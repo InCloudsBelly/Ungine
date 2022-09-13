@@ -1,0 +1,9 @@
+[submodule "Ungine/vendor/GLFW"]
+	path = Ungine/vendor/GLFW
+	url = https://github.com/TheCherno/glfw.git
+[submodule "Ungine/vendor/ImGui"]
+	path = Ungine/vendor/ImGui
+	url = https://github.com/TheCherno/imgui.git
+[submodule "Ungine/vendor/glm"]
+	path = Ungine/vendor/glm
+	url = https://github.com/g-truc/glm.git

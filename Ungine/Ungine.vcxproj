@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Dist|x64">
+      <Configuration>Dist</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{EB5126D6-D7F3-50AC-C0AE-6400ACEFD7FC}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Ungine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>..\bin\Debug-windows-x86_64\Ungine\</OutDir>
+    <IntDir>..\bin-int\Debug-windows-x86_64\Ungine\</IntDir>
+    <TargetName>Ungine</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>..\bin\Release-windows-x86_64\Ungine\</OutDir>
+    <IntDir>..\bin-int\Release-windows-x86_64\Ungine\</IntDir>
+    <TargetName>Ungine</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
+    <OutDir>..\bin\Dist-windows-x86_64\Ungine\</OutDir>
+    <IntDir>..\bin-int\Dist-windows-x86_64\Ungine\</IntDir>
+    <TargetName>Ungine</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Upch.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>U_PLATFORM_WINDOWS;U_BUILD_DLL;U_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor;vendor\GLFW\include;vendor\Glad\include;vendor\glm;vendor\ImGui;vendor\assimp\include;vendor\stb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Upch.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>U_PLATFORM_WINDOWS;U_BUILD_DLL;U_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor;vendor\GLFW\include;vendor\Glad\include;vendor\glm;vendor\ImGui;vendor\assimp\include;vendor\stb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Upch.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>U_PLATFORM_WINDOWS;U_BUILD_DLL;U_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor;vendor\GLFW\include;vendor\Glad\include;vendor\glm;vendor\ImGui;vendor\assimp\include;vendor\stb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Ungine.h" />
+    <ClInclude Include="src\Ungine\Core\Application.h" />
+    <ClInclude Include="src\Ungine\Core\Base.h" />
+    <ClInclude Include="src\Ungine\Core\Buffer.h" />
+    <ClInclude Include="src\Ungine\Core\Events\ApplicationEvent.h" />
+    <ClInclude Include="src\Ungine\Core\Events\Event.h" />
+    <ClInclude Include="src\Ungine\Core\Events\KeyEvent.h" />
+    <ClInclude Include="src\Ungine\Core\Events\MouseEvent.h" />
+    <ClInclude Include="src\Ungine\Core\Input.h" />
+    <ClInclude Include="src\Ungine\Core\KeyCodes.h" />
+    <ClInclude Include="src\Ungine\Core\Layer.h" />
+    <ClInclude Include="src\Ungine\Core\LayerStack.h" />
+    <ClInclude Include="src\Ungine\Core\Log.h" />
+    <ClInclude Include="src\Ungine\Core\Platform.h" />
+    <ClInclude Include="src\Ungine\Core\TimeStep.h" />
+    <ClInclude Include="src\Ungine\Core\Window.h" />
+    <ClInclude Include="src\Ungine\EntryPoint.h" />
+    <ClInclude Include="src\Ungine\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLBuffer.h" />
+    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.h" />
+    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLShader.h" />
+    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLShaderUniform.h" />
+    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLTexture.h" />
+    <ClInclude Include="src\Ungine\Platform\Windows\WindowsInput.h" />
+    <ClInclude Include="src\Ungine\Platform\Windows\WindowsWindow.h" />
+    <ClInclude Include="src\Ungine\Renderer\Buffer.h" />
+    <ClInclude Include="src\Ungine\Renderer\Camera.h" />
+    <ClInclude Include="src\Ungine\Renderer\Framebuffer.h" />
+    <ClInclude Include="src\Ungine\Renderer\Material.h" />
+    <ClInclude Include="src\Ungine\Renderer\Mesh.h" />
+    <ClInclude Include="src\Ungine\Renderer\RenderCommandQueue.h" />
+    <ClInclude Include="src\Ungine\Renderer\Renderer.h" />
+    <ClInclude Include="src\Ungine\Renderer\RendererAPI.h" />
+    <ClInclude Include="src\Ungine\Renderer\Shader.h" />
+    <ClInclude Include="src\Ungine\Renderer\ShaderUniform.h" />
+    <ClInclude Include="src\Ungine\Renderer\Texture.h" />
+    <ClInclude Include="src\Upch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Ungine\Core\Application.cpp" />
+    <ClCompile Include="src\Ungine\Core\Base.cpp" />
+    <ClCompile Include="src\Ungine\Core\Layer.cpp" />
+    <ClCompile Include="src\Ungine\Core\LayerStack.cpp" />
+    <ClCompile Include="src\Ungine\Core\Log.cpp" />
+    <ClCompile Include="src\Ungine\Core\TimeStep.cpp" />
+    <ClCompile Include="src\Ungine\Core\Window.cpp" />
+    <ClCompile Include="src\Ungine\ImGui\ImGuiBuild.cpp" />
+    <ClCompile Include="src\Ungine\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLBuffer.cpp" />
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.cpp" />
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLRendererAPI.cpp" />
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLShader.cpp" />
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLShaderUniform.cpp" />
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLTexture.cpp" />
+    <ClCompile Include="src\Ungine\Platform\Windows\WindowsInput.cpp" />
+    <ClCompile Include="src\Ungine\Platform\Windows\WindowsWindow.cpp" />
+    <ClCompile Include="src\Ungine\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Ungine\Renderer\Camera.cpp" />
+    <ClCompile Include="src\Ungine\Renderer\Framebuffer.cpp" />
+    <ClCompile Include="src\Ungine\Renderer\Material.cpp" />
+    <ClCompile Include="src\Ungine\Renderer\Mesh.cpp" />
+    <ClCompile Include="src\Ungine\Renderer\RenderCommandQueue.cpp" />
+    <ClCompile Include="src\Ungine\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Ungine\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Ungine\Renderer\Texture.cpp" />
+    <ClCompile Include="src\Ungine\Vendor\stb_image.cpp" />
+    <ClCompile Include="src\Upch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
+      <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="vendor\Glad\Glad.vcxproj">
+      <Project>{BDD6857C-A90D-870D-52FA-6C103E10030F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="vendor\ImGui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

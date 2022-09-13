@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Ungine">
+      <UniqueIdentifier>{EB5126D6-D7F3-50AC-C0AE-6400ACEFD7FC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ungine\Core">
+      <UniqueIdentifier>{236166B7-8F16-DFAC-180B-D98384BFD5B0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ungine\Core\Events">
+      <UniqueIdentifier>{A707C5B2-93EB-8508-FC4B-805BE84E708A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ungine\ImGui">
+      <UniqueIdentifier>{554B9DA4-41AE-2C49-EA33-65FFD675F8CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ungine\Platform">
+      <UniqueIdentifier>{9FE632CA-0B72-A08E-1483-2383808DFC8E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ungine\Platform\OpenGL">
+      <UniqueIdentifier>{F30674E2-DF00-9D34-C86D-3345B40603A1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ungine\Platform\Windows">
+      <UniqueIdentifier>{D9BF1089-45F7-5820-4E01-BD43BAB77F19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ungine\Renderer">
+      <UniqueIdentifier>{F1ED0FA5-5D79-7D69-668A-005ED294D969}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ungine\Vendor">
+      <UniqueIdentifier>{C81D1E56-34DE-998C-FD18-E3096998DE68}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Ungine.h" />
+    <ClInclude Include="src\Ungine\Core\Application.h">
+      <Filter>Ungine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Core\Base.h">
+      <Filter>Ungine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Core\Buffer.h">
+      <Filter>Ungine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Core\Events\ApplicationEvent.h">
+      <Filter>Ungine\Core\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Core\Events\Event.h">
+      <Filter>Ungine\Core\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Core\Events\KeyEvent.h">
+      <Filter>Ungine\Core\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Core\Events\MouseEvent.h">
+      <Filter>Ungine\Core\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Core\Input.h">
+      <Filter>Ungine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Core\KeyCodes.h">
+      <Filter>Ungine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Core\Layer.h">
+      <Filter>Ungine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Core\LayerStack.h">
+      <Filter>Ungine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Core\Log.h">
+      <Filter>Ungine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Core\Platform.h">
+      <Filter>Ungine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Core\TimeStep.h">
+      <Filter>Ungine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Core\Window.h">
+      <Filter>Ungine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\EntryPoint.h">
+      <Filter>Ungine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\ImGui\ImGuiLayer.h">
+      <Filter>Ungine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLBuffer.h">
+      <Filter>Ungine\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.h">
+      <Filter>Ungine\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLShader.h">
+      <Filter>Ungine\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLShaderUniform.h">
+      <Filter>Ungine\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLTexture.h">
+      <Filter>Ungine\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Platform\Windows\WindowsInput.h">
+      <Filter>Ungine\Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Platform\Windows\WindowsWindow.h">
+      <Filter>Ungine\Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Renderer\Buffer.h">
+      <Filter>Ungine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Renderer\Camera.h">
+      <Filter>Ungine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Renderer\Framebuffer.h">
+      <Filter>Ungine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Renderer\Material.h">
+      <Filter>Ungine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Renderer\Mesh.h">
+      <Filter>Ungine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Renderer\RenderCommandQueue.h">
+      <Filter>Ungine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Renderer\Renderer.h">
+      <Filter>Ungine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Renderer\RendererAPI.h">
+      <Filter>Ungine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Renderer\Shader.h">
+      <Filter>Ungine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Renderer\ShaderUniform.h">
+      <Filter>Ungine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Renderer\Texture.h">
+      <Filter>Ungine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Upch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Ungine\Core\Application.cpp">
+      <Filter>Ungine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Core\Base.cpp">
+      <Filter>Ungine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Core\Layer.cpp">
+      <Filter>Ungine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Core\LayerStack.cpp">
+      <Filter>Ungine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Core\Log.cpp">
+      <Filter>Ungine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Core\TimeStep.cpp">
+      <Filter>Ungine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Core\Window.cpp">
+      <Filter>Ungine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\ImGui\ImGuiBuild.cpp">
+      <Filter>Ungine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\ImGui\ImGuiLayer.cpp">
+      <Filter>Ungine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLBuffer.cpp">
+      <Filter>Ungine\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.cpp">
+      <Filter>Ungine\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLRendererAPI.cpp">
+      <Filter>Ungine\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLShader.cpp">
+      <Filter>Ungine\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLShaderUniform.cpp">
+      <Filter>Ungine\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLTexture.cpp">
+      <Filter>Ungine\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Platform\Windows\WindowsInput.cpp">
+      <Filter>Ungine\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Platform\Windows\WindowsWindow.cpp">
+      <Filter>Ungine\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Renderer\Buffer.cpp">
+      <Filter>Ungine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Renderer\Camera.cpp">
+      <Filter>Ungine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Renderer\Framebuffer.cpp">
+      <Filter>Ungine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Renderer\Material.cpp">
+      <Filter>Ungine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Renderer\Mesh.cpp">
+      <Filter>Ungine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Renderer\RenderCommandQueue.cpp">
+      <Filter>Ungine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Renderer\Renderer.cpp">
+      <Filter>Ungine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Renderer\Shader.cpp">
+      <Filter>Ungine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Renderer\Texture.cpp">
+      <Filter>Ungine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Vendor\stb_image.cpp">
+      <Filter>Ungine\Vendor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Upch.cpp" />
+  </ItemGroup>
+</Project>
