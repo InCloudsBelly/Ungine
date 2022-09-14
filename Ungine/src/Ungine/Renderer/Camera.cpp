@@ -16,11 +16,6 @@ namespace U
 	Camera::Camera(const glm::mat4& projectionMatrix)
 		:m_ProjectionMatrix(projectionMatrix)
 	{
-		m_PanSpeed = 0.15f;
-		m_RotationSpeed = 0.3f;
-		m_ZoomSpeed = 1.0f;
-
-
 		m_Position = { -5, 5, 5 };
 		m_Rotation = glm::vec3(90.0f, 0.0f, 0.0f);
 
@@ -34,6 +29,32 @@ namespace U
 
 	void Camera::Focus()
 	{
+	}
+	
+	std::pair<float, float> Camera::PanSpeed() const
+	{
+		float x = std::min(m_ViewportWidth / 1000.0f, 2.4f); // max = 2.4f
+		float xFactor = 0.0366f * (x * x) - 0.1778f * x + 0.3021f;
+
+		float y = std::min(m_ViewportHeight / 1000.0f, 2.4f); // max = 2.4f
+		float yFactor = 0.0366f * (y * y) - 0.1778f * y + 0.3021f;
+
+		return { xFactor, yFactor };
+	}
+
+	float Camera::RotationSpeed()const
+	{
+		return 0.8f;
+	}
+
+	float Camera::ZoomSpeed() const
+	{
+		float distance = m_Distance * 0.2f;
+		distance = std::max(distance, 0.0f);
+		float speed = distance * distance;
+		speed = std::min(speed, 100.0f); // max speed = 100
+		return speed;
+
 	}
 
 	void Camera::Update(TimeStep ts)
@@ -77,19 +98,21 @@ namespace U
 	}
 	void Camera::MousePan(const glm::vec2& delta)
 	{
-		m_FocalPoint += -GetRightDirection() * delta.x * m_PanSpeed * m_Distance;
-		m_FocalPoint += GetUpDirection() * delta.y * m_PanSpeed * m_Distance;
+		auto [xSpeed, ySpeed] = PanSpeed();
+		m_FocalPoint += -GetRightDirection() * delta.x * xSpeed * m_Distance;
+		m_FocalPoint += GetUpDirection() * delta.y * ySpeed * m_Distance;
+
 
 	}
 	void Camera::MouseRotate(const glm::vec2& delta)
 	{
 		float yawSign = GetUpDirection().y < 0 ? -1.0f : 1.0f;
-		m_Yaw += yawSign * delta.x * m_RotationSpeed;
-		m_Pitch += delta.y * m_RotationSpeed;
+		m_Yaw += yawSign * delta.x * RotationSpeed();
+		m_Pitch += delta.y * RotationSpeed();
 	}
 	void Camera::MouseZoom(float delta)
 	{
-		m_Distance -= delta * m_ZoomSpeed;
+		m_Distance -= delta * ZoomSpeed();
 		if (m_Distance < 1.0f)
 		{
 			m_FocalPoint += GetForwardDirection();

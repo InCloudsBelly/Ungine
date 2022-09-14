@@ -1,5 +1,6 @@
 #include "Upch.h"
 #include "Renderer.h"
+#include "Shader.h"
 
 namespace U {
 
@@ -8,7 +9,12 @@ namespace U {
 	
 	void Renderer::Init()
 	{
+		s_Instance->m_ShaderLibrary = std::make_unique<ShaderLibrary>();
 		U_RENDER({ RendererAPI::Init(); });
+
+		Renderer::GetShaderLibrary()->Load("assets/shaders/HazelPBR_Static.glsl");
+		Renderer::GetShaderLibrary()->Load("assets/shaders/HazelPBR_Anim.glsl");
+
 	}
 
 	void Renderer::Clear()
@@ -35,7 +41,7 @@ namespace U {
 	{
 	}
 
-	void Renderer::DrawIndexed(unsigned int count, bool depthTest)
+	void Renderer::DrawIndexed(uint32_t count, bool depthTest)
 	{
 		U_RENDER_2(count, depthTest, {
 			RendererAPI::DrawIndexed(count, depthTest);

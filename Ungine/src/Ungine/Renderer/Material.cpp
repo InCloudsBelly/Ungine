@@ -3,6 +3,16 @@
 
 namespace U
 {
+
+	//////////////////////////////////////////////////////////////////////////////////
+	// Material
+	//////////////////////////////////////////////////////////////////////////////////
+
+	Ref<Material> Material::Create(const Ref<Shader>& shader)
+	{
+		return std::make_shared<Material>(shader);
+	}
+
 	Material::Material(const Ref<Shader>& shader)
 		:m_Shader(shader)
 	{
@@ -102,8 +112,14 @@ namespace U
 
 
 
+	//////////////////////////////////////////////////////////////////////////////////
+	// MaterialInstance
+	//////////////////////////////////////////////////////////////////////////////////
 
-
+	Ref<MaterialInstance> MaterialInstance::Create(const Ref<Material>& material)
+	{
+		return std::make_shared<MaterialInstance>(material);
+	}
 
 	MaterialInstance::MaterialInstance(const Ref<Material>& material)
 		: m_Material(material)

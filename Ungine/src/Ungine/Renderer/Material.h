@@ -51,6 +51,10 @@ namespace U
 		{
 			Set(name, (const Ref<Texture>&)texture);
 		}
+
+	public:
+		static Ref<Material> Create(const Ref<Shader>& shader);
+
 	private:
 		void AllocateStorage();
 		void OnShaderReloaded();
@@ -82,6 +86,8 @@ namespace U
 		void Set(const std::string& name, const T& value)
 		{
 			auto decl = m_Material->FindUniformDeclaration(name);
+			if (!decl)
+				return;
 			U_CORE_ASSERT(decl, "Could not find uniform with name 'x'");
 			auto& buffer = GetUniformBufferTarget(decl);
 			buffer.Write((byte*)&value, decl->GetSize(), decl->GetOffset());
@@ -110,6 +116,10 @@ namespace U
 		}
 
 		void Bind() const;
+
+	public:
+		static Ref<MaterialInstance> Create(const Ref<Material>& material);
+
 	private:
 		void AllocateStorage();
 		void OnShaderReloaded();

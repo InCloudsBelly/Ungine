@@ -163,6 +163,7 @@
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLShader.h" />
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLShaderUniform.h" />
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLTexture.h" />
+    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLVertexArray.h" />
     <ClInclude Include="src\Ungine\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Ungine\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\Ungine\Renderer\Buffer.h" />
@@ -176,6 +177,7 @@
     <ClInclude Include="src\Ungine\Renderer\Shader.h" />
     <ClInclude Include="src\Ungine\Renderer\ShaderUniform.h" />
     <ClInclude Include="src\Ungine\Renderer\Texture.h" />
+    <ClInclude Include="src\Ungine\Renderer\VertexArray.h" />
     <ClInclude Include="src\Upch.h" />
   </ItemGroup>
   <ItemGroup>
@@ -194,6 +196,7 @@
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLShaderUniform.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLTexture.cpp" />
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLVertexArray.cpp" />
     <ClCompile Include="src\Ungine\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Ungine\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Buffer.cpp" />
@@ -205,6 +208,7 @@
     <ClCompile Include="src\Ungine\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Shader.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Texture.cpp" />
+    <ClCompile Include="src\Ungine\Renderer\VertexArray.cpp" />
     <ClCompile Include="src\Ungine\Vendor\stb_image.cpp" />
     <ClCompile Include="src\Upch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

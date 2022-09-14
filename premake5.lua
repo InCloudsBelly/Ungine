@@ -1,14 +1,14 @@
 workspace "Ungine"
 	architecture "x64"
 	targetdir "build"
-	
+    startproject "UngineEditor"
+
 	configurations 
 	{ 
 		"Debug", 
         "Release",
         "Dist"
-    }
-    
+    }  
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 -- Include directories relative to root folder (solution directory)
@@ -84,8 +84,8 @@ project "Ungine"
         defines "U_DIST"
         optimize "On"
 
-project "Sandbox"
-    location "Sandbox"
+project "UngineEditor"
+    location "UngineEditor"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"
@@ -148,3 +148,69 @@ project "Sandbox"
 			"Ungine/vendor/assimp/bin/Release/assimp-vc141-mt.lib"
 		}
 
+
+project "Sandbox"
+    location "Sandbox"
+    kind "ConsoleApp"
+    language "C++"
+    cppdialect "C++17"
+    staticruntime "on"
+        
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+    
+    links 
+    { 
+        "Ungine"
+    }
+        
+    files 
+    { 
+        "%{prj.name}/src/**.h", 
+        "%{prj.name}/src/**.c", 
+        "%{prj.name}/src/**.hpp", 
+        "%{prj.name}/src/**.cpp" 
+    }
+        
+    includedirs 
+    {
+        "%{prj.name}/src",
+        "Ungine/src",
+        "Ungine/vendor",
+        "%{IncludeDir.glm}"
+    }
+        
+    filter "system:windows"
+        systemversion "latest"
+                    
+        defines 
+        { 
+            "U_PLATFORM_WINDOWS"
+        }
+        
+    filter "configurations:Debug"
+        defines "U_DEBUG"
+        symbols "on"
+    
+        links
+        {
+            "Ungine/vendor/assimp/bin/Debug/assimp-vc141-mtd.lib"
+        }
+                    
+    filter "configurations:Release"
+        defines "U_RELEASE"
+        optimize "on"
+    
+        links
+        {
+            "Ungine/vendor/assimp/bin/Release/assimp-vc141-mt.lib"
+        }
+    
+    filter "configurations:Dist"
+        defines "U_DIST"
+        optimize "on"
+    
+        links
+        {
+            "Ungine/vendor/assimp/bin/Release/assimp-vc141-mt.lib"
+        }

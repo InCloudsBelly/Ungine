@@ -1,7 +1,9 @@
 #include "Upch.h"
 #include "Ungine/Renderer/RendererAPI.h"
+#include "Ungine/Renderer/Shader.h"
 
 #include <Glad/glad.h>
+
 
 namespace U {
 
@@ -14,13 +16,14 @@ namespace U {
 		}
 		else
 		{
-			U_CORE_TRACE("{0}", message);
+			//U_CORE_TRACE("{0}", message);
 		}
 	}
 
 	void RendererAPI::Init()
 	{
 		glDebugMessageCallback(OpenGLLogMessage, nullptr);
+		glEnable(GL_DEBUG_OUTPUT);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 
 		unsigned int vao;
@@ -50,10 +53,13 @@ namespace U {
 			U_CORE_ERROR("OpenGL Error {0}", error);
 			error = glGetError();
 		}
-
+		LoadRequiredAssets();
 	}
 
 	void RendererAPI::Shutdown()
+	{
+	}
+	void RendererAPI::LoadRequiredAssets()
 	{
 	}
 

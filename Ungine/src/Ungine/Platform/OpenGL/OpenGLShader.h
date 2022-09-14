@@ -10,7 +10,10 @@ namespace U {
 	class OpenGLShader : public Shader
 	{
 	public:
+		OpenGLShader() = default;
 		OpenGLShader(const std::string& filepath);
+		static Ref<OpenGLShader> CreateFromString(const std::string& source);
+
 		virtual void AddShaderReloadedCallback(const ShaderReloadedCallback& callback) override;
 
 		virtual void Reload() override;
@@ -29,11 +32,15 @@ namespace U {
 		virtual const std::string& GetName() const override { return m_Name; }
 
 	private:
+		void Load(const std::string& source);
 		std::string ReadShaderFromFile(const std::string& filepath) const;
+
 		std::unordered_map<GLenum, std::string> PreProcess(const std::string& source);
+
 		void Parse();
 		void ParseUniform(const std::string& statement, ShaderDomain domain);
 		void ParseUniformStruct(const std::string& block, ShaderDomain domain);
+
 		ShaderStruct* FindStruct(const std::string& name);
 		
 		int32_t GetUniformLocation(const std::string& name) const;
@@ -81,7 +88,7 @@ namespace U {
 		inline const ShaderResourceList& GetResources() const override { return m_Resources; }
 
 	private:
-		RendererID m_RendererID;
+		RendererID m_RendererID = 0;
 		bool m_Loaded = false;
 
 		std::string m_Name, m_AssetPath;

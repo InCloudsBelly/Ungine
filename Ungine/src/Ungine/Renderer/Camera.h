@@ -19,6 +19,7 @@ namespace U
 		inline void SetDistance(float distance) { m_Distance = distance; }
 
 		inline void SetProjectionMatrix(const glm::mat4& projectionMatrix) { m_ProjectionMatrix = projectionMatrix; }
+		inline void SetViewportSize(uint32_t width, uint32_t height) { m_ViewportWidth = width; m_ViewportHeight = height; }
 
 		const glm::mat4& GetProjectionMatrix()const { return m_ProjectionMatrix; }
 		const glm::mat4& GetViewMatrix()const { return m_ViewMatrix; }
@@ -35,6 +36,11 @@ namespace U
 
 		glm::vec3 CalculatePosition();
 		glm::quat GetOrientation();
+
+		std::pair<float, float> PanSpeed() const;
+		float RotationSpeed() const;
+		float ZoomSpeed() const;
+
 	private:
 		glm::mat4 m_ProjectionMatrix, m_ViewMatrix;
 		glm::vec3 m_Position, m_Rotation, m_FocalPoint;
@@ -44,10 +50,10 @@ namespace U
 		glm::vec3 m_InitialFocalPoint, m_InitialRotation;
 
 		float m_Distance;
-		float m_PanSpeed, m_RotationSpeed, m_ZoomSpeed;
 
 		float m_Pitch, m_Yaw;
 
+		uint32_t m_ViewportWidth = 1280, m_ViewportHeight = 720;
 	};
 
 }

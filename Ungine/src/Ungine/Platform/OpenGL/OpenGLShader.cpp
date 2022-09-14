@@ -22,12 +22,28 @@ namespace U {
 	{
 		size_t found = filepath.find_last_of("/\\");
 		m_Name = found != std::string::npos ? filepath.substr(found + 1) : filepath;
+		found = m_Name.find_last_of(".");
+		m_Name = found != std::string::npos ? m_Name.substr(0, found) : m_Name;
+
 		Reload();
 	}
+
+	Ref<OpenGLShader> OpenGLShader::CreateFromString(const std::string& source)
+	{
+		Ref<OpenGLShader> shader = std::make_shared<OpenGLShader>();
+		shader->Load(source);
+		return shader;
+	}
+
 
 	void OpenGLShader::Reload()
 	{
 		std::string source = ReadShaderFromFile(m_AssetPath);
+		Load(source);
+	}
+
+	void OpenGLShader::Load(const std::string& source)
+	{
 		m_ShaderSource = PreProcess(source);
 		Parse();
 
@@ -44,9 +60,11 @@ namespace U {
 				for (auto& callback : self->m_ShaderReloadedCallbacks)
 					callback();
 			}
+
 			self->m_Loaded = true;
 			});
 	}
+
 
 	void OpenGLShader::AddShaderReloadedCallback(const ShaderReloadedCallback& callback)
 	{

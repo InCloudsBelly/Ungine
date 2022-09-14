@@ -73,6 +73,11 @@ namespace U
 		if(!scene || !scene->HasMeshes())
 			U_CORE_ERROR("Failed to load mesh file: {0}", filename);
 
+		m_IsAnimated = scene->mAnimations != nullptr;
+		m_MeshShader = m_IsAnimated ? Renderer::GetShaderLibrary()->Get("HazelPBR_Anim") : Renderer::GetShaderLibrary()->Get("HazelPBR_Static");
+		m_Material.reset(new U::Material(m_MeshShader));
+
+
 		m_InverseTransform = glm::inverse(aiMatrix4x4ToGlm(scene->mRootNode->mTransformation));
 
 		uint32_t vertexCount = 0;
@@ -98,23 +103,46 @@ namespace U
 			U_CORE_ASSERT(mesh->HasPositions(), "Meshes require positions.");
 			U_CORE_ASSERT(mesh->HasNormals(), "Meshes require normals.");
 
-
-			for (size_t i = 0; i < mesh->mNumVertices; i++)
+			if (m_IsAnimated)
 			{
-				Vertex vertex;
-				vertex.Position = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
-				vertex.Normal = { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z };
-
-				if (mesh->HasTangentsAndBitangents())
+				for (size_t i = 0; i < mesh->mNumVertices; i++)
 				{
-					vertex.Tangent = { mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z };
-					vertex.Binormal = { mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z };
+					AnimatedVertex vertex;
+					vertex.Position = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
+					vertex.Normal = { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z };
+
+					if (mesh->HasTangentsAndBitangents())
+					{
+						vertex.Tangent = { mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z };
+						vertex.Binormal = { mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z };
+					}
+
+					if (mesh->HasTextureCoords(0))
+						vertex.Texcoord = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
+
+					m_AnimatedVertices.push_back(vertex);
 				}
+			}
+			else
+			{
+				for (size_t i = 0; i < mesh->mNumVertices; i++)
+				{
+					Vertex vertex;
+					vertex.Position = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
+					vertex.Normal = { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z };
 
-				if (mesh->HasTextureCoords(0))
-					vertex.Texcoord = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
-				m_Vertices.push_back(vertex);
+					if (mesh->HasTangentsAndBitangents())
+					{
+						vertex.Tangent = { mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z };
+						vertex.Binormal = { mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z };
+					}
 
+					if (mesh->HasTextureCoords(0))
+						vertex.Texcoord = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
+
+					m_StaticVertices.push_back(vertex);
+
+				}
 			}
 
 			for (size_t i = 0; i < mesh->mNumFaces; i++)
@@ -124,51 +152,106 @@ namespace U
 			}
 		}
 
-		for (size_t m = 0; m < scene->mNumMeshes; m++)
+		U_CORE_TRACE("NODES:");
+		U_CORE_TRACE("-----------------------------");
+		TraverseNodes(scene->mRootNode);
+		U_CORE_TRACE("-----------------------------");
+
+		if (m_IsAnimated)
 		{
-			aiMesh* mesh = scene->mMeshes[m];
-			Submesh& submesh = m_Submeshes[m];
-
-			for (size_t i = 0; i < mesh->mNumBones; i++)
+			for (size_t m = 0; m < scene->mNumMeshes; m++)
 			{
-				aiBone* bone = mesh->mBones[i];
-				std::string boneName(bone->mName.data);
-				int boneIndex = 0;
+				aiMesh* mesh = scene->mMeshes[m];
+				Submesh& submesh = m_Submeshes[m];
 
-				if (m_BoneMapping.find(boneName) == m_BoneMapping.end())
+				for (size_t i = 0; i < mesh->mNumBones; i++)
 				{
-					boneIndex = m_BoneCount;
-					m_BoneCount++;
-					BoneInfo bi;
-					m_BoneInfo.push_back(bi);
-					m_BoneInfo[boneIndex].BoneOffset = aiMatrix4x4ToGlm(bone->mOffsetMatrix);
-					m_BoneMapping[boneName] = boneIndex;
-				}
-				else
-				{
-					U_CORE_TRACE("Found existing bone in map");
-					boneIndex = m_BoneMapping[boneName];
-				}
+					aiBone* bone = mesh->mBones[i];
+					std::string boneName(bone->mName.data);
+					int boneIndex = 0;
 
-				for (size_t j = 0; j < bone->mNumWeights; j++)
-				{
-					int VertexID = submesh.BaseVertex + bone->mWeights[j].mVertexId;
-					float Weight = bone->mWeights[j].mWeight;
-					m_Vertices[VertexID].AddBoneData(boneIndex, Weight);
+					if (m_BoneMapping.find(boneName) == m_BoneMapping.end())
+					{
+						// Allocate an index for a new bone
+						boneIndex = m_BoneCount;
+						m_BoneCount++;
+						BoneInfo bi;
+						m_BoneInfo.push_back(bi);
+						m_BoneInfo[boneIndex].BoneOffset = aiMatrix4x4ToGlm(bone->mOffsetMatrix);
+						m_BoneMapping[boneName] = boneIndex;
+					}
+					else
+					{
+						U_CORE_TRACE("Found existing bone in map");
+						boneIndex = m_BoneMapping[boneName];
+					}
+
+					for (size_t j = 0; j < bone->mNumWeights; j++)
+					{
+						int VertexID = submesh.BaseVertex + bone->mWeights[j].mVertexId;
+						float Weight = bone->mWeights[j].mWeight;
+						m_AnimatedVertices[VertexID].AddBoneData(boneIndex, Weight);
+
+					}
 				}
 			}
 		}
-		m_VertexBuffer.reset(VertexBuffer::Create());
-		m_VertexBuffer->SetData(m_Vertices.data(), m_Vertices.size() * sizeof(Vertex));
 
-		m_IndexBuffer.reset(IndexBuffer::Create());
-		m_IndexBuffer->SetData(m_Indices.data(), m_Indices.size() * sizeof(Index));
+		m_VertexArray = VertexArray::Create();
+		if (m_IsAnimated)
+		{
+			auto vb = VertexBuffer::Create(m_AnimatedVertices.data(), m_AnimatedVertices.size() * sizeof(AnimatedVertex));
+			vb->SetLayout({
+				{ ShaderDataType::Float3, "a_Position" },
+				{ ShaderDataType::Float3, "a_Normal" },
+				{ ShaderDataType::Float3, "a_Tangent" },
+				{ ShaderDataType::Float3, "a_Binormal" },
+				{ ShaderDataType::Float2, "a_TexCoord" },
+				{ ShaderDataType::Int4, "a_BoneIDs" },
+				{ ShaderDataType::Float4, "a_BoneWeights" },
+				});
+			m_VertexArray->AddVertexBuffer(vb);
+		}
+		else
+		{
+			auto vb = VertexBuffer::Create(m_StaticVertices.data(), m_StaticVertices.size() * sizeof(Vertex));
+			vb->SetLayout({
+				{ ShaderDataType::Float3, "a_Position" },
+				{ ShaderDataType::Float3, "a_Normal" },
+				{ ShaderDataType::Float3, "a_Tangent" },
+				{ ShaderDataType::Float3, "a_Binormal" },
+				{ ShaderDataType::Float2, "a_TexCoord" },
+				});
+			m_VertexArray->AddVertexBuffer(vb);
+		}
+
+		auto ib = IndexBuffer::Create(m_Indices.data(), m_Indices.size() * sizeof(Index));
+		m_VertexArray->SetIndexBuffer(ib);
 
 		m_Scene = scene;
 	}
 
 	Mesh::~Mesh()
 	{
+	}
+
+	void Mesh::TraverseNodes(aiNode* node, int level)
+	{
+		std::string levelText;
+		for (int i = 0; i < level; i++)
+			levelText += "-";
+		U_CORE_TRACE("{0}Node name: {1}", levelText, std::string(node->mName.data));
+		for (uint32_t i = 0; i < node->mNumMeshes; i++)
+		{
+			uint32_t mesh = node->mMeshes[i];
+			m_Submeshes[mesh].Transform = aiMatrix4x4ToGlm(node->mTransformation);
+		}
+
+		for (uint32_t i = 0; i < node->mNumChildren; i++)
+		{
+			aiNode* child = node->mChildren[i];
+			TraverseNodes(child, level + 1);
+		}
 	}
 
 
@@ -348,56 +431,49 @@ namespace U
 
 	/**************************************************************************/
 
-	void Mesh::Render(TimeStep ts, Shader* shader)
+	void Mesh::Render(TimeStep ts, Ref<MaterialInstance> materialInstance)
 	{
-		if (m_AnimationPlaying && m_Scene->mAnimations)
+		Render(ts, glm::mat4(1.0f), materialInstance);
+	}
+
+
+	void Mesh::Render(TimeStep ts, const glm::mat4& transform, Ref<MaterialInstance> materialInstance)
+	{
+		if (m_IsAnimated)
 		{
-			m_WorldTime += ts;
+			if (m_AnimationPlaying)
+			{
+				m_WorldTime += ts;
 
-			float ticksPerSecond = (float)(m_Scene->mAnimations[0]->mTicksPerSecond != 0 ? m_Scene->mAnimations[0]->mTicksPerSecond : 25.0f) * m_TimeMultiplier;
-			m_AnimationTime += ts * ticksPerSecond;
-			m_AnimationTime = fmod(m_AnimationTime, (float)m_Scene->mAnimations[0]->mDuration);
-		}
+				float ticksPerSecond = (float)(m_Scene->mAnimations[0]->mTicksPerSecond != 0 ? m_Scene->mAnimations[0]->mTicksPerSecond : 25.0f) * m_TimeMultiplier;
+				m_AnimationTime += ts * ticksPerSecond;
+				m_AnimationTime = fmod(m_AnimationTime, (float)m_Scene->mAnimations[0]->mDuration);
+			}
 
-		if (m_Scene->mAnimations)
 			BoneTransform(m_AnimationTime);
-		
+		}
+		if (materialInstance)
+			materialInstance->Bind();
+
 		// TODO: Sort this out
-		m_VertexBuffer->Bind();
-		m_IndexBuffer->Bind();
+		m_VertexArray->Bind();
+
+		bool materialOverride = !!materialInstance;
 		
-		U_RENDER_S1(shader,{
+		U_RENDER_S2(transform, materialOverride, {
 			for (Submesh& submesh : self->m_Submeshes)
 			{
-				glEnableVertexAttribArray(0);
-				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
-
-				glEnableVertexAttribArray(1);
-				glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Normal));
-
-				glEnableVertexAttribArray(2);
-				glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Tangent));
-
-				glEnableVertexAttribArray(3);
-				glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Binormal));
-
-				glEnableVertexAttribArray(4);
-				glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Texcoord));
-		
-				glEnableVertexAttribArray(5);
-				glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (const void*)offsetof(Vertex, IDs));
-
-				glEnableVertexAttribArray(6);
-				glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Weights));
-
-				if (self->m_Scene->mAnimations)
+				if (self->m_IsAnimated)
 				{
 					for (size_t i = 0; i < self->m_BoneTransforms.size(); i++)
 					{
 						std::string uniformName = std::string("u_BoneTransforms[") + std::to_string(i) + std::string("]");
-						shader->SetMat4FromRenderThread(uniformName, self->m_BoneTransforms[i]);
+						self->m_MeshShader->SetMat4FromRenderThread(uniformName, self->m_BoneTransforms[i]);
 					}
 				}
+				if (!materialOverride)
+					self->m_MeshShader->SetMat4FromRenderThread("u_ModelMatrix", transform * submesh.Transform);
+
 				glDrawElementsBaseVertex(GL_TRIANGLES, submesh.IndexCount, GL_UNSIGNED_INT, (void*)(sizeof(uint32_t) * submesh.BaseIndex), submesh.BaseVertex);
 
 			}
@@ -412,17 +488,19 @@ namespace U
 		
 		if (ImGui::CollapsingHeader(m_FilePath.c_str()))
 		{
-			if (ImGui::CollapsingHeader("Animation"))
+			if (m_IsAnimated)
 			{
-				if (ImGui::Button(m_AnimationPlaying ? "Pause" : "Play"))
-					m_AnimationPlaying = !m_AnimationPlaying;
 
-				ImGui::SliderFloat("##AnimationTime", &m_AnimationTime, 0.0f, (float)m_Scene->mAnimations[0]->mDuration);
-				ImGui::DragFloat("Time Scale", &m_TimeMultiplier, 0.05f, 0.0f, 10.0f);
+				if (ImGui::CollapsingHeader("Animation"))
+				{
+					if (ImGui::Button(m_AnimationPlaying ? "Pause" : "Play"))
+						m_AnimationPlaying = !m_AnimationPlaying;
+
+					ImGui::SliderFloat("##AnimationTime", &m_AnimationTime, 0.0f, (float)m_Scene->mAnimations[0]->mDuration);
+					ImGui::DragFloat("Time Scale", &m_TimeMultiplier, 0.05f, 0.0f, 10.0f);
+				}
 			}
-
 		}
-
 		ImGui::End();
 	}
 
@@ -433,18 +511,36 @@ namespace U
 		U_CORE_TRACE("------------------------------------------------------");
 		U_CORE_TRACE("Vertex Buffer Dump");
 		U_CORE_TRACE("Mesh: {0}", m_FilePath);
-		for (size_t i = 0; i < m_Vertices.size(); i++)
+		if (m_IsAnimated)
 		{
-			auto& vertex = m_Vertices[i];
-			U_CORE_TRACE("Vertex: {0}", i);
-			U_CORE_TRACE("Position: {0}, {1}, {2}", vertex.Position.x, vertex.Position.y, vertex.Position.z);
-			U_CORE_TRACE("Normal: {0}, {1}, {2}", vertex.Normal.x, vertex.Normal.y, vertex.Normal.z);
-			U_CORE_TRACE("Binormal: {0}, {1}, {2}", vertex.Binormal.x, vertex.Binormal.y, vertex.Binormal.z);
-			U_CORE_TRACE("Tangent: {0}, {1}, {2}", vertex.Tangent.x, vertex.Tangent.y, vertex.Tangent.z);
-			U_CORE_TRACE("TexCoord: {0}, {1}", vertex.Texcoord.x, vertex.Texcoord.y);
-			U_CORE_TRACE("--");
+			for (size_t i = 0; i < m_AnimatedVertices.size(); i++)
+			{
+				auto& vertex = m_AnimatedVertices[i];
+				U_CORE_TRACE("Vertex: {0}", i);
+				U_CORE_TRACE("Position: {0}, {1}, {2}", vertex.Position.x, vertex.Position.y, vertex.Position.z);
+				U_CORE_TRACE("Normal: {0}, {1}, {2}", vertex.Normal.x, vertex.Normal.y, vertex.Normal.z);
+				U_CORE_TRACE("Binormal: {0}, {1}, {2}", vertex.Binormal.x, vertex.Binormal.y, vertex.Binormal.z);
+				U_CORE_TRACE("Tangent: {0}, {1}, {2}", vertex.Tangent.x, vertex.Tangent.y, vertex.Tangent.z);
+				U_CORE_TRACE("TexCoord: {0}, {1}", vertex.Texcoord.x, vertex.Texcoord.y);
+				U_CORE_TRACE("--");
+			}
+		}
+		else
+		{
+			for (size_t i = 0; i < m_StaticVertices.size(); i++)
+			{
+				auto& vertex = m_StaticVertices[i];
+				U_CORE_TRACE("Vertex: {0}", i);
+				U_CORE_TRACE("Position: {0}, {1}, {2}", vertex.Position.x, vertex.Position.y, vertex.Position.z);
+				U_CORE_TRACE("Normal: {0}, {1}, {2}", vertex.Normal.x, vertex.Normal.y, vertex.Normal.z);
+				U_CORE_TRACE("Binormal: {0}, {1}, {2}", vertex.Binormal.x, vertex.Binormal.y, vertex.Binormal.z);
+				U_CORE_TRACE("Tangent: {0}, {1}, {2}", vertex.Tangent.x, vertex.Tangent.y, vertex.Tangent.z);
+				U_CORE_TRACE("TexCoord: {0}, {1}", vertex.Texcoord.x, vertex.Texcoord.y);
+				U_CORE_TRACE("--");
+			}
 		}
 		U_CORE_TRACE("------------------------------------------------------");
-	}
 
+
+	}
 }

@@ -137,6 +137,8 @@
       <Filter>Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Upch.h" />
+    <ClInclude Include="src\Ungine\Renderer\VertexArray.h" />
+    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLVertexArray.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ungine\Core\Application.cpp">
@@ -221,5 +223,7 @@
       <Filter>Ungine\Vendor</Filter>
     </ClCompile>
     <ClCompile Include="src\Upch.cpp" />
+    <ClCompile Include="src\Ungine\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLVertexArray.cpp" />
   </ItemGroup>
 </Project>

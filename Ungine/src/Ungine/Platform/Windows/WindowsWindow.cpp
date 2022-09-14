@@ -162,6 +162,13 @@ namespace U {
 		
 	}
 
+	inline std::pair<float, float> WindowsWindow::GetWindowPos() const
+	{
+		int x, y;
+		glfwGetWindowPos(m_Window, &x, &y);
+		return { x,y };
+	}
+
 	void WindowsWindow::OnUpdate()
 	{
 		glfwPollEvents();

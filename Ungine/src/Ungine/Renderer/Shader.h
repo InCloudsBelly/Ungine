@@ -126,7 +126,9 @@ namespace U
 		// Represents a complete shader program stored in a single file.
 		// Note: currently for simplicity this is simply a string filepath, however
 		//       in the future this will be an asset object + metadata
-		static Shader* Create(const std::string& filepath);
+		static Ref<Shader> Create(const std::string& filepath);
+		static Ref<Shader> CreateFromString(const std::string& source);
+
 
 		virtual void SetVSMaterialUniformBuffer(Buffer buffer) = 0;
 		virtual void SetPSMaterialUniformBuffer(Buffer buffer) = 0;
@@ -142,7 +144,23 @@ namespace U
 
 
 		// Temporary, before we have an asset manager
-		static std::vector<Shader*> s_AllShaders;
+		static std::vector<Ref<Shader>> s_AllShaders;
+	};
+
+	class ShaderLibrary
+	{
+	public:
+		ShaderLibrary();
+		~ShaderLibrary();
+
+		void Add(const Ref<Shader>& shader);
+		void Load(const std::string& path);
+		void Load(const std::string& name, const std::string& path);
+
+		Ref<Shader>& Get(const std::string& name);
+
+	private:
+		std::unordered_map<std::string, Ref<Shader>> m_Shaders;
 	};
 
 }

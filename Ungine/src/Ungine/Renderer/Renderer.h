@@ -5,6 +5,8 @@
 
 namespace U {
 
+	class ShaderLibrary;
+
 	class Renderer
 	{
 	public:
@@ -15,11 +17,13 @@ namespace U {
 		static void Clear(float r, float g, float b, float a = 1.0f);
 		static void SetClearColor(float r, float g, float b, float a);
 
-		static void DrawIndexed(unsigned int count, bool depthTest = true);
+		static void DrawIndexed(uint32_t count, bool depthTest = true);
 
 		static void ClearMagenta();
 
 		static void Init();
+
+		static const Scope<ShaderLibrary>& GetShaderLibrary() { return Get().m_ShaderLibrary; }
 
 		static void* Submit(RenderCommandFn fn, unsigned int size)
 		{
@@ -33,6 +37,7 @@ namespace U {
 		static Renderer* s_Instance;
 
 		RenderCommandQueue m_CommandQueue;
+		Scope<ShaderLibrary> m_ShaderLibrary;
 	};
 
 }

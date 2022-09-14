@@ -39,14 +39,22 @@ public:
 	{
 		using namespace glm;
 
-		m_SimplePBRShader.reset(U::Shader::Create("assets/shaders/simplepbr.glsl"));
-		m_QuadShader.reset(U::Shader::Create("assets/shaders/quad.glsl"));
-		m_HDRShader.reset(U::Shader::Create("assets/shaders/hdr.glsl"));
-		m_GridShader.reset(U::Shader::Create("assets/shaders/Grid.glsl"));
-		
+
 		m_Mesh.reset(new U::Mesh("assets/models/m1911/m1911.fbx"));
+
+		m_MeshMaterial.reset(new U::MaterialInstance(m_Mesh->GetMaterial()));
+
+		m_QuadShader = U::Shader::Create("assets/shaders/quad.glsl");
+		m_HDRShader = U::Shader::Create("assets/shaders/hdr.glsl");
+
 		m_SphereMesh.reset(new U::Mesh("assets/models/Sphere1m.fbx"));
 		m_PlaneMesh.reset(new U::Mesh("assets/models/Plane1m.obj"));
+
+
+		m_GridShader = U::Shader::Create("assets/shaders/Grid.glsl");
+		m_GridMaterial = U::MaterialInstance::Create(U::Material::Create(m_GridShader));
+		m_GridMaterial->Set("u_Scale", m_GridScale);
+		m_GridMaterial->Set("u_Res", m_GridSize);
 
 
 		// Editor
@@ -60,14 +68,11 @@ public:
 		m_Framebuffer.reset(U::Framebuffer::Create(1280, 720, U::FramebufferFormat::RGBA16F));
 		m_FinalPresentBuffer.reset(U::Framebuffer::Create(1280, 720, U::FramebufferFormat::RGBA8));
 
-
-		m_PBRMaterial.reset(new U::Material(m_SimplePBRShader));
-
 		float x = -4.0f;
 		float roughness = 0.0f;
 		for (int i = 0; i < 8; i++)
 		{
-			U::Ref<U::MaterialInstance> mi(new U::MaterialInstance(m_PBRMaterial));
+			U::Ref<U::MaterialInstance> mi(new U::MaterialInstance(m_SphereMesh->GetMaterial()));
 			mi->Set("u_Metalness", 1.0f);
 			mi->Set("u_Roughness", roughness);
 			mi->Set("u_ModelMatrix", translate(mat4(1.0f), vec3(x, 0.0f, 0.0f)));
@@ -80,7 +85,7 @@ public:
 		roughness = 0.0f;
 		for (int i = 0; i < 8; i++)
 		{
-			U::Ref<U::MaterialInstance> mi(new U::MaterialInstance(m_PBRMaterial));
+			U::Ref<U::MaterialInstance> mi(new U::MaterialInstance(m_SphereMesh->GetMaterial()));
 			mi->Set("u_Metalness", 0.0f);
 			mi->Set("u_Roughness", roughness);
 			mi->Set("u_ModelMatrix", translate(mat4(1.0f), vec3(x, 1.2f, 0.0f)));
@@ -149,71 +154,73 @@ public:
 		m_IndexBuffer->Bind();
 		Renderer::DrawIndexed(m_IndexBuffer->GetCount(), false);
 
-		m_PBRMaterial->Set("u_AlbedoColor", m_AlbedoInput.Color);
-		m_PBRMaterial->Set("u_Metalness", m_MetalnessInput.Value);
-		m_PBRMaterial->Set("u_Roughness", m_RoughnessInput.Value);
-		m_PBRMaterial->Set("u_ViewProjectionMatrix", viewProjection);
-		m_PBRMaterial->Set("u_ModelMatrix", scale(mat4(1.0f), vec3(m_MeshScale)));
-		m_PBRMaterial->Set("lights", m_Light);
-		m_PBRMaterial->Set("u_CameraPosition", m_Camera.GetPosition());
-		m_PBRMaterial->Set("u_RadiancePrefilter", m_RadiancePrefilter ? 1.0f : 0.0f);
-		m_PBRMaterial->Set("u_AlbedoTexToggle", m_AlbedoInput.UseTexture ? 1.0f : 0.0f);
-		m_PBRMaterial->Set("u_NormalTexToggle", m_NormalInput.UseTexture ? 1.0f : 0.0f);
-		m_PBRMaterial->Set("u_MetalnessTexToggle", m_MetalnessInput.UseTexture ? 1.0f : 0.0f);
-		m_PBRMaterial->Set("u_RoughnessTexToggle", m_RoughnessInput.UseTexture ? 1.0f : 0.0f);
-		m_PBRMaterial->Set("u_EnvMapRotation", m_EnvMapRotation);
+		m_MeshMaterial->Set("u_AlbedoColor", m_AlbedoInput.Color);
+		m_MeshMaterial->Set("u_Metalness", m_MetalnessInput.Value);
+		m_MeshMaterial->Set("u_Roughness", m_RoughnessInput.Value);
+		m_MeshMaterial->Set("u_ViewProjectionMatrix", viewProjection);
+		m_MeshMaterial->Set("u_ModelMatrix", scale(mat4(1.0f), vec3(m_MeshScale)));
+		m_MeshMaterial->Set("lights", m_Light);
+		m_MeshMaterial->Set("u_CameraPosition", m_Camera.GetPosition());
+		m_MeshMaterial->Set("u_RadiancePrefilter", m_RadiancePrefilter ? 1.0f : 0.0f);
+		m_MeshMaterial->Set("u_AlbedoTexToggle", m_AlbedoInput.UseTexture ? 1.0f : 0.0f);
+		m_MeshMaterial->Set("u_NormalTexToggle", m_NormalInput.UseTexture ? 1.0f : 0.0f);
+		m_MeshMaterial->Set("u_MetalnessTexToggle", m_MetalnessInput.UseTexture ? 1.0f : 0.0f);
+		m_MeshMaterial->Set("u_RoughnessTexToggle", m_RoughnessInput.UseTexture ? 1.0f : 0.0f);
+		m_MeshMaterial->Set("u_EnvMapRotation", m_EnvMapRotation);
 
+		m_MeshMaterial->Set("u_EnvRadianceTex", m_EnvironmentCubeMap);
+		m_MeshMaterial->Set("u_EnvIrradianceTex", m_EnvironmentIrradiance);
+		m_MeshMaterial->Set("u_BRDFLUTTexture", m_BRDFLUT);
 
+		m_SphereMesh->GetMaterial()->Set("u_AlbedoColor", m_AlbedoInput.Color);
+		m_SphereMesh->GetMaterial()->Set("u_Metalness", m_MetalnessInput.Value);
+		m_SphereMesh->GetMaterial()->Set("u_Roughness", m_RoughnessInput.Value);
+		m_SphereMesh->GetMaterial()->Set("u_ViewProjectionMatrix", viewProjection);
+		m_SphereMesh->GetMaterial()->Set("u_ModelMatrix", scale(mat4(1.0f), vec3(m_MeshScale)));
+		m_SphereMesh->GetMaterial()->Set("lights", m_Light);
+		m_SphereMesh->GetMaterial()->Set("u_CameraPosition", m_Camera.GetPosition());
+		m_SphereMesh->GetMaterial()->Set("u_RadiancePrefilter", m_RadiancePrefilter ? 1.0f : 0.0f);
+		m_SphereMesh->GetMaterial()->Set("u_AlbedoTexToggle", m_AlbedoInput.UseTexture ? 1.0f : 0.0f);
+		m_SphereMesh->GetMaterial()->Set("u_NormalTexToggle", m_NormalInput.UseTexture ? 1.0f : 0.0f);
+		m_SphereMesh->GetMaterial()->Set("u_MetalnessTexToggle", m_MetalnessInput.UseTexture ? 1.0f : 0.0f);
+		m_SphereMesh->GetMaterial()->Set("u_RoughnessTexToggle", m_RoughnessInput.UseTexture ? 1.0f : 0.0f);
+		m_SphereMesh->GetMaterial()->Set("u_EnvMapRotation", m_EnvMapRotation);
+		m_SphereMesh->GetMaterial()->Set("u_EnvRadianceTex", m_EnvironmentCubeMap);
+		m_SphereMesh->GetMaterial()->Set("u_EnvIrradianceTex", m_EnvironmentIrradiance);
+		m_SphereMesh->GetMaterial()->Set("u_BRDFLUTTexture", m_BRDFLUT);
 
-		m_PBRMaterial->Set("u_EnvRadianceTex", m_EnvironmentCubeMap);
-		m_PBRMaterial->Set("u_EnvIrradianceTex", m_EnvironmentIrradiance);
-		m_PBRMaterial->Set("u_BRDFLUTTexture", m_BRDFLUT);
 
 
 		if (m_AlbedoInput.TextureMap)
-			m_PBRMaterial->Set("u_AlbedoTexture", m_AlbedoInput.TextureMap);
+			m_MeshMaterial->Set("u_AlbedoTexture", m_AlbedoInput.TextureMap);
 		if (m_NormalInput.TextureMap)
-			m_PBRMaterial->Set("u_NormalTexture", m_NormalInput.TextureMap);
+			m_MeshMaterial->Set("u_NormalTexture", m_NormalInput.TextureMap);
 		if (m_MetalnessInput.TextureMap)
-			m_PBRMaterial->Set("u_MetalnessTexture", m_MetalnessInput.TextureMap);
+			m_MeshMaterial->Set("u_MetalnessTexture", m_MetalnessInput.TextureMap);
 		if (m_RoughnessInput.TextureMap)
-			m_PBRMaterial->Set("u_RoughnessTexture", m_RoughnessInput.TextureMap);
+			m_MeshMaterial->Set("u_RoughnessTexture", m_RoughnessInput.TextureMap);
 
 		if (m_Scene == Scene::Spheres)
 		{
 			// Metals
 			
 			for (int i = 0; i < 8; i++)
-			{
-				m_MetalSphereMaterialInstances[i]->Bind();
-				m_SphereMesh->Render(ts, m_SimplePBRShader.get());
-
-			}
+				m_SphereMesh->Render(ts, glm::mat4(1.0f), m_MetalSphereMaterialInstances[i]);
 
 			// Dielectrics
 			for (int i = 0; i < 8; i++)
-			{
-				m_DielectricSphereMaterialInstances[i]->Bind();
-				m_SphereMesh->Render(ts, m_SimplePBRShader.get());
-			}
+				m_SphereMesh->Render(ts, glm::mat4(1.0f), m_DielectricSphereMaterialInstances[i]);
 
 		}
 		else if (m_Scene == Scene::Model)
 		{
 			if (m_Mesh)
-			{
-				m_PBRMaterial->Bind();
-				m_Mesh->Render(ts, m_SimplePBRShader.get());
-			}
+				m_Mesh->Render(ts, scale(mat4(1.0f), vec3(m_MeshScale)), m_MeshMaterial);
 
 		}
 
-		m_GridShader->Bind();
-		m_GridShader->SetMat4("u_MVP", viewProjection * glm::scale(glm::mat4(1.0f), glm::vec3(16.0f)));
-		m_GridShader->SetFloat("u_Scale", m_GridScale);
-		m_GridShader->SetFloat("u_Res", m_GridSize);
-		m_PlaneMesh->Render(ts, m_GridShader.get());
-
+		m_GridMaterial->Set("u_MVP", viewProjection * glm::scale(glm::mat4(1.0f), glm::vec3(16.0f)));
+		m_PlaneMesh->Render(ts, m_GridMaterial);
 
 		m_Framebuffer->UnBind();
 
@@ -376,7 +383,10 @@ public:
 			{
 				std::string filename = U::Application::Get().OpenFile("");
 				if (filename != "")
+				{
 					m_Mesh.reset(new U::Mesh(filename));
+					m_MeshMaterial.reset(new U::MaterialInstance(m_Mesh->GetMaterial()));
+				}
 			}
 		}
 		ImGui::Separator();
@@ -535,6 +545,15 @@ public:
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 		ImGui::Begin("Viewport");
+
+		/*float posX = ImGui::GetCursorScreenPos().x;
+		float posY = ImGui::GetCursorScreenPos().y;
+
+		auto [wx, wy] = Hazel::Application::Get().GetWindow().GetWindowPos();
+		posX -= wx;
+		posY -= wy;
+		HZ_INFO("{0}, {1}", posX, posY);*/
+
 		auto viewportSize = ImGui::GetContentRegionAvail();
 		m_Framebuffer->Resize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
 		m_FinalPresentBuffer->Resize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
@@ -583,15 +602,15 @@ public:
 	{
 	}
 private:
-	U::Ref<U::Shader> m_SimplePBRShader;
-	U::Scope<U::Shader> m_QuadShader;
-	U::Scope<U::Shader> m_HDRShader;
-	U::Scope<U::Shader> m_GridShader;
-	U::Scope<U::Mesh> m_Mesh;
-	U::Scope<U::Mesh> m_SphereMesh, m_PlaneMesh;
+	U::Ref<U::Shader> m_QuadShader;
+	U::Ref<U::Shader> m_HDRShader;
+	U::Ref<U::Shader> m_GridShader;
+	U::Ref<U::Mesh> m_Mesh;
+	U::Ref<U::Mesh> m_SphereMesh, m_PlaneMesh;
 	U::Ref<U::Texture2D> m_BRDFLUT;
 
-	U::Ref<U::Material> m_PBRMaterial;
+	U::Ref<U::MaterialInstance> m_MeshMaterial;
+	U::Ref<U::MaterialInstance> m_GridMaterial;
 	std::vector<U::Ref<U::MaterialInstance>> m_MetalSphereMaterialInstances;
 	std::vector<U::Ref<U::MaterialInstance>> m_DielectricSphereMaterialInstances;
 
