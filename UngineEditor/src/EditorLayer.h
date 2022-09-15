@@ -28,10 +28,11 @@ namespace U {
 
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
-		virtual void OnUpdate(TimeStep ts) override;
+		virtual void OnUpdate(Timestep ts) override;
 
 		virtual void OnImGuiRender() override;
 		virtual void OnEvent(Event& event) override;
+		bool OnKeyPressedEvent(KeyPressedEvent& e);
 
 		// ImGui UI helpers
 		void Property(const std::string& name, bool& value);
@@ -47,6 +48,7 @@ namespace U {
 		Ref<Mesh> m_Mesh;
 		Ref<Mesh> m_SphereMesh, m_PlaneMesh;
 		Ref<Texture2D> m_BRDFLUT;
+		Ref<RenderPass> m_GeoPass, m_CompositePass;
 
 		Ref<MaterialInstance> m_MeshMaterial;
 		Ref<MaterialInstance> m_GridMaterial;
@@ -88,8 +90,6 @@ namespace U {
 		};
 		RoughnessInput m_RoughnessInput;
 
-		std::unique_ptr<Framebuffer> m_Framebuffer, m_FinalPresentBuffer;
-
 		Ref<VertexArray> m_FullscreenQuadVertexArray;
 
 		Ref<TextureCube> m_EnvironmentCubeMap, m_EnvironmentIrradiance;
@@ -119,6 +119,10 @@ namespace U {
 
 		// Editor resources
 		Ref<Texture2D> m_CheckerboardTex;
+
+		int m_GizmoType = -1; // -1 = no gizmo
+		glm::mat4 m_Transform;
+
 	};
 
 }

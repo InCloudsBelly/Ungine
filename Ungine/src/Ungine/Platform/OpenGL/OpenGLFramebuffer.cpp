@@ -7,89 +7,100 @@
 
 namespace U
 {
-	OpenGLFramebuffer::OpenGLFramebuffer(uint32_t width, uint32_t height, FramebufferFormat format)
-		: m_Width(width), m_Height(height), m_Format(format)
+	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& spec)
+		: m_Specification(spec)
 	{
-		Resize(width, height);
+		Resize(spec.Width, spec.Height);
 	}
 
 	OpenGLFramebuffer::~OpenGLFramebuffer()
 	{
-		U_RENDER_S({
-			glDeleteFramebuffers(1, &self->m_RendererID);
+		Renderer::Submit([this]() {
+			glDeleteFramebuffers(1, &m_RendererID);
 			});
+
 	}
 
 	void OpenGLFramebuffer::Resize(uint32_t width, uint32_t height)
 	{
-		if (m_Width == width && m_Height == height)
+		if (m_Specification.Width == width && m_Specification.Height == height)
 			return;
 
-		m_Width = width;
-		m_Height = height;
-		U_RENDER_S({
-			if (self->m_RendererID)
+		m_Specification.Width = width;
+		m_Specification.Height = height;
+
+		Renderer::Submit([this]()
 			{
-				glDeleteFramebuffers(1, &self->m_RendererID);
-				glDeleteTextures(1, &self->m_ColorAttachment);
-				glDeleteTextures(1, &self->m_DepthAttachment);
-			}
+				if (m_RendererID)
+				{
+					glDeleteFramebuffers(1, &m_RendererID);
+					glDeleteTextures(1, &m_ColorAttachment);
+					glDeleteTextures(1, &m_DepthAttachment);
+				}
 
-			glGenFramebuffers(1, &self->m_RendererID);
-			glBindFramebuffer(GL_FRAMEBUFFER, self->m_RendererID);
 
-			glGenTextures(1, &self->m_ColorAttachment);
-			glBindTexture(GL_TEXTURE_2D, self->m_ColorAttachment);
+				glGenFramebuffers(1, &m_RendererID);
+				glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
+
+
+				glGenTextures(1, &m_ColorAttachment);
+				glBindTexture(GL_TEXTURE_2D, m_ColorAttachment);
+
 
 			// TODO: Create Hazel texture object based on format here
-			if (self->m_Format == FramebufferFormat::RGBA16F)
-			{
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, self->m_Width, self->m_Height, 0, GL_RGBA, GL_FLOAT, nullptr);
-			}
-			else if (self->m_Format == FramebufferFormat::RGBA8)
-			{
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, self->m_Width, self->m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-			}
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, self->m_ColorAttachment, 0);
+				if (m_Specification.Format == FramebufferFormat::RGBA16F)
+				{
+					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, m_Specification.Width, m_Specification.Height, 0, GL_RGBA, GL_FLOAT, nullptr);
+				}
 
-			glGenTextures(1, &self->m_DepthAttachment);
-			glBindTexture(GL_TEXTURE_2D, self->m_DepthAttachment);
-			glTexImage2D(
-				GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, self->m_Width, self->m_Height, 0,
-				GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL
-			);
+				else if (m_Specification.Format == FramebufferFormat::RGBA8)
+				{
 
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, self->m_DepthAttachment, 0);
+					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Specification.Width, m_Specification.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+				}
 
-			if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-				U_CORE_ERROR("Framebuffer is incomplete!");
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorAttachment, 0);
 
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+				glGenTextures(1, &m_DepthAttachment);
+				glBindTexture(GL_TEXTURE_2D, m_DepthAttachment);
+
+				glTexImage2D(
+					GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, m_Specification.Width, m_Specification.Height, 0,
+					GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL
+				);
+
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_DepthAttachment, 0);
+
+				if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+					U_CORE_ERROR("Framebuffer is incomplete!");
+
+				glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			});
 	}
 
 	void OpenGLFramebuffer::Bind() const
 	{
-		U_RENDER_S({
-			glBindFramebuffer(GL_FRAMEBUFFER, self->m_RendererID);
-			glViewport(0, 0, self->m_Width, self->m_Height);
+		Renderer::Submit([this]() {
+			glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
+			glViewport(0, 0, m_Specification.Width, m_Specification.Height);
 			});
 	}
 
 	void OpenGLFramebuffer::UnBind() const
 	{
-		U_RENDER_S({
+		Renderer::Submit([this]() {
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			});
 	}
 
 	void OpenGLFramebuffer::BindTexture(uint32_t slot) const
 	{
-		U_RENDER_S1(slot, {
+		Renderer::Submit([this, slot]() {
 			glActiveTexture(GL_TEXTURE0 + slot);
-			glBindTexture(GL_TEXTURE_2D, self->m_ColorAttachment);
+
+			glBindTexture(GL_TEXTURE_2D, m_ColorAttachment);
 			});
 	}
 }

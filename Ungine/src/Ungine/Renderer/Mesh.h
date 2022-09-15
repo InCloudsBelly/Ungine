@@ -3,7 +3,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-#include "Ungine/Core/TimeStep.h"
+#include "Ungine/Core/Timestep.h"
 
 #include "Ungine/Renderer/VertexArray.h"
 #include "Ungine/Renderer/Buffer.h"
@@ -116,8 +116,7 @@ namespace U
 		Mesh(const std::string& filename);
 		~Mesh();
 
-		void Render(TimeStep ts, Ref<MaterialInstance> materialInstance = Ref<MaterialInstance>());
-		void Render(TimeStep ts, const glm::mat4& transform = glm::mat4(1.0f), Ref<MaterialInstance> materialInstance = Ref<MaterialInstance>());
+		void OnUpdate(Timestep ts); 
 
 		void OnImGuiRender();
 		void DumpVertexBuffer();
@@ -130,7 +129,7 @@ namespace U
 	private:
 		void BoneTransform(float time);
 		void ReadNodeHierarchy(float AnimationTime, const aiNode* pNode, const glm::mat4& ParentTransform);
-		void TraverseNodes(aiNode* node, int level = 0);
+		void TraverseNodes(aiNode* node);
 
 		const aiNodeAnim* FindNodeAnim(const aiAnimation* animation, const std::string& nodeName);
 
@@ -175,6 +174,6 @@ namespace U
 
 		std::string m_FilePath;
 
-
+		friend class Renderer;
 	};
 }

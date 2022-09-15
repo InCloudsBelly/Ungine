@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Ungine/Core/Base.h"
-#include "Ungine/Core/TimeStep.h"
+#include "Ungine/Core/Timestep.h"
 
 namespace U {
 
@@ -13,7 +13,7 @@ namespace U {
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate(TimeStep ts) {}
+		virtual void OnUpdate(Timestep ts) {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& event) {}
 

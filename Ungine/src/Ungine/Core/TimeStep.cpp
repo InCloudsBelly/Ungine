@@ -1,9 +1,9 @@
 #include "Upch.h"
-#include "TimeStep.h"
+#include "Timestep.h"
 
 namespace U
 {
-	TimeStep::TimeStep(float time)
+	Timestep::Timestep(float time)
 		:m_Time(time)
 	{
 	}

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Ungine/Core/Base.h"
-#include "Ungine/Core/TimeStep.h"
+#include "Ungine/Core/Timestep.h"
 #include "Ungine/Core/Window.h"
 #include "Ungine/Core/LayerStack.h"
 
@@ -29,7 +29,7 @@ namespace U {
 
 		virtual void OnInit() {}
 		virtual void OnShutdown() {}
-		virtual void OnUpdate(TimeStep ts) {}
+		virtual void OnUpdate(Timestep ts) {}
 
 		virtual void OnEvent(Event& event);
 
@@ -53,7 +53,7 @@ namespace U {
 		LayerStack m_LayerStack;
 		ImGuiLayer* m_ImGuiLayer;
 		
-		TimeStep m_TimeStep;
+		Timestep m_TimeStep;
 		float m_LastFrameTime = 0.0f;
 
 		static Application* s_Instance;

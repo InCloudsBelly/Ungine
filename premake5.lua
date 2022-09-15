@@ -84,6 +84,7 @@ project "Ungine"
         defines "U_DIST"
         optimize "On"
 
+
 project "UngineEditor"
     location "UngineEditor"
     kind "ConsoleApp"
@@ -114,6 +115,12 @@ project "UngineEditor"
         "Ungine/vendor",
         "%{IncludeDir.glm}"
     }
+
+    postbuildcommands 
+	{
+		'{COPY} "../UngineEditor/assets" "%{cfg.targetdir}/assets"'
+	}
+
 	
 	filter "system:windows"
         systemversion "latest"
@@ -131,6 +138,11 @@ project "UngineEditor"
 			"Ungine/vendor/assimp/bin/Debug/assimp-vc141-mtd.lib"
 		}
 
+        postbuildcommands 
+		{
+			'{COPY} "../Ungine/vendor/assimp/bin/Debug/assimp-vc141-mtd.dll" "%{cfg.targetdir}"'
+		}
+
                 
     filter "configurations:Release"
         defines "U_RELEASE"
@@ -139,6 +151,11 @@ project "UngineEditor"
 		{
 			"Ungine/vendor/assimp/bin/Release/assimp-vc141-mtd.lib"
 		}
+        postbuildcommands 
+		{
+			'{COPY} "../Ungine/vendor/assimp/bin/Debug/assimp-vc141-mtd.dll" "%{cfg.targetdir}"'
+		}
+
 
     filter "configurations:Dist"
         defines "U_DIST"
@@ -146,6 +163,11 @@ project "UngineEditor"
         links
 		{
 			"Ungine/vendor/assimp/bin/Release/assimp-vc141-mt.lib"
+		}
+
+        postbuildcommands 
+		{
+			'{COPY} "../Ungine/vendor/assimp/bin/Debug/assimp-vc141-mtd.dll" "%{cfg.targetdir}"'
 		}
 
 

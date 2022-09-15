@@ -2,11 +2,16 @@
 
 #include "RenderCommandQueue.h"
 #include "RendererAPI.h"
+#include "RenderPass.h"
+
+#include "Mesh.h"
 
 namespace U {
 
+
 	class ShaderLibrary;
 
+	// TODO: Maybe this should be renamed to RendererAPI? Because we want an actual renderer vs API calls...
 	class Renderer
 	{
 	public:
@@ -25,143 +30,51 @@ namespace U {
 
 		static const Scope<ShaderLibrary>& GetShaderLibrary() { return Get().m_ShaderLibrary; }
 
-		static void* Submit(RenderCommandFn fn, unsigned int size)
+		template<typename FuncT>
+		static void Submit(FuncT&& func)
+		{
+			auto renderCmd = [](void* ptr) {
+				auto pFunc = (FuncT*)ptr;
+				(*pFunc)();
+
+				// NOTE: Instead of destroying we could try and enforce all items to be trivally destructible
+				// however some items like uniforms which contain std::strings still exist for now
+				// static_assert(std::is_trivially_destructible_v<FuncT>, "FuncT must be trivially destructible");
+				pFunc->~FuncT();
+			};
+			auto storageBuffer = s_Instance->m_CommandQueue.Allocate(renderCmd, sizeof(func));
+			new (storageBuffer) FuncT(std::forward<FuncT>(func));
+		}
+
+		/*static void* Submit(RenderCommandFn fn, unsigned int size)
 		{
 			return s_Instance->m_CommandQueue.Allocate(fn, size);
-		}
+		}*/
 
 		void WaitAndRender();
 
 		inline static Renderer& Get() { return *s_Instance; }
+
+		// ~Actual~ Renderer here... TODO: remove confusion later
+		static void BeginRenderPass(const Ref<RenderPass>& renderPass) { s_Instance->IBeginRenderPass(renderPass); }
+		static void EndRenderPass() { s_Instance->IEndRenderPass(); }
+
+		static void SubmitMesh(const Ref<Mesh>& mesh, const glm::mat4& transform, const Ref<MaterialInstance>& overrideMaterial = nullptr) { s_Instance->SubmitMeshI(mesh, transform, overrideMaterial); }
+	private:
+		void IBeginRenderPass(const Ref<RenderPass>& renderPass);
+		void IEndRenderPass();
+
+		void SubmitMeshI(const Ref<Mesh>& mesh, const glm::mat4& transform, const Ref<MaterialInstance>& overrideMaterial);
+
 	private:
 		static Renderer* s_Instance;
-
+	private:
+		Ref<RenderPass> m_ActiveRenderPass;
 		RenderCommandQueue m_CommandQueue;
 		Scope<ShaderLibrary> m_ShaderLibrary;
 	};
 
+
+
+
 }
-
-#define U_RENDER_PASTE2(a, b) a ## b
-#define U_RENDER_PASTE(a, b) U_RENDER_PASTE2(a, b)
-#define U_RENDER_UNIQUE(x) U_RENDER_PASTE(x, __LINE__)
-
-#define U_RENDER(code) \
-    struct U_RENDER_UNIQUE(HZRenderCommand) \
-    {\
-        static void Execute(void*)\
-        {\
-            code\
-        }\
-    };\
-	{\
-		auto mem = ::U::Renderer::Submit(U_RENDER_UNIQUE(HZRenderCommand)::Execute, sizeof(U_RENDER_UNIQUE(HZRenderCommand)));\
-		new (mem) U_RENDER_UNIQUE(HZRenderCommand)();\
-	}\
-
-#define U_RENDER_1(arg0, code) \
-	do {\
-    struct U_RENDER_UNIQUE(HZRenderCommand) \
-    {\
-		U_RENDER_UNIQUE(HZRenderCommand)(typename ::std::remove_const<typename ::std::remove_reference<decltype(arg0)>::type>::type arg0) \
-		: arg0(arg0) {}\
-		\
-        static void Execute(void* argBuffer)\
-        {\
-			auto& arg0 = ((U_RENDER_UNIQUE(HZRenderCommand)*)argBuffer)->arg0;\
-            code\
-        }\
-		\
-		typename ::std::remove_const<typename ::std::remove_reference<decltype(arg0)>::type>::type arg0;\
-    };\
-	{\
-		auto mem = ::U::Renderer::Submit(U_RENDER_UNIQUE(HZRenderCommand)::Execute, sizeof(U_RENDER_UNIQUE(HZRenderCommand)));\
-		new (mem) U_RENDER_UNIQUE(HZRenderCommand)(arg0);\
-	} } while(0)
-
-#define U_RENDER_2(arg0, arg1, code) \
-    struct U_RENDER_UNIQUE(HZRenderCommand) \
-    {\
-		U_RENDER_UNIQUE(HZRenderCommand)(typename ::std::remove_const<typename ::std::remove_reference<decltype(arg0)>::type>::type arg0,\
-											typename ::std::remove_const<typename ::std::remove_reference<decltype(arg1)>::type>::type arg1) \
-		: arg0(arg0), arg1(arg1) {}\
-		\
-        static void Execute(void* argBuffer)\
-        {\
-			auto& arg0 = ((U_RENDER_UNIQUE(HZRenderCommand)*)argBuffer)->arg0;\
-			auto& arg1 = ((U_RENDER_UNIQUE(HZRenderCommand)*)argBuffer)->arg1;\
-            code\
-        }\
-		\
-		typename ::std::remove_const<typename ::std::remove_reference<decltype(arg0)>::type>::type arg0;\
-		typename ::std::remove_const<typename ::std::remove_reference<decltype(arg1)>::type>::type arg1;\
-    };\
-	{\
-		auto mem = ::U::Renderer::Submit(U_RENDER_UNIQUE(HZRenderCommand)::Execute, sizeof(U_RENDER_UNIQUE(HZRenderCommand)));\
-		new (mem) U_RENDER_UNIQUE(HZRenderCommand)(arg0, arg1);\
-	}\
-
-#define U_RENDER_3(arg0, arg1, arg2, code) \
-    struct U_RENDER_UNIQUE(HZRenderCommand) \
-    {\
-		U_RENDER_UNIQUE(HZRenderCommand)(typename ::std::remove_const<typename ::std::remove_reference<decltype(arg0)>::type>::type arg0,\
-											typename ::std::remove_const<typename ::std::remove_reference<decltype(arg1)>::type>::type arg1,\
-											typename ::std::remove_const<typename ::std::remove_reference<decltype(arg2)>::type>::type arg2) \
-		: arg0(arg0), arg1(arg1), arg2(arg2) {}\
-		\
-        static void Execute(void* argBuffer)\
-        {\
-			auto& arg0 = ((U_RENDER_UNIQUE(HZRenderCommand)*)argBuffer)->arg0;\
-			auto& arg1 = ((U_RENDER_UNIQUE(HZRenderCommand)*)argBuffer)->arg1;\
-			auto& arg2 = ((U_RENDER_UNIQUE(HZRenderCommand)*)argBuffer)->arg2;\
-            code\
-        }\
-		\
-		typename ::std::remove_const<typename ::std::remove_reference<decltype(arg0)>::type>::type arg0;\
-		typename ::std::remove_const<typename ::std::remove_reference<decltype(arg1)>::type>::type arg1;\
-		typename ::std::remove_const<typename ::std::remove_reference<decltype(arg2)>::type>::type arg2;\
-    };\
-	{\
-		auto mem = ::U::Renderer::Submit(U_RENDER_UNIQUE(HZRenderCommand)::Execute, sizeof(U_RENDER_UNIQUE(HZRenderCommand)));\
-		new (mem) U_RENDER_UNIQUE(HZRenderCommand)(arg0, arg1, arg2);\
-	}\
-
-#define U_RENDER_4(arg0, arg1, arg2, arg3, code) \
-    struct U_RENDER_UNIQUE(HZRenderCommand) \
-    {\
-		U_RENDER_UNIQUE(HZRenderCommand)(typename ::std::remove_const<typename ::std::remove_reference<decltype(arg0)>::type>::type arg0,\
-											typename ::std::remove_const<typename ::std::remove_reference<decltype(arg1)>::type>::type arg1,\
-											typename ::std::remove_const<typename ::std::remove_reference<decltype(arg2)>::type>::type arg2,\
-											typename ::std::remove_const<typename ::std::remove_reference<decltype(arg3)>::type>::type arg3)\
-		: arg0(arg0), arg1(arg1), arg2(arg2), arg3(arg3) {}\
-		\
-        static void Execute(void* argBuffer)\
-        {\
-			auto& arg0 = ((U_RENDER_UNIQUE(HZRenderCommand)*)argBuffer)->arg0;\
-			auto& arg1 = ((U_RENDER_UNIQUE(HZRenderCommand)*)argBuffer)->arg1;\
-			auto& arg2 = ((U_RENDER_UNIQUE(HZRenderCommand)*)argBuffer)->arg2;\
-			auto& arg3 = ((U_RENDER_UNIQUE(HZRenderCommand)*)argBuffer)->arg3;\
-            code\
-        }\
-		\
-		typename ::std::remove_const<typename ::std::remove_reference<decltype(arg0)>::type>::type arg0;\
-		typename ::std::remove_const<typename ::std::remove_reference<decltype(arg1)>::type>::type arg1;\
-		typename ::std::remove_const<typename ::std::remove_reference<decltype(arg2)>::type>::type arg2;\
-		typename ::std::remove_const<typename ::std::remove_reference<decltype(arg3)>::type>::type arg3;\
-    };\
-	{\
-		auto mem = Renderer::Submit(U_RENDER_UNIQUE(HZRenderCommand)::Execute, sizeof(U_RENDER_UNIQUE(HZRenderCommand)));\
-		new (mem) U_RENDER_UNIQUE(HZRenderCommand)(arg0, arg1, arg2, arg3);\
-	}
-
-#define U_RENDER_S(code) auto self = this;\
-	U_RENDER_1(self, code)
-
-#define U_RENDER_S1(arg0, code) auto self = this;\
-	U_RENDER_2(self, arg0, code)
-
-#define U_RENDER_S2(arg0, arg1, code) auto self = this;\
-	U_RENDER_3(self, arg0, arg1, code)
-
-#define U_RENDER_S3(arg0, arg1, arg2, code) auto self = this;\
-	U_RENDER_4(self, arg0, arg1, arg2, code)

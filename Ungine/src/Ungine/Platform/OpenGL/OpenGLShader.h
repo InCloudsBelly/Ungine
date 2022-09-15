@@ -27,7 +27,7 @@ namespace U {
 		virtual void SetFloat(const std::string& name, float value) override;
 		virtual void SetMat4(const std::string& name, const glm::mat4& value) override;
 
-		virtual void SetMat4FromRenderThread(const std::string& name, const glm::mat4& value) override;
+		virtual void SetMat4FromRenderThread(const std::string& name, const glm::mat4& value, bool bind = true) override;
 
 		virtual const std::string& GetName() const override { return m_Name; }
 

@@ -3,7 +3,7 @@
 #include "Ungine/Core/Base.h"
 #include "Ungine/Core/Buffer.h"
 
-#include "Ungine/Renderer/Renderer.h"
+#include "Ungine/Renderer/RendererAPI.h"
 #include "Ungine/Renderer/ShaderUniform.h"
 
 #include <string>
@@ -118,7 +118,7 @@ namespace U
 		// Temporary while we don't have materials
 		virtual void SetFloat(const std::string& name, float value) = 0;
 		virtual void SetMat4(const std::string& name, const glm::mat4& value) = 0;
-		virtual void SetMat4FromRenderThread(const std::string& name, const glm::mat4& value) = 0;
+		virtual void SetMat4FromRenderThread(const std::string& name, const glm::mat4& value, bool bind = true) = 0;
 
 		virtual const std::string& GetName() const = 0;
 

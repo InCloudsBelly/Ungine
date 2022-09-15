@@ -17,6 +17,8 @@
 
 #include "imgui/imgui.h"
 
+#include "Ungine/Renderer/Renderer.h"	
+
 
 namespace U
 {
@@ -152,10 +154,10 @@ namespace U
 			}
 		}
 
-		U_CORE_TRACE("NODES:");
-		U_CORE_TRACE("-----------------------------");
+	/*	U_CORE_TRACE("NODES:");
+		U_CORE_TRACE("-----------------------------");*/
 		TraverseNodes(scene->mRootNode);
-		U_CORE_TRACE("-----------------------------");
+		/*U_CORE_TRACE("-----------------------------");*/
 
 		if (m_IsAnimated)
 		{
@@ -235,12 +237,27 @@ namespace U
 	{
 	}
 
-	void Mesh::TraverseNodes(aiNode* node, int level)
+	void Mesh::OnUpdate(Timestep ts)
 	{
-		std::string levelText;
-		for (int i = 0; i < level; i++)
-			levelText += "-";
-		U_CORE_TRACE("{0}Node name: {1}", levelText, std::string(node->mName.data));
+		if (m_IsAnimated)
+		{
+			if (m_AnimationPlaying)
+			{
+				m_WorldTime += ts;
+
+				float ticksPerSecond = (float)(m_Scene->mAnimations[0]->mTicksPerSecond != 0 ? m_Scene->mAnimations[0]->mTicksPerSecond : 25.0f) * m_TimeMultiplier;
+				m_AnimationTime += ts * ticksPerSecond;
+				m_AnimationTime = fmod(m_AnimationTime, (float)m_Scene->mAnimations[0]->mDuration);
+			}
+
+			// TODO: We only need to recalc bones if rendering has been requested at the current animation frame
+			BoneTransform(m_AnimationTime);
+		}
+	}
+
+	void Mesh::TraverseNodes(aiNode* node)
+	{
+
 		for (uint32_t i = 0; i < node->mNumMeshes; i++)
 		{
 			uint32_t mesh = node->mMeshes[i];
@@ -248,10 +265,7 @@ namespace U
 		}
 
 		for (uint32_t i = 0; i < node->mNumChildren; i++)
-		{
-			aiNode* child = node->mChildren[i];
-			TraverseNodes(child, level + 1);
-		}
+			TraverseNodes(node->mChildren[i]);
 	}
 
 
@@ -426,58 +440,6 @@ namespace U
 		m_BoneTransforms.resize(m_BoneCount);
 		for (size_t i = 0; i < m_BoneCount; i++)
 			m_BoneTransforms[i] = m_BoneInfo[i].FinalTransformation;
-	}
-
-
-	/**************************************************************************/
-
-	void Mesh::Render(TimeStep ts, Ref<MaterialInstance> materialInstance)
-	{
-		Render(ts, glm::mat4(1.0f), materialInstance);
-	}
-
-
-	void Mesh::Render(TimeStep ts, const glm::mat4& transform, Ref<MaterialInstance> materialInstance)
-	{
-		if (m_IsAnimated)
-		{
-			if (m_AnimationPlaying)
-			{
-				m_WorldTime += ts;
-
-				float ticksPerSecond = (float)(m_Scene->mAnimations[0]->mTicksPerSecond != 0 ? m_Scene->mAnimations[0]->mTicksPerSecond : 25.0f) * m_TimeMultiplier;
-				m_AnimationTime += ts * ticksPerSecond;
-				m_AnimationTime = fmod(m_AnimationTime, (float)m_Scene->mAnimations[0]->mDuration);
-			}
-
-			BoneTransform(m_AnimationTime);
-		}
-		if (materialInstance)
-			materialInstance->Bind();
-
-		// TODO: Sort this out
-		m_VertexArray->Bind();
-
-		bool materialOverride = !!materialInstance;
-		
-		U_RENDER_S2(transform, materialOverride, {
-			for (Submesh& submesh : self->m_Submeshes)
-			{
-				if (self->m_IsAnimated)
-				{
-					for (size_t i = 0; i < self->m_BoneTransforms.size(); i++)
-					{
-						std::string uniformName = std::string("u_BoneTransforms[") + std::to_string(i) + std::string("]");
-						self->m_MeshShader->SetMat4FromRenderThread(uniformName, self->m_BoneTransforms[i]);
-					}
-				}
-				if (!materialOverride)
-					self->m_MeshShader->SetMat4FromRenderThread("u_ModelMatrix", transform * submesh.Transform);
-
-				glDrawElementsBaseVertex(GL_TRIANGLES, submesh.IndexCount, GL_UNSIGNED_INT, (void*)(sizeof(uint32_t) * submesh.BaseIndex), submesh.BaseVertex);
-
-			}
-			});
 	}
 
 	/***************************************************************************************/

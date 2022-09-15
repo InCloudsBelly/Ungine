@@ -1,5 +1,7 @@
 #include "Upch.h"
 
+#include "Renderer.h"
+
 #include "Ungine/Platform/OpenGL/OpenGLBuffer.h"
 
 namespace U {

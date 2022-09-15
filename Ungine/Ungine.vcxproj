@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="src\Ungine.h" />
     <ClInclude Include="src\Ungine\Core\Application.h" />
+    <ClInclude Include="src\Ungine\Core\Assert.h" />
     <ClInclude Include="src\Ungine\Core\Base.h" />
     <ClInclude Include="src\Ungine\Core\Buffer.h" />
     <ClInclude Include="src\Ungine\Core\Events\ApplicationEvent.h" />
@@ -158,8 +159,10 @@
     <ClInclude Include="src\Ungine\Core\Window.h" />
     <ClInclude Include="src\Ungine\EntryPoint.h" />
     <ClInclude Include="src\Ungine\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\Ungine\ImGui\ImGuizmo.h" />
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.h" />
+    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLRenderPass.h" />
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLShader.h" />
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLShaderUniform.h" />
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLTexture.h" />
@@ -174,6 +177,7 @@
     <ClInclude Include="src\Ungine\Renderer\RenderCommandQueue.h" />
     <ClInclude Include="src\Ungine\Renderer\Renderer.h" />
     <ClInclude Include="src\Ungine\Renderer\RendererAPI.h" />
+    <ClInclude Include="src\Ungine\Renderer\RenderPass.h" />
     <ClInclude Include="src\Ungine\Renderer\Shader.h" />
     <ClInclude Include="src\Ungine\Renderer\ShaderUniform.h" />
     <ClInclude Include="src\Ungine\Renderer\Texture.h" />
@@ -190,9 +194,11 @@
     <ClCompile Include="src\Ungine\Core\Window.cpp" />
     <ClCompile Include="src\Ungine\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Ungine\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="src\Ungine\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLRendererAPI.cpp" />
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLRenderPass.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLShaderUniform.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLTexture.cpp" />
@@ -206,6 +212,7 @@
     <ClCompile Include="src\Ungine\Renderer\Mesh.cpp" />
     <ClCompile Include="src\Ungine\Renderer\RenderCommandQueue.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Ungine\Renderer\RenderPass.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Shader.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Texture.cpp" />
     <ClCompile Include="src\Ungine\Renderer\VertexArray.cpp" />
