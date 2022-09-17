@@ -153,7 +153,7 @@ project "UngineEditor"
 		}
         postbuildcommands 
 		{
-			'{COPY} "../Ungine/vendor/assimp/bin/Debug/assimp-vc141-mtd.dll" "%{cfg.targetdir}"'
+			'{COPY} "../Ungine/vendor/assimp/bin/Debug/assimp-vc141-mt.dll" "%{cfg.targetdir}"'
 		}
 
 
@@ -171,7 +171,7 @@ project "UngineEditor"
 		}
 
 
-project "Sandbox"
+--[[project "Sandbox"
     location "Sandbox"
     kind "ConsoleApp"
     language "C++"
@@ -236,3 +236,4 @@ project "Sandbox"
         {
             "Ungine/vendor/assimp/bin/Release/assimp-vc141-mt.lib"
         }
+        --]]

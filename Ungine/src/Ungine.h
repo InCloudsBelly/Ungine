@@ -10,6 +10,9 @@
 #include "Ungine/Core/Events/KeyEvent.h"
 #include "Ungine/Core/Events/MouseEvent.h"
 
+#include "Ungine/Core/Math/AABB.h"
+#include "Ungine/Core/Math/Ray.h"
+
 
 #include "imgui/imgui.h"
 

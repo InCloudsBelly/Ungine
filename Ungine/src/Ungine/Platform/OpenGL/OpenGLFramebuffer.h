@@ -12,7 +12,7 @@ namespace U
 
 		virtual ~OpenGLFramebuffer();
 
-		virtual void Resize(uint32_t width, uint32_t height) override;
+		virtual void Resize(uint32_t width, uint32_t height, bool forceRecreate = false) override;
 
 		virtual void Bind() const override;
 		virtual void UnBind() const override;

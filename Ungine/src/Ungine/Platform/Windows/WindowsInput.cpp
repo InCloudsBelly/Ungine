@@ -25,22 +25,23 @@ namespace U {
 
 	float Input::GetMouseX()
 	{
-		auto& window = static_cast<WindowsWindow&>(Application::Get().GetWindow());
+		auto [x, y] = GetMousePosition();
+		return (float)x;
 
-		double xpos, ypos;
-		glfwGetCursorPos(static_cast<GLFWwindow*>(window.GetNativeWindow()), &xpos, &ypos);
-
-		return (float)xpos;
 	}
 
 	float Input::GetMouseY()
 	{
-		auto& window = static_cast<WindowsWindow&>(Application::Get().GetWindow());
+		auto [x, y] = GetMousePosition();
+		return (float)y;
 
-		double xpos, ypos;
-		glfwGetCursorPos(static_cast<GLFWwindow*>(window.GetNativeWindow()), &xpos, &ypos);
-
-		return (float)ypos;
 	}
 
+	std::pair<float, float> Input::GetMousePosition()
+	{
+		auto& window = static_cast<WindowsWindow&>(Application::Get().GetWindow());
+		double x, y;
+		glfwGetCursorPos(static_cast<GLFWwindow*>(window.GetNativeWindow()), &x, &y);
+		return { (float)x, (float)y };
+	}
 }

@@ -76,7 +76,7 @@ namespace U {
 
 		using namespace glm;
 
-		auto environment = Environment::Load("assets/env/birchwood_4k.hdr");
+		auto environment = Environment::Load("assets/env/pink_sunrise_4k.hdr");
 
 		// Model Scene
 		{
@@ -91,7 +91,7 @@ namespace U {
 
 			auto secondEntity = m_Scene->CreateEntity("Gun Entity");
 			secondEntity->Transform() = glm::translate(glm::mat4(1.0f), { 5, 5, 5 }) * glm::scale(glm::mat4(1.0f), { 10, 10, 10 });
-			mesh = CreateRef<Mesh>("assets/models/m1911/m1911.fbx");
+			mesh = CreateRef<Mesh>("assets/models/m1911/M1911Materials.fbx");
 			secondEntity->SetMesh(mesh);
 
 		}
@@ -152,8 +152,12 @@ namespace U {
 		m_CheckerboardTex = Texture2D::Create("assets/editor/Checkerboard.tga");
 
 		// Set lights
-		m_Light.Direction = { -0.5f, -0.5f, 1.0f };
-		m_Light.Radiance = { 1.0f, 1.0f, 1.0f };
+		auto& light = m_Scene->GetLight();
+		light.Direction = { -0.5f, -0.5f, 1.0f };
+		light.Radiance = { 1.0f, 1.0f, 1.0f };
+
+		m_CurrentlySelectedTransform = &m_MeshEntity->Transform();
+
 
 	}
 
@@ -172,7 +176,6 @@ namespace U {
 		m_MeshMaterial->Set("u_AlbedoColor", m_AlbedoInput.Color);
 		m_MeshMaterial->Set("u_Metalness", m_MetalnessInput.Value);
 		m_MeshMaterial->Set("u_Roughness", m_RoughnessInput.Value);
-		m_MeshMaterial->Set("lights", m_Light);
 		m_MeshMaterial->Set("u_AlbedoTexToggle", m_AlbedoInput.UseTexture ? 1.0f : 0.0f);
 		m_MeshMaterial->Set("u_NormalTexToggle", m_NormalInput.UseTexture ? 1.0f : 0.0f);
 		m_MeshMaterial->Set("u_MetalnessTexToggle", m_MetalnessInput.UseTexture ? 1.0f : 0.0f);
@@ -181,7 +184,7 @@ namespace U {
 
 
 		m_SphereBaseMaterial->Set("u_AlbedoColor", m_AlbedoInput.Color);
-		m_SphereBaseMaterial->Set("lights", m_Light);
+		m_SphereBaseMaterial->Set("lights", m_Scene->GetLight());
 		m_SphereBaseMaterial->Set("u_RadiancePrefilter", m_RadiancePrefilter ? 1.0f : 0.0f);
 		m_SphereBaseMaterial->Set("u_AlbedoTexToggle", m_AlbedoInput.UseTexture ? 1.0f : 0.0f);
 		m_SphereBaseMaterial->Set("u_NormalTexToggle", m_NormalInput.UseTexture ? 1.0f : 0.0f);
@@ -210,7 +213,19 @@ namespace U {
 			auto viewProj = m_Scene->GetCamera().GetViewProjection();
 			U::Renderer2D::BeginScene(viewProj, false);
 			// Hazel::Renderer2D::DrawQuad({ 0, 0, 0 }, { 4.0f, 5.0f }, { 1.0f, 1.0f, 0.5f, 1.0f });
-			Renderer::DrawAABB(m_MeshEntity->GetMesh());
+			Renderer::DrawAABB(m_MeshEntity->GetMesh(), m_MeshEntity->Transform());
+			U::Renderer2D::EndScene();
+			U::Renderer::EndRenderPass();
+		}
+
+		if (m_SelectedSubmeshes.size())
+		{
+			U::Renderer::BeginRenderPass(U::SceneRenderer::GetFinalRenderPass(), false);
+			auto viewProj = m_Scene->GetCamera().GetViewProjection();
+			U::Renderer2D::BeginScene(viewProj, false);
+			auto& submesh = m_SelectedSubmeshes[0];
+			Renderer::DrawAABB(submesh.Mesh->BoundingBox, m_MeshEntity->GetTransform() * submesh.Mesh->Transform);
+
 			U::Renderer2D::EndScene();
 			U::Renderer::EndRenderPass();
 		}
@@ -377,9 +392,11 @@ namespace U {
 		ImGui::Columns(2);
 		ImGui::AlignTextToFramePadding();
 
-		Property("Light Direction", m_Light.Direction);
-		Property("Light Radiance", m_Light.Radiance, PropertyFlag::ColorProperty);
-		Property("Light Multiplier", m_LightMultiplier, 0.0f, 5.0f);
+		auto& light = m_Scene->GetLight();
+		Property("Light Direction", light.Direction);
+		Property("Light Radiance", light.Radiance, PropertyFlag::ColorProperty);
+		Property("Light Multiplier", light.Multiplier, 0.0f, 5.0f);
+
 		Property("Exposure", m_ActiveScene->GetCamera().GetExposure(), 0.0f, 5.0f);
 
 		Property("Radiance Prefiltering", m_RadiancePrefilter);
@@ -573,6 +590,7 @@ namespace U {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 		ImGui::Begin("Viewport");
 
+		auto viewportOffset = ImGui::GetCursorPos();
 		auto viewportSize = ImGui::GetContentRegionAvail();
 		SceneRenderer::SetViewportSize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
 		m_ActiveScene->GetCamera().SetProjectionMatrix(glm::perspectiveFov(glm::radians(45.0f), viewportSize.x, viewportSize.y, 0.1f, 10000.0f));
@@ -582,19 +600,32 @@ namespace U {
 		static int counter = 0;
 		auto windowSize = ImGui::GetWindowSize();
 		ImVec2 minBound = ImGui::GetWindowPos();
+		minBound.x += viewportOffset.x;
+		minBound.y += viewportOffset.y;
+
 		ImVec2 maxBound = { minBound.x + windowSize.x, minBound.y + windowSize.y };
+		m_ViewportBounds[0] = { minBound.x, minBound.y };
+		m_ViewportBounds[1] = { maxBound.x, maxBound.y };
 		m_AllowViewportCameraEvents = ImGui::IsMouseHoveringRect(minBound, maxBound);
 
 		
 		// Gizmos
-		if (m_GizmoType != -1)
+		if (m_GizmoType != -1 && m_CurrentlySelectedTransform)
 		{
 			float rw = (float)ImGui::GetWindowWidth();
 			float rh = (float)ImGui::GetWindowHeight();
 			ImGuizmo::SetOrthographic(false);
 			ImGuizmo::SetDrawlist();
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, rw, rh);
-			ImGuizmo::Manipulate(glm::value_ptr(m_ActiveScene->GetCamera().GetViewMatrix()), glm::value_ptr(m_ActiveScene->GetCamera().GetProjectionMatrix()), (ImGuizmo::OPERATION)m_GizmoType, ImGuizmo::LOCAL, glm::value_ptr(m_MeshEntity->Transform()));
+			bool snap = Input::IsKeyPressed(U_KEY_LEFT_CONTROL);
+			ImGuizmo::Manipulate(glm::value_ptr(m_ActiveScene->GetCamera().GetViewMatrix()* m_MeshEntity->Transform()),
+				glm::value_ptr(m_ActiveScene->GetCamera().GetProjectionMatrix()),
+				(ImGuizmo::OPERATION)m_GizmoType,
+				ImGuizmo::LOCAL,
+				glm::value_ptr(*m_CurrentlySelectedTransform),
+				nullptr,
+				snap ? &m_SnapValue : nullptr);
+
 		}
 
 		
@@ -644,7 +675,7 @@ namespace U {
 		EventDispatcher dispatcher(e);
 
 		dispatcher.Dispatch<KeyPressedEvent>(U_BIND_EVENT_FN(EditorLayer::OnKeyPressedEvent));
-
+		dispatcher.Dispatch<MouseButtonPressedEvent>(U_BIND_EVENT_FN(EditorLayer::OnMouseButtonPressed));
 	}
 
 	bool EditorLayer::OnKeyPressedEvent(KeyPressedEvent& e)
@@ -682,6 +713,84 @@ namespace U {
 		return false;
 	}
 
+
+	bool EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent& e)
+	{
+		auto [mx, my] = Input::GetMousePosition();
+		if (e.GetMouseButton() == U_MOUSE_BUTTON_LEFT && !Input::IsKeyPressed(U_KEY_LEFT_ALT) && !ImGuizmo::IsOver())
+		{
+			auto [mouseX, mouseY] = GetMouseViewportSpace();
+			if (mouseX > -1.0f && mouseX < 1.0f && mouseY > -1.0f && mouseY < 1.0f)
+			{
+				auto [origin, direction] = CastRay(mouseX,mouseY);
+
+				m_SelectedSubmeshes.clear();
+				auto mesh = m_MeshEntity->GetMesh();
+				auto& submeshes = mesh->GetSubmeshes();
+				float lastT = std::numeric_limits<float>::max();
+				for (uint32_t i = 0; i < submeshes.size(); i++)
+				{
+					auto& submesh = submeshes[i];
+					Ray ray = { glm::inverse(m_MeshEntity->GetTransform() * submesh.Transform) * glm::vec4(origin, 1.0f),
+						glm::inverse(glm::mat3(m_MeshEntity->GetTransform()) * glm::mat3(submesh.Transform)) * direction
+					};
+
+					float t;
+
+					bool intersects = ray.IntersectsAABB(submesh.BoundingBox, t);
+					if (intersects)
+					{
+						const auto& triangleCache = mesh->GetTriangleCache(i);
+						for (const auto& triangle : triangleCache) 
+						{
+							if (ray.IntersectsTriangle(triangle.V0.Position, triangle.V1.Position, triangle.V2.Position, t))
+							{
+								U_WARN("INTERSECTION: {0}, t={1}", submesh.NodeName, t);
+								m_SelectedSubmeshes.push_back({ &submesh, t });
+								break;
+							}
+						}
+					}
+
+				}
+
+				std::sort(m_SelectedSubmeshes.begin(), m_SelectedSubmeshes.end(), [](auto& a, auto& b) { return a.Distance < b.Distance; });
+			
+				// TODO: Handle mesh being deleted, etc.
+				if (m_SelectedSubmeshes.size())
+					m_CurrentlySelectedTransform = &m_SelectedSubmeshes[0].Mesh->Transform;
+				else
+					m_CurrentlySelectedTransform = &m_MeshEntity->Transform();
+
+			}
+		}
+		return false;
+	}
+
+	std::pair<float, float> EditorLayer::GetMouseViewportSpace()
+	{
+		auto [mx, my] = ImGui::GetMousePos(); // Input::GetMousePosition();
+		mx -= m_ViewportBounds[0].x;
+		my -= m_ViewportBounds[0].y;
+		auto viewportWidth = m_ViewportBounds[1].x - m_ViewportBounds[0].x;
+		auto viewportHeight = m_ViewportBounds[1].y - m_ViewportBounds[0].y;
+
+		return { (mx / viewportWidth) * 2.0f - 1.0f, ((my / viewportHeight) * 2.0f - 1.0f) * -1.0f };
+	}
+
+	std::pair<glm::vec3, glm::vec3> EditorLayer::CastRay(float mx, float my)
+	{
+		glm::vec4 mouseClipPos = { mx, my, -1.0f, 1.0f };
+
+		auto inverseProj = glm::inverse(m_Scene->GetCamera().GetProjectionMatrix());
+		auto inverseView = glm::inverse(glm::mat3(m_Scene->GetCamera().GetViewMatrix()));
+
+		glm::vec4 ray = inverseProj * mouseClipPos;
+		glm::vec3 rayPos = m_Scene->GetCamera().GetPosition();
+		glm::vec3 rayDir = inverseView * glm::vec3(ray);
+
+		return { rayPos, rayDir };
+	}
 
 
 }

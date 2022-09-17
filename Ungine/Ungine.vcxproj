@@ -154,7 +154,9 @@
     <ClInclude Include="src\Ungine\Core\Layer.h" />
     <ClInclude Include="src\Ungine\Core\LayerStack.h" />
     <ClInclude Include="src\Ungine\Core\Log.h" />
+    <ClInclude Include="src\Ungine\Core\Math\AABB.h" />
     <ClInclude Include="src\Ungine\Core\Math\Mat4.h" />
+    <ClInclude Include="src\Ungine\Core\Math\Ray.h" />
     <ClInclude Include="src\Ungine\Core\Platform.h" />
     <ClInclude Include="src\Ungine\Core\TimeStep.h" />
     <ClInclude Include="src\Ungine\Core\Window.h" />

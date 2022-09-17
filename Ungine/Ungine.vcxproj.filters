@@ -79,7 +79,13 @@
     <ClInclude Include="src\Ungine\Core\Log.h">
       <Filter>Ungine\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ungine\Core\Math\AABB.h">
+      <Filter>Ungine\Core\Math</Filter>
+    </ClInclude>
     <ClInclude Include="src\Ungine\Core\Math\Mat4.h">
+      <Filter>Ungine\Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Core\Math\Ray.h">
       <Filter>Ungine\Core\Math</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Core\Platform.h">

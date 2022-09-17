@@ -37,6 +37,9 @@ namespace U
 		float& GetExposure() { return m_Exposure; }
 
 	private:
+		void UpdateCameraView();
+
+		bool OnMouseScroll(MouseScrolledEvent& e);
 		void MousePan(const glm::vec2& delta);
 		void MouseRotate(const glm::vec2& delta);
 		void MouseZoom(float delta);
@@ -49,8 +52,6 @@ namespace U
 		float ZoomSpeed() const;
 
 	private:
-		bool OnMouseScroll(MouseScrolledEvent& e);
-
 		glm::mat4 m_ProjectionMatrix, m_ViewMatrix;
 		glm::vec3 m_Position, m_Rotation, m_FocalPoint;
 

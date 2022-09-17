@@ -123,3 +123,8 @@
 #define U_KEY_RIGHT_ALT          346
 #define U_KEY_RIGHT_SUPER        347
 #define U_KEY_MENU               348
+
+#define U_MOUSE_BUTTON_LEFT        0
+#define U_MOUSE_BUTTON_RIGHT       1
+#define U_MOUSE_BUTTON_MIDDLE      2
+
