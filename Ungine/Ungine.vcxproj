@@ -140,7 +140,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Ungine\Core\Math\Mat4.h" />
     <ClInclude Include="src\Ungine.h" />
     <ClInclude Include="src\Ungine\Core\Application.h" />
     <ClInclude Include="src\Ungine\Core\Assert.h" />
@@ -155,6 +154,7 @@
     <ClInclude Include="src\Ungine\Core\Layer.h" />
     <ClInclude Include="src\Ungine\Core\LayerStack.h" />
     <ClInclude Include="src\Ungine\Core\Log.h" />
+    <ClInclude Include="src\Ungine\Core\Math\Mat4.h" />
     <ClInclude Include="src\Ungine\Core\Platform.h" />
     <ClInclude Include="src\Ungine\Core\TimeStep.h" />
     <ClInclude Include="src\Ungine\Core\Window.h" />
@@ -176,10 +176,10 @@
     <ClInclude Include="src\Ungine\Renderer\Material.h" />
     <ClInclude Include="src\Ungine\Renderer\Mesh.h" />
     <ClInclude Include="src\Ungine\Renderer\RenderCommandQueue.h" />
+    <ClInclude Include="src\Ungine\Renderer\RenderPass.h" />
     <ClInclude Include="src\Ungine\Renderer\Renderer.h" />
     <ClInclude Include="src\Ungine\Renderer\Renderer2D.h" />
     <ClInclude Include="src\Ungine\Renderer\RendererAPI.h" />
-    <ClInclude Include="src\Ungine\Renderer\RenderPass.h" />
     <ClInclude Include="src\Ungine\Renderer\SceneRenderer.h" />
     <ClInclude Include="src\Ungine\Renderer\Shader.h" />
     <ClInclude Include="src\Ungine\Renderer\ShaderUniform.h" />
@@ -190,12 +190,12 @@
     <ClInclude Include="src\Upch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Ungine\Core\Math\Mat4.cpp" />
     <ClCompile Include="src\Ungine\Core\Application.cpp" />
     <ClCompile Include="src\Ungine\Core\Base.cpp" />
     <ClCompile Include="src\Ungine\Core\Layer.cpp" />
     <ClCompile Include="src\Ungine\Core\LayerStack.cpp" />
     <ClCompile Include="src\Ungine\Core\Log.cpp" />
+    <ClCompile Include="src\Ungine\Core\Math\Mat4.cpp" />
     <ClCompile Include="src\Ungine\Core\TimeStep.cpp" />
     <ClCompile Include="src\Ungine\Core\Window.cpp" />
     <ClCompile Include="src\Ungine\Editor\SceneHierarchyPanel.cpp" />
@@ -204,8 +204,8 @@
     <ClCompile Include="src\Ungine\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.cpp" />
-    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLRendererAPI.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLRenderPass.cpp" />
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLRendererAPI.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLShaderUniform.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLTexture.cpp" />
@@ -218,9 +218,9 @@
     <ClCompile Include="src\Ungine\Renderer\Material.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Mesh.cpp" />
     <ClCompile Include="src\Ungine\Renderer\RenderCommandQueue.cpp" />
+    <ClCompile Include="src\Ungine\Renderer\RenderPass.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Renderer2D.cpp" />
-    <ClCompile Include="src\Ungine\Renderer\RenderPass.cpp" />
     <ClCompile Include="src\Ungine\Renderer\SceneRenderer.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Shader.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Texture.cpp" />

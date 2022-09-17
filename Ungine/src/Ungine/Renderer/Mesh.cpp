@@ -102,13 +102,12 @@ namespace U
 		{
 			aiMesh* mesh = scene->mMeshes[m];
 
-			Submesh submesh;
+			Submesh& submesh = m_Submeshes.emplace_back();
 			submesh.BaseVertex = vertexCount;
 			submesh.BaseIndex = indexCount;
 			submesh.MaterialIndex = mesh->mMaterialIndex;
 			submesh.IndexCount = mesh->mNumFaces * 3;
 			
-			m_Submeshes.push_back(submesh);
 
 			vertexCount += mesh->mNumVertices;
 			indexCount += submesh.IndexCount;

@@ -10,6 +10,12 @@
     <Filter Include="Ungine\Core\Events">
       <UniqueIdentifier>{A707C5B2-93EB-8508-FC4B-805BE84E708A}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ungine\Core\Math">
+      <UniqueIdentifier>{DCF3ADE0-C8EC-CC32-F11E-B2B7DD76AC3E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ungine\Editor">
+      <UniqueIdentifier>{C1D8612E-2D99-DD64-F6D3-26E262532241}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Ungine\ImGui">
       <UniqueIdentifier>{554B9DA4-41AE-2C49-EA33-65FFD675F8CB}</UniqueIdentifier>
     </Filter>
@@ -24,6 +30,9 @@
     </Filter>
     <Filter Include="Ungine\Renderer">
       <UniqueIdentifier>{F1ED0FA5-5D79-7D69-668A-005ED294D969}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ungine\Scene">
+      <UniqueIdentifier>{48434DA5-34A6-DC49-DD2B-1500C96DA8CC}</UniqueIdentifier>
     </Filter>
     <Filter Include="Ungine\Vendor">
       <UniqueIdentifier>{C81D1E56-34DE-998C-FD18-E3096998DE68}</UniqueIdentifier>
@@ -70,6 +79,9 @@
     <ClInclude Include="src\Ungine\Core\Log.h">
       <Filter>Ungine\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ungine\Core\Math\Mat4.h">
+      <Filter>Ungine\Core\Math</Filter>
+    </ClInclude>
     <ClInclude Include="src\Ungine\Core\Platform.h">
       <Filter>Ungine\Core</Filter>
     </ClInclude>
@@ -78,6 +90,9 @@
     </ClInclude>
     <ClInclude Include="src\Ungine\Core\Window.h">
       <Filter>Ungine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Editor\SceneHierarchyPanel.h">
+      <Filter>Ungine\Editor</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\EntryPoint.h">
       <Filter>Ungine</Filter>
@@ -92,6 +107,9 @@
       <Filter>Ungine\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.h">
+      <Filter>Ungine\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLRenderPass.h">
       <Filter>Ungine\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLShader.h">
@@ -127,10 +145,19 @@
     <ClInclude Include="src\Ungine\Renderer\RenderCommandQueue.h">
       <Filter>Ungine\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ungine\Renderer\RenderPass.h">
+      <Filter>Ungine\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\Renderer.h">
       <Filter>Ungine\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ungine\Renderer\Renderer2D.h">
+      <Filter>Ungine\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\RendererAPI.h">
+      <Filter>Ungine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Renderer\SceneRenderer.h">
       <Filter>Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\Shader.h">
@@ -145,15 +172,13 @@
     <ClInclude Include="src\Ungine\Renderer\VertexArray.h">
       <Filter>Ungine\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ungine\Scene\Entity.h">
+      <Filter>Ungine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Scene\Scene.h">
+      <Filter>Ungine\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Upch.h" />
-    <ClInclude Include="src\Ungine\Renderer\RenderPass.h" />
-    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLRenderPass.h" />
-    <ClInclude Include="src\Ungine\Core\Math\Mat4.h" />
-    <ClInclude Include="src\Ungine\Editor\SceneHierarchyPanel.h" />
-    <ClInclude Include="src\Ungine\Scene\Scene.h" />
-    <ClInclude Include="src\Ungine\Renderer\SceneRenderer.h" />
-    <ClInclude Include="src\Ungine\Scene\Entity.h" />
-    <ClInclude Include="src\Ungine\Renderer\Renderer2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ungine\Core\Application.cpp">
@@ -171,11 +196,17 @@
     <ClCompile Include="src\Ungine\Core\Log.cpp">
       <Filter>Ungine\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Ungine\Core\Math\Mat4.cpp">
+      <Filter>Ungine\Core\Math</Filter>
+    </ClCompile>
     <ClCompile Include="src\Ungine\Core\TimeStep.cpp">
       <Filter>Ungine\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Core\Window.cpp">
       <Filter>Ungine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Editor\SceneHierarchyPanel.cpp">
+      <Filter>Ungine\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\ImGui\ImGuiBuild.cpp">
       <Filter>Ungine\ImGui</Filter>
@@ -190,6 +221,9 @@
       <Filter>Ungine\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.cpp">
+      <Filter>Ungine\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLRenderPass.cpp">
       <Filter>Ungine\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLRendererAPI.cpp">
@@ -231,7 +265,16 @@
     <ClCompile Include="src\Ungine\Renderer\RenderCommandQueue.cpp">
       <Filter>Ungine\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Ungine\Renderer\RenderPass.cpp">
+      <Filter>Ungine\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\Renderer.cpp">
+      <Filter>Ungine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Renderer\Renderer2D.cpp">
+      <Filter>Ungine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Renderer\SceneRenderer.cpp">
       <Filter>Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\Shader.cpp">
@@ -243,17 +286,15 @@
     <ClCompile Include="src\Ungine\Renderer\VertexArray.cpp">
       <Filter>Ungine\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Ungine\Scene\Entity.cpp">
+      <Filter>Ungine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Scene\Scene.cpp">
+      <Filter>Ungine\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\Ungine\Vendor\stb_image.cpp">
       <Filter>Ungine\Vendor</Filter>
     </ClCompile>
     <ClCompile Include="src\Upch.cpp" />
-    <ClCompile Include="src\Ungine\Renderer\RenderPass.cpp" />
-    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLRenderPass.cpp" />
-    <ClCompile Include="src\Ungine\Core\Math\Mat4.cpp" />
-    <ClCompile Include="src\Ungine\Editor\SceneHierarchyPanel.cpp" />
-    <ClCompile Include="src\Ungine\Scene\Scene.cpp" />
-    <ClCompile Include="src\Ungine\Scene\Entity.cpp" />
-    <ClCompile Include="src\Ungine\Renderer\SceneRenderer.cpp" />
-    <ClCompile Include="src\Ungine\Renderer\Renderer2D.cpp" />
   </ItemGroup>
 </Project>
