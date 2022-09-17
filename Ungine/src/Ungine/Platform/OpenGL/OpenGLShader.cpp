@@ -13,7 +13,7 @@ namespace U {
 
 	#define UNIFORM_LOGGING 0
 	#if UNIFORM_LOGGING
-		#define U_LOG_UNIFORM(...) HZ_CORE_WARN(__VA_ARGS__)
+		#define U_LOG_UNIFORM(...) U_CORE_WARN(__VA_ARGS__)
 	#else
 		#define U_LOG_UNIFORM
 	#endif
@@ -47,16 +47,22 @@ namespace U {
 	void OpenGLShader::Load(const std::string& source)
 	{
 		m_ShaderSource = PreProcess(source);
-		Parse();
+		if (!m_IsCompute)
+			Parse();
 
-		Renderer::Submit([this]()
+
+		Renderer::Submit([=]()
 			{
 				if (m_RendererID)
-					glDeleteShader(m_RendererID);
+					glDeleteProgram(m_RendererID);
 
 				CompileAndUploadShader();
-				ResolveUniforms();
-				ValidateUniforms();
+				if (!m_IsCompute)
+				{
+					ResolveUniforms();
+					ValidateUniforms();
+				}
+
 
 				if (m_Loaded)
 				{
@@ -77,7 +83,7 @@ namespace U {
 
 	void OpenGLShader::Bind()
 	{
-		Renderer::Submit([this]() {
+		Renderer::Submit([=]() {
 			glUseProgram(m_RendererID);
 			});
 
@@ -97,7 +103,7 @@ namespace U {
 		}
 		else
 		{
-			U_CORE_WARN("Could not read shader file {0}", filepath);
+			U_CORE_ASSERT(false, "Could not load shader!");
 		}
 		return result;
 	}
@@ -115,10 +121,19 @@ namespace U {
 			U_CORE_ASSERT(eol != std::string::npos, "Syntax error");
 			size_t begin = pos + typeTokenLength + 1;
 			std::string type = source.substr(begin, eol - begin);
-			U_CORE_ASSERT(type == "vertex" || type == "fragment" || type == "pixel", "Invalid shader type specified");
+			U_CORE_ASSERT(type == "vertex" || type == "fragment" || type == "pixel" || type == "compute", "Invalid shader type specified");
 			size_t nextLinePos = source.find_first_not_of("\r\n", eol);
 			pos = source.find(typeToken, nextLinePos);
-			shaderSources[ShaderTypeFromString(type)] = source.substr(nextLinePos, pos - (nextLinePos == std::string::npos ? source.size() - 1 : nextLinePos));
+			auto shaderType = ShaderTypeFromString(type);
+			shaderSources[shaderType] = source.substr(nextLinePos, pos - (nextLinePos == std::string::npos ? source.size() - 1 : nextLinePos));
+
+			// Compute shaders cannot contain other types
+			if (shaderType == GL_COMPUTE_SHADER)
+			{
+				m_IsCompute = true;
+				break;
+			}
+
 		}
 
 		return shaderSources;
@@ -248,6 +263,7 @@ namespace U {
 	static bool IsTypeStringResource(const std::string& type)
 	{
 		if (type == "sampler2D")		return true;
+		if (type == "sampler2DMS")		return true;
 		if (type == "samplerCube")		return true;
 		if (type == "sampler2DShadow")	return true;
 		return false;
@@ -531,6 +547,9 @@ namespace U {
 			return GL_VERTEX_SHADER;
 		if (type == "fragment" || type == "pixel")
 			return GL_FRAGMENT_SHADER;
+		if (type == "compute")
+			return GL_COMPUTE_SHADER;
+
 
 		return GL_NONE;
 	}
@@ -676,7 +695,7 @@ namespace U {
 
 	void OpenGLShader::ResolveAndSetUniformArray(OpenGLShaderUniformDeclaration* uniform, Buffer buffer)
 	{
-		//HZ_CORE_ASSERT(uniform->GetLocation() != -1, "Uniform has invalid location!");
+		//U_CORE_ASSERT(uniform->GetLocation() != -1, "Uniform has invalid location!");
 
 		uint32_t offset = uniform->GetOffset();
 		switch (uniform->GetType())
@@ -801,6 +820,13 @@ namespace U {
 
 	}
 
+	void OpenGLShader::SetInt(const std::string& name, int value)
+	{
+		Renderer::Submit([=]() {
+			UploadUniformInt(name, value);
+			});
+	}
+
 	void OpenGLShader::SetMat4(const std::string& name, const glm::mat4& value)
 	{
 		Renderer::Submit([=]() {
@@ -822,8 +848,17 @@ namespace U {
 			if (location != -1)
 				UploadUniformMat4(location, value);
 		}
-
 	}
+
+	void OpenGLShader::SetIntArray(const std::string& name, int* values, uint32_t size)
+	{
+		Renderer::Submit([=]() {
+			UploadUniformIntArray(name, values, size);
+			});
+	}
+
+
+
 
 	void OpenGLShader::UploadUniformInt(uint32_t location, int32_t value)
 	{
@@ -882,13 +917,17 @@ namespace U {
 		}
 	}
 
+
+
+
+
 	void OpenGLShader::UploadUniformInt(const std::string& name, int32_t value)
 	{
 		int32_t location = GetUniformLocation(name);
 		glUniform1i(location, value);
 	}
 
-	void OpenGLShader::UploadUniformIntArray(const std::string& name, int32_t* values, int32_t count)
+	void OpenGLShader::UploadUniformIntArray(const std::string& name, int32_t* values, uint32_t count)
 	{
 		int32_t location = GetUniformLocation(name);
 		glUniform1iv(location, count, values);

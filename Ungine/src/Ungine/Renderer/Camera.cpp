@@ -57,7 +57,7 @@ namespace U
 
 	}
 
-	void Camera::Update(Timestep ts)
+	void Camera::OnUpdate(Timestep ts)
 	{
 		if (Input::IsKeyPressed(GLFW_KEY_LEFT_ALT))
 		{
@@ -96,6 +96,22 @@ namespace U
 	{
 		return glm::rotate(GetOrientation(), glm::vec3(0.0f, 0.0f, -1.0f));
 	}
+
+	void Camera::OnEvent(Event& e)
+	{
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<MouseScrolledEvent>(U_BIND_EVENT_FN(Camera::OnMouseScroll));
+	}
+
+	bool Camera::OnMouseScroll(MouseScrolledEvent& e)
+	{
+
+		float delta = e.GetYOffset() * 0.1f;
+		MouseZoom(delta);
+		return false;
+	}
+
+
 	void Camera::MousePan(const glm::vec2& delta)
 	{
 		auto [xSpeed, ySpeed] = PanSpeed();

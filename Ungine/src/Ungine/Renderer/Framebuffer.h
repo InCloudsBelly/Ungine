@@ -18,6 +18,7 @@ namespace U
 		uint32_t Height = 720;
 		glm::vec4 ClearColor;
 		FramebufferFormat Format;
+		uint32_t Samples = 1; // multisampling
 
 		// SwapChainTarget = screen buffer (i.e. no framebuffer)
 		bool SwapChainTarget = false;

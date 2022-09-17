@@ -1,5 +1,5 @@
 #include "Upch.h"
-#include "WindowsInput.h"
+#include "Ungine/Core/Input.h"
 #include "WindowsWindow.h"
 
 #include "Ungine/Core/Application.h"
@@ -8,16 +8,14 @@
 
 namespace U {
 
-	Input* Input::s_Instance = new WindowsInput;
-
-	bool WindowsInput::IsKeyPressedImpl(int keycode)
+	bool Input::IsKeyPressed(int keycode)
 	{
 		auto& window = static_cast<WindowsWindow&>(Application::Get().GetWindow());
 		auto state = glfwGetKey(static_cast<GLFWwindow*>(window.GetNativeWindow()), keycode);
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool WindowsInput::IsMouseButtonPressedImpl(int button)
+	bool Input::IsMouseButtonPressed(int button)
 	{
 		auto& window = static_cast<WindowsWindow&>(Application::Get().GetWindow());
 
@@ -25,7 +23,7 @@ namespace U {
 		return state == GLFW_PRESS;
 	}
 
-	float WindowsInput::GetMouseXImpl()
+	float Input::GetMouseX()
 	{
 		auto& window = static_cast<WindowsWindow&>(Application::Get().GetWindow());
 
@@ -35,7 +33,7 @@ namespace U {
 		return (float)xpos;
 	}
 
-	float WindowsInput::GetMouseYImpl()
+	float Input::GetMouseY()
 	{
 		auto& window = static_cast<WindowsWindow&>(Application::Get().GetWindow());
 

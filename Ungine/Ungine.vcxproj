@@ -140,6 +140,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Ungine\Core\Math\Mat4.h" />
     <ClInclude Include="src\Ungine.h" />
     <ClInclude Include="src\Ungine\Core\Application.h" />
     <ClInclude Include="src\Ungine\Core\Assert.h" />
@@ -157,6 +158,7 @@
     <ClInclude Include="src\Ungine\Core\Platform.h" />
     <ClInclude Include="src\Ungine\Core\TimeStep.h" />
     <ClInclude Include="src\Ungine\Core\Window.h" />
+    <ClInclude Include="src\Ungine\Editor\SceneHierarchyPanel.h" />
     <ClInclude Include="src\Ungine\EntryPoint.h" />
     <ClInclude Include="src\Ungine\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Ungine\ImGui\ImGuizmo.h" />
@@ -167,7 +169,6 @@
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLShaderUniform.h" />
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLTexture.h" />
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLVertexArray.h" />
-    <ClInclude Include="src\Ungine\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Ungine\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\Ungine\Renderer\Buffer.h" />
     <ClInclude Include="src\Ungine\Renderer\Camera.h" />
@@ -176,15 +177,20 @@
     <ClInclude Include="src\Ungine\Renderer\Mesh.h" />
     <ClInclude Include="src\Ungine\Renderer\RenderCommandQueue.h" />
     <ClInclude Include="src\Ungine\Renderer\Renderer.h" />
+    <ClInclude Include="src\Ungine\Renderer\Renderer2D.h" />
     <ClInclude Include="src\Ungine\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Ungine\Renderer\RenderPass.h" />
+    <ClInclude Include="src\Ungine\Renderer\SceneRenderer.h" />
     <ClInclude Include="src\Ungine\Renderer\Shader.h" />
     <ClInclude Include="src\Ungine\Renderer\ShaderUniform.h" />
     <ClInclude Include="src\Ungine\Renderer\Texture.h" />
     <ClInclude Include="src\Ungine\Renderer\VertexArray.h" />
+    <ClInclude Include="src\Ungine\Scene\Entity.h" />
+    <ClInclude Include="src\Ungine\Scene\Scene.h" />
     <ClInclude Include="src\Upch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Ungine\Core\Math\Mat4.cpp" />
     <ClCompile Include="src\Ungine\Core\Application.cpp" />
     <ClCompile Include="src\Ungine\Core\Base.cpp" />
     <ClCompile Include="src\Ungine\Core\Layer.cpp" />
@@ -192,6 +198,7 @@
     <ClCompile Include="src\Ungine\Core\Log.cpp" />
     <ClCompile Include="src\Ungine\Core\TimeStep.cpp" />
     <ClCompile Include="src\Ungine\Core\Window.cpp" />
+    <ClCompile Include="src\Ungine\Editor\SceneHierarchyPanel.cpp" />
     <ClCompile Include="src\Ungine\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Ungine\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Ungine\ImGui\ImGuizmo.cpp" />
@@ -212,10 +219,14 @@
     <ClCompile Include="src\Ungine\Renderer\Mesh.cpp" />
     <ClCompile Include="src\Ungine\Renderer\RenderCommandQueue.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Ungine\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\Ungine\Renderer\RenderPass.cpp" />
+    <ClCompile Include="src\Ungine\Renderer\SceneRenderer.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Shader.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Texture.cpp" />
     <ClCompile Include="src\Ungine\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\Ungine\Scene\Entity.cpp" />
+    <ClCompile Include="src\Ungine\Scene\Scene.cpp" />
     <ClCompile Include="src\Ungine\Vendor\stb_image.cpp" />
     <ClCompile Include="src\Upch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

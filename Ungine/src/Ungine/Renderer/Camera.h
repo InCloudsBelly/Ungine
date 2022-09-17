@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Ungine/Core/Timestep.h"
+#include "Ungine/Core/Events/MouseEvent.h"
 
 #include <glm/glm.hpp>
 
@@ -10,10 +11,12 @@ namespace U
 	class Camera
 	{
 	public:
+		Camera() = default;
 		Camera(const glm::mat4& projectionMatrix);
 
 		void Focus();
-		void Update(Timestep ts);
+		void OnUpdate(Timestep ts);
+		void OnEvent(Event& e);
 
 		inline float GetDistance()const { return m_Distance; }
 		inline void SetDistance(float distance) { m_Distance = distance; }
@@ -23,11 +26,15 @@ namespace U
 
 		const glm::mat4& GetProjectionMatrix()const { return m_ProjectionMatrix; }
 		const glm::mat4& GetViewMatrix()const { return m_ViewMatrix; }
+		const glm::mat4& GetViewProjection() const { return m_ProjectionMatrix * m_ViewMatrix; }
 
 		glm::vec3 GetUpDirection();
 		glm::vec3 GetRightDirection();
 		glm::vec3 GetForwardDirection();
 		const glm::vec3& GetPosition() const { return m_Position; }
+
+		float GetExposure() const { return m_Exposure; }
+		float& GetExposure() { return m_Exposure; }
 
 	private:
 		void MousePan(const glm::vec2& delta);
@@ -42,6 +49,8 @@ namespace U
 		float ZoomSpeed() const;
 
 	private:
+		bool OnMouseScroll(MouseScrolledEvent& e);
+
 		glm::mat4 m_ProjectionMatrix, m_ViewMatrix;
 		glm::vec3 m_Position, m_Rotation, m_FocalPoint;
 
@@ -52,6 +61,8 @@ namespace U
 		float m_Distance;
 
 		float m_Pitch, m_Yaw;
+
+		float m_Exposure = 0.8f;
 
 		uint32_t m_ViewportWidth = 1280, m_ViewportHeight = 720;
 	};

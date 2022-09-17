@@ -2,21 +2,83 @@
 #include "Renderer.h"
 #include "Shader.h"
 
+#include "RendererAPI.h"
+#include "SceneRenderer.h"
+#include "Renderer2D.h"
+
 #include <glad/glad.h>
 
 namespace U {
 
-	Renderer* Renderer::s_Instance = new Renderer();
 	RendererAPIType RendererAPI::s_CurrentRendererAPI = RendererAPIType::OpenGL;
+
+	struct RendererData
+	{
+		Ref<RenderPass> m_ActiveRenderPass;
+		RenderCommandQueue m_CommandQueue;
+		Scope<ShaderLibrary> m_ShaderLibrary;
+		Ref<VertexArray> m_FullscreenQuadVertexArray;
+	};
+
+	static RendererData s_Data;
 
 	void Renderer::Init()
 	{
-		s_Instance->m_ShaderLibrary = std::make_unique<ShaderLibrary>();
+		s_Data.m_ShaderLibrary = std::make_unique<ShaderLibrary>();
 		Renderer::Submit([]() { RendererAPI::Init(); });
 
 		Renderer::GetShaderLibrary()->Load("assets/shaders/HazelPBR_Static.glsl");
 		Renderer::GetShaderLibrary()->Load("assets/shaders/HazelPBR_Anim.glsl");
+	
+
+		SceneRenderer::Init();
+
+		// Create fullscreen quad
+		float x = -1;
+		float y = -1;
+		float width = 2, height = 2;
+		struct QuadVertex
+		{
+			glm::vec3 Position;
+			glm::vec2 TexCoord;
+		};
+
+		QuadVertex* data = new QuadVertex[4];
+
+		data[0].Position = glm::vec3(x, y, 0.1f);
+		data[0].TexCoord = glm::vec2(0, 0);
+
+		data[1].Position = glm::vec3(x + width, y, 0.1f);
+		data[1].TexCoord = glm::vec2(1, 0);
+
+		data[2].Position = glm::vec3(x + width, y + height, 0.1f);
+		data[2].TexCoord = glm::vec2(1, 1);
+
+		data[3].Position = glm::vec3(x, y + height, 0.1f);
+		data[3].TexCoord = glm::vec2(0, 1);
+
+
+		s_Data.m_FullscreenQuadVertexArray = VertexArray::Create();
+		auto quadVB = VertexBuffer::Create(data, 4 * sizeof(QuadVertex));
+		quadVB->SetLayout({
+			{ ShaderDataType::Float3, "a_Position" },
+			{ ShaderDataType::Float2, "a_TexCoord" }
+			});
+
+		uint32_t indices[6] = { 0, 1, 2, 2, 3, 0, };
+		auto quadIB = IndexBuffer::Create(indices, 6 * sizeof(uint32_t));
+
+		s_Data.m_FullscreenQuadVertexArray->AddVertexBuffer(quadVB);
+		s_Data.m_FullscreenQuadVertexArray->SetIndexBuffer(quadIB);
+
+		Renderer2D::Init();
 	}
+
+	const Scope<ShaderLibrary>& Renderer::GetShaderLibrary()
+	{
+		return s_Data.m_ShaderLibrary;
+	}
+
 
 	void Renderer::Clear()
 	{
@@ -41,71 +103,152 @@ namespace U {
 	{
 	}
 
-	void Renderer::DrawIndexed(uint32_t count, bool depthTest)
+	void Renderer::DrawIndexed(uint32_t count, PrimitiveType type, bool depthTest)
 	{
 		Renderer::Submit([=]() {
-			RendererAPI::DrawIndexed(count, depthTest);
+			RendererAPI::DrawIndexed(count, type, depthTest);
+			});
+	}
+
+	void Renderer::SetLineThickness(float thickness)
+	{
+		Renderer::Submit([=]() {
+			RendererAPI::SetLineThickness(thickness);
 			});
 	}
 
 	void Renderer::WaitAndRender()
 	{
-		s_Instance->m_CommandQueue.Execute();
+		s_Data.m_CommandQueue.Execute();
 	}
 
-	void Renderer::IBeginRenderPass(const Ref<RenderPass>& renderPass)
+	void Renderer::BeginRenderPass(const Ref<RenderPass>& renderPass, bool clear)
 	{
+		U_CORE_ASSERT(renderPass, "Render pass cannot be null!");
+
 		// TODO: Convert all of this into a render command buffer
-		m_ActiveRenderPass = renderPass;
+		s_Data.m_ActiveRenderPass = renderPass;
 
 		renderPass->GetSpecification().TargetFramebuffer->Bind();
-		const glm::vec4& clearColor = renderPass->GetSpecification().TargetFramebuffer->GetSpecification().ClearColor;
-		Renderer::Submit([=]() {
-			RendererAPI::Clear(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
-			});
+		
+		if (clear) {
+			const glm::vec4& clearColor = renderPass->GetSpecification().TargetFramebuffer->GetSpecification().ClearColor;
+			Renderer::Submit([=]() {
+				RendererAPI::Clear(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+				});
+		}
 	}
 
-	void Renderer::IEndRenderPass()
+	void Renderer::EndRenderPass()
 	{
-		U_CORE_ASSERT(m_ActiveRenderPass, "No active render pass! Have you called Renderer::EndRenderPass twice?");
-		m_ActiveRenderPass->GetSpecification().TargetFramebuffer->UnBind();
-		m_ActiveRenderPass = nullptr;
+		U_CORE_ASSERT(s_Data.m_ActiveRenderPass, "No active render pass! Have you called Renderer::EndRenderPass twice?");
+		s_Data.m_ActiveRenderPass->GetSpecification().TargetFramebuffer->UnBind();
+		s_Data.m_ActiveRenderPass = nullptr;
 	}
 
-	void Renderer::SubmitMeshI(const Ref<Mesh>& mesh, const glm::mat4& transform, const Ref<MaterialInstance>& overrideMaterial)
+	void Renderer::SubmitQuad(const Ref<MaterialInstance>& material, const glm::mat4& transform)
 	{
-		if (overrideMaterial)
+		bool depthTest = true;
+		if (material)
 		{
-			overrideMaterial->Bind();
+			material->Bind();
+			depthTest = material->GetFlag(MaterialFlag::DepthTest);
+
+			auto shader = material->GetShader();
+			shader->SetMat4("u_Transform", transform);
 		}
-		else
+		s_Data.m_FullscreenQuadVertexArray->Bind();
+		Renderer::DrawIndexed(6, PrimitiveType::Triangles, depthTest);
+
+	}
+
+	void Renderer::SubmitFullscreenQuad(const Ref<MaterialInstance>& material)
+	{
+		bool depthTest = true;
+		if (material)
 		{
-			// Bind mesh material here
+			material->Bind();
+			depthTest = material->GetFlag(MaterialFlag::DepthTest);
 		}
 
-		// TODO: Sort this out
+		s_Data.m_FullscreenQuadVertexArray->Bind();
+		Renderer::DrawIndexed(6, PrimitiveType::Triangles, depthTest);
+	}
+
+
+
+	void Renderer::SubmitMesh(const Ref<Mesh>& mesh, const glm::mat4& transform, const Ref<MaterialInstance>& overrideMaterial)
+	{
 		mesh->m_VertexArray->Bind();
 
-		// TODO: replace with render API calls
-		Renderer::Submit([=]()
-			{
-				for (Submesh& submesh : mesh->m_Submeshes)
-				{
-					if (mesh->m_IsAnimated)
-					{
-						for (size_t i = 0; i < mesh->m_BoneTransforms.size(); i++)
-						{
-							std::string uniformName = std::string("u_BoneTransforms[") + std::to_string(i) + std::string("]");
-							mesh->m_MeshShader->SetMat4FromRenderThread(uniformName, mesh->m_BoneTransforms[i]);
-						}
-					}
+		auto& materials = mesh->GetMaterials();
+		for (Submesh& submesh : mesh->m_Submeshes)
+		{
+			auto material = materials[submesh.MaterialIndex];
+			auto shader = material->GetShader();
+			material->Bind();
 
-					glDrawElementsBaseVertex(GL_TRIANGLES, submesh.IndexCount, GL_UNSIGNED_INT, (void*)(sizeof(uint32_t) * submesh.BaseIndex), submesh.BaseVertex);
+			if (mesh->m_IsAnimated)
+			{
+				for (size_t i = 0; i < mesh->m_BoneTransforms.size(); i++)
+				{
+					std::string uniformName = std::string("u_BoneTransforms[") + std::to_string(i) + std::string("]");
+					mesh->m_MeshShader->SetMat4(uniformName, mesh->m_BoneTransforms[i]);
 				}
-			});
+			}
+
+			shader->SetMat4("u_Transform", transform * submesh.Transform);
+
+			Renderer::Submit([submesh, material]() {
+				if (material->GetFlag(MaterialFlag::DepthTest))
+					glEnable(GL_DEPTH_TEST);
+				else
+					glDisable(GL_DEPTH_TEST);
+
+				glDrawElementsBaseVertex(GL_TRIANGLES, submesh.IndexCount, GL_UNSIGNED_INT, (void*)(sizeof(uint32_t) * submesh.BaseIndex), submesh.BaseVertex);
+				});
+		}
+	}
+
+	void Renderer::DrawAABB(const Ref<Mesh>& mesh, const glm::vec4& color)
+	{
+		for (Submesh& submesh : mesh->m_Submeshes)
+		{
+			const auto& transform = submesh.Transform;
+			glm::vec4 min = { submesh.Min.x, submesh.Min.y, submesh.Min.z, 1.0f };
+			glm::vec4 max = { submesh.Max.x, submesh.Max.y, submesh.Max.z, 1.0f };
+
+
+			glm::vec4 corners[8] =
+			{
+				transform * glm::vec4 { submesh.Min.x, submesh.Min.y, submesh.Max.z, 1.0f },
+				transform * glm::vec4 { submesh.Min.x, submesh.Max.y, submesh.Max.z, 1.0f },
+				transform * glm::vec4 { submesh.Max.x, submesh.Max.y, submesh.Max.z, 1.0f },
+				transform * glm::vec4 { submesh.Max.x, submesh.Min.y, submesh.Max.z, 1.0f },
+
+				transform * glm::vec4 { submesh.Min.x, submesh.Min.y, submesh.Min.z, 1.0f },
+				transform * glm::vec4 { submesh.Min.x, submesh.Max.y, submesh.Min.z, 1.0f },
+				transform * glm::vec4 { submesh.Max.x, submesh.Max.y, submesh.Min.z, 1.0f },
+				transform * glm::vec4 { submesh.Max.x, submesh.Min.y, submesh.Min.z, 1.0f }
+
+			};
+
+			for (uint32_t i = 0; i < 4; i++)
+				Renderer2D::DrawLine(corners[i], corners[(i + 1) % 4], color);
+
+			for (uint32_t i = 0; i < 4; i++)
+				Renderer2D::DrawLine(corners[i + 4], corners[((i + 1) % 4) + 4], color);
+
+			for (uint32_t i = 0; i < 4; i++)
+				Renderer2D::DrawLine(corners[i], corners[i + 4], color);
+		}
 	}
 
 
+	RenderCommandQueue& Renderer::GetRenderCommandQueue()
+	{
+		return s_Data.m_CommandQueue;
+	}
 
 
 }

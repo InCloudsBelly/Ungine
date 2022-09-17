@@ -44,7 +44,7 @@ namespace U
 
 	OpenGLShaderUniformDeclaration::Type OpenGLShaderUniformDeclaration::StringToType(const std::string& type)
 	{
-		if (type == "int32")    return Type::INT32;
+		if (type == "int")      return Type::INT32;
 		if (type == "float")    return Type::FLOAT32;
 		if (type == "vec2")     return Type::VEC2;
 		if (type == "vec3")     return Type::VEC3;
@@ -107,8 +107,10 @@ namespace U
 
 	OpenGLShaderResourceDeclaration::Type OpenGLShaderResourceDeclaration::StringToType(const std::string& type)
 	{
-		if (type == "sampler2D")		return Type::TEXTURE2D;
-		if (type == "samplerCube")		return Type::TEXTURECUBE;
+		if (type == "sampler2D")    return Type::TEXTURE2D;
+		if (type == "sampler2DMS")  return Type::TEXTURE2D;
+		if (type == "samplerCube")  return Type::TEXTURECUBE;
+
 
 		return Type::NONE;
 	}
@@ -117,8 +119,8 @@ namespace U
 	{
 		switch (type)
 		{
-		case Type::TEXTURE2D:	return "sampler2D";
-		case Type::TEXTURECUBE:		return "samplerCube";
+			case Type::TEXTURE2D:	return "sampler2D";
+			case Type::TEXTURECUBE:	return "samplerCube";
 		}
 		return "Invalid Type";
 	}

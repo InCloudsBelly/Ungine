@@ -106,9 +106,6 @@
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLVertexArray.h">
       <Filter>Ungine\Platform\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ungine\Platform\Windows\WindowsInput.h">
-      <Filter>Ungine\Platform\Windows</Filter>
-    </ClInclude>
     <ClInclude Include="src\Ungine\Platform\Windows\WindowsWindow.h">
       <Filter>Ungine\Platform\Windows</Filter>
     </ClInclude>
@@ -151,6 +148,12 @@
     <ClInclude Include="src\Upch.h" />
     <ClInclude Include="src\Ungine\Renderer\RenderPass.h" />
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLRenderPass.h" />
+    <ClInclude Include="src\Ungine\Core\Math\Mat4.h" />
+    <ClInclude Include="src\Ungine\Editor\SceneHierarchyPanel.h" />
+    <ClInclude Include="src\Ungine\Scene\Scene.h" />
+    <ClInclude Include="src\Ungine\Renderer\SceneRenderer.h" />
+    <ClInclude Include="src\Ungine\Scene\Entity.h" />
+    <ClInclude Include="src\Ungine\Renderer\Renderer2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ungine\Core\Application.cpp">
@@ -246,5 +249,11 @@
     <ClCompile Include="src\Upch.cpp" />
     <ClCompile Include="src\Ungine\Renderer\RenderPass.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLRenderPass.cpp" />
+    <ClCompile Include="src\Ungine\Core\Math\Mat4.cpp" />
+    <ClCompile Include="src\Ungine\Editor\SceneHierarchyPanel.cpp" />
+    <ClCompile Include="src\Ungine\Scene\Scene.cpp" />
+    <ClCompile Include="src\Ungine\Scene\Entity.cpp" />
+    <ClCompile Include="src\Ungine\Renderer\SceneRenderer.cpp" />
+    <ClCompile Include="src\Ungine\Renderer\Renderer2D.cpp" />
   </ItemGroup>
 </Project>
