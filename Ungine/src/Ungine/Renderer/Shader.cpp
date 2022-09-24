@@ -15,7 +15,7 @@ namespace U {
 		switch (RendererAPI::Current())
 		{
 			case RendererAPIType::None: return nullptr;
-			case RendererAPIType::OpenGL: result = std::make_shared<OpenGLShader>(filepath);
+			case RendererAPIType::OpenGL: result = Ref<OpenGLShader>::Create(filepath);
 		}
 		s_AllShaders.push_back(result);
 		return result;
@@ -68,11 +68,10 @@ namespace U {
 
 	}
 
-	Ref<Shader>& ShaderLibrary::Get(const std::string& name)
+	const Ref<Shader>& ShaderLibrary::Get(const std::string& name)const
 	{
 		U_CORE_ASSERT(m_Shaders.find(name) != m_Shaders.end());
-		return m_Shaders[name];
-
+		return m_Shaders.at(name);
 	}
 
 }

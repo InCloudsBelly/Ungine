@@ -16,14 +16,14 @@ namespace U
 		Blend = BIT(2)
 	};
 
-	class Material
+	class Material : public RefCounted
 	{
 		friend class MaterialInstance;
 	public:
 		Material(const Ref<Shader>& shader);
 		virtual ~Material();
 
-		void Bind() const;
+		void Bind();
 
 		uint32_t GetFlags() const { return m_MaterialFlags; }
 		void SetFlag(MaterialFlag flag) { m_MaterialFlags |= (uint32_t)flag; }
@@ -69,7 +69,7 @@ namespace U
 	private:
 		void AllocateStorage();
 		void OnShaderReloaded();
-		void BindTextures() const;
+		void BindTextures();
 
 		ShaderUniformDeclaration* FindUniformDeclaration(const std::string& name);
 		ShaderResourceDeclaration* FindResourceDeclaration(const std::string& name);
@@ -85,7 +85,7 @@ namespace U
 		uint32_t m_MaterialFlags;
 	};
 
-	class MaterialInstance
+	class MaterialInstance : public RefCounted
 	{
 		friend class Material;
 
@@ -129,7 +129,7 @@ namespace U
 			Set(name, (const Ref<Texture>&)texture);
 		}
 
-		void Bind() const;
+		void Bind();
 
 	public:
 		static Ref<MaterialInstance> Create(const Ref<Material>& material);

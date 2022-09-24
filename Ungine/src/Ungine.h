@@ -4,6 +4,7 @@
 #include "Ungine/Core/Log.h"
 #include "Ungine/Core/Input.h"
 #include "Ungine/Core/Timestep.h"
+#include "Ungine/Core/Timer.h"
 
 #include "Ungine/Core/Events/Event.h"
 #include "Ungine/Core/Events/ApplicationEvent.h"
@@ -33,3 +34,6 @@
 //Scenes
 #include "Ungine/Scene/Entity.h"
 #include "Ungine/Scene/Scene.h"
+#include "Ungine/Scene/Components.h"
+#include "Ungine/Scene/SceneCamera.h"
+#include "Ungine/Scene/SceneSerializer.h"

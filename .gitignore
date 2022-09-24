@@ -2,8 +2,14 @@
 .vs/
 /bin/
 bin-int/
+!vendor/bin/premake/
+!Ungine/vendor/mono/bin
+obj/
 
 # Files
 *.user
 *.sln
-*.vcxproj
+**.vcxproj
+**.vcxproj.filters
+**.vcxproj.user
+**.csproj

@@ -109,7 +109,7 @@ namespace U {
 
 
 
-	class VertexBuffer
+	class VertexBuffer : public RefCounted
 	{
 	public:
 		virtual ~VertexBuffer() {}
@@ -128,7 +128,7 @@ namespace U {
 
 	};
 
-	class IndexBuffer
+	class IndexBuffer : public RefCounted
 	{
 	public:
 		virtual ~IndexBuffer() {}
@@ -141,6 +141,7 @@ namespace U {
 		virtual unsigned int GetSize() const = 0;
 		virtual RendererID GetRendererID() const = 0;
 
+		static Ref<IndexBuffer> Create(uint32_t size);
 		static Ref<IndexBuffer> Create(void* data, uint32_t size = 0);
 	};
 

@@ -1,306 +1,678 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Ungine">
-      <UniqueIdentifier>{EB5126D6-D7F3-50AC-C0AE-6400ACEFD7FC}</UniqueIdentifier>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ungine\Core">
-      <UniqueIdentifier>{236166B7-8F16-DFAC-180B-D98384BFD5B0}</UniqueIdentifier>
+    <Filter Include="src\Ungine">
+      <UniqueIdentifier>{222B8533-0EE3-C680-77EA-9FDC63C16171}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ungine\Core\Events">
-      <UniqueIdentifier>{A707C5B2-93EB-8508-FC4B-805BE84E708A}</UniqueIdentifier>
+    <Filter Include="src\Ungine\Core">
+      <UniqueIdentifier>{BA9440CF-2620-AE93-2F31-31889B3B0A94}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ungine\Core\Math">
-      <UniqueIdentifier>{DCF3ADE0-C8EC-CC32-F11E-B2B7DD76AC3E}</UniqueIdentifier>
+    <Filter Include="src\Ungine\Core\Events">
+      <UniqueIdentifier>{5E6B9CA9-4A65-C5FB-33D2-5B0C1F6B2B68}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ungine\Editor">
-      <UniqueIdentifier>{C1D8612E-2D99-DD64-F6D3-26E262532241}</UniqueIdentifier>
+    <Filter Include="src\Ungine\Core\Math">
+      <UniqueIdentifier>{D3FD1A48-BF8C-A411-68AB-B80C5419B5B7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ungine\ImGui">
-      <UniqueIdentifier>{554B9DA4-41AE-2C49-EA33-65FFD675F8CB}</UniqueIdentifier>
+    <Filter Include="src\Ungine\Editor">
+      <UniqueIdentifier>{184E97A5-8464-953B-CDDB-205D393166C3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ungine\Platform">
-      <UniqueIdentifier>{9FE632CA-0B72-A08E-1483-2383808DFC8E}</UniqueIdentifier>
+    <Filter Include="src\Ungine\ImGui">
+      <UniqueIdentifier>{CCF1BDB7-B8EA-DC09-E11C-C28ECD74BC15}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ungine\Platform\OpenGL">
-      <UniqueIdentifier>{F30674E2-DF00-9D34-C86D-3345B40603A1}</UniqueIdentifier>
+    <Filter Include="src\Ungine\Platform">
+      <UniqueIdentifier>{B60D9BE4-226F-78F2-ABDC-BEA4173DAFB1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ungine\Platform\Windows">
-      <UniqueIdentifier>{D9BF1089-45F7-5820-4E01-BD43BAB77F19}</UniqueIdentifier>
+    <Filter Include="src\Ungine\Platform\OpenGL">
+      <UniqueIdentifier>{2A6E3479-167E-E049-7F37-45686B66CFE2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ungine\Renderer">
-      <UniqueIdentifier>{F1ED0FA5-5D79-7D69-668A-005ED294D969}</UniqueIdentifier>
+    <Filter Include="src\Ungine\Platform\Windows">
+      <UniqueIdentifier>{F00DDEF7-5C1B-0CDE-E501-08C9510ED894}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ungine\Scene">
-      <UniqueIdentifier>{48434DA5-34A6-DC49-DD2B-1500C96DA8CC}</UniqueIdentifier>
+    <Filter Include="src\Ungine\Renderer">
+      <UniqueIdentifier>{081578BF-7476-55CD-FDE3-9B7F69448C8C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ungine\Vendor">
-      <UniqueIdentifier>{C81D1E56-34DE-998C-FD18-E3096998DE68}</UniqueIdentifier>
+    <Filter Include="src\Ungine\Scene">
+      <UniqueIdentifier>{BFE96DB8-ABE2-8C0A-D414-728FC06C6C16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Ungine\Script">
+      <UniqueIdentifier>{262F32C6-9245-305C-DBBC-BB7D471201E4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Ungine\Vendor">
+      <UniqueIdentifier>{1F9353CD-8BA9-5163-D420-DD84407622EB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor">
+      <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\FastNoise">
+      <UniqueIdentifier>{EEFAAAA2-DAF3-C9F4-0326-AF79EF7DA900}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\yaml-cpp">
+      <UniqueIdentifier>{C5B3FC54-313F-6A19-3A50-ED0DA65AC619}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\yaml-cpp\include">
+      <UniqueIdentifier>{38D04F32-A407-98C9-AD11-FCEC19C8BEC2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\yaml-cpp\include\yaml-cpp">
+      <UniqueIdentifier>{EAF52FF2-D646-1B34-FFAA-09F6EB5AAE9D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\yaml-cpp\include\yaml-cpp\contrib">
+      <UniqueIdentifier>{EA87E472-D604-D8B5-FF81-D8C9EB5D7449}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\yaml-cpp\include\yaml-cpp\node">
+      <UniqueIdentifier>{FFEED84C-6BB3-D73C-3419-0807A09C7372}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\yaml-cpp\include\yaml-cpp\node\detail">
+      <UniqueIdentifier>{E131EE05-CD44-EE5E-762E-CB4B62208BAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\yaml-cpp\src">
+      <UniqueIdentifier>{5CCC2628-C82D-0436-519B-4AE8BDFB3AF5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\yaml-cpp\src\contrib">
+      <UniqueIdentifier>{5CB0BB24-C8BD-E90A-51A4-E5F5BDB0B5C1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Ungine.h" />
+    <ClInclude Include="src\Ungine.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\Ungine\Core\Application.h">
-      <Filter>Ungine\Core</Filter>
+      <Filter>src\Ungine\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Core\Assert.h">
-      <Filter>Ungine\Core</Filter>
+      <Filter>src\Ungine\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Core\Base.h">
-      <Filter>Ungine\Core</Filter>
+      <Filter>src\Ungine\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Core\Buffer.h">
-      <Filter>Ungine\Core</Filter>
+      <Filter>src\Ungine\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Core\Events\ApplicationEvent.h">
-      <Filter>Ungine\Core\Events</Filter>
+      <Filter>src\Ungine\Core\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Core\Events\Event.h">
-      <Filter>Ungine\Core\Events</Filter>
+      <Filter>src\Ungine\Core\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Core\Events\KeyEvent.h">
-      <Filter>Ungine\Core\Events</Filter>
+      <Filter>src\Ungine\Core\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Core\Events\MouseEvent.h">
-      <Filter>Ungine\Core\Events</Filter>
+      <Filter>src\Ungine\Core\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Core\Input.h">
-      <Filter>Ungine\Core</Filter>
+      <Filter>src\Ungine\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Core\KeyCodes.h">
-      <Filter>Ungine\Core</Filter>
+      <Filter>src\Ungine\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Core\Layer.h">
-      <Filter>Ungine\Core</Filter>
+      <Filter>src\Ungine\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Core\LayerStack.h">
-      <Filter>Ungine\Core</Filter>
+      <Filter>src\Ungine\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Core\Log.h">
-      <Filter>Ungine\Core</Filter>
+      <Filter>src\Ungine\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Core\Math\AABB.h">
-      <Filter>Ungine\Core\Math</Filter>
+      <Filter>src\Ungine\Core\Math</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Core\Math\Mat4.h">
-      <Filter>Ungine\Core\Math</Filter>
+      <Filter>src\Ungine\Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Core\Math\Noise.h">
+      <Filter>src\Ungine\Core\Math</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Core\Math\Ray.h">
-      <Filter>Ungine\Core\Math</Filter>
+      <Filter>src\Ungine\Core\Math</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Core\Platform.h">
-      <Filter>Ungine\Core</Filter>
+      <Filter>src\Ungine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Core\Ref.h">
+      <Filter>src\Ungine\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Core\TimeStep.h">
-      <Filter>Ungine\Core</Filter>
+      <Filter>src\Ungine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Core\Timer.h">
+      <Filter>src\Ungine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Core\UUID.h">
+      <Filter>src\Ungine\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Core\Window.h">
-      <Filter>Ungine\Core</Filter>
+      <Filter>src\Ungine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Editor\EditorCamera.h">
+      <Filter>src\Ungine\Editor</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Editor\SceneHierarchyPanel.h">
-      <Filter>Ungine\Editor</Filter>
+      <Filter>src\Ungine\Editor</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\EntryPoint.h">
-      <Filter>Ungine</Filter>
+      <Filter>src\Ungine</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\ImGui\ImGuiLayer.h">
-      <Filter>Ungine\ImGui</Filter>
+      <Filter>src\Ungine\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\ImGui\ImGuizmo.h">
-      <Filter>Ungine\ImGui</Filter>
+      <Filter>src\Ungine\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLBuffer.h">
-      <Filter>Ungine\Platform\OpenGL</Filter>
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.h">
-      <Filter>Ungine\Platform\OpenGL</Filter>
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLRenderPass.h">
-      <Filter>Ungine\Platform\OpenGL</Filter>
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLShader.h">
-      <Filter>Ungine\Platform\OpenGL</Filter>
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLShaderUniform.h">
-      <Filter>Ungine\Platform\OpenGL</Filter>
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLTexture.h">
-      <Filter>Ungine\Platform\OpenGL</Filter>
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLVertexArray.h">
-      <Filter>Ungine\Platform\OpenGL</Filter>
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Platform\Windows\WindowsWindow.h">
-      <Filter>Ungine\Platform\Windows</Filter>
+      <Filter>src\Ungine\Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\Buffer.h">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\Camera.h">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\Framebuffer.h">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\Material.h">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\Mesh.h">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\RenderCommandQueue.h">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\RenderPass.h">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\Renderer.h">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\Renderer2D.h">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\RendererAPI.h">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\SceneRenderer.h">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\Shader.h">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\ShaderUniform.h">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\Texture.h">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\VertexArray.h">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Scene\Components.h">
+      <Filter>src\Ungine\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Scene\Entity.h">
-      <Filter>Ungine\Scene</Filter>
+      <Filter>src\Ungine\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Scene\Scene.h">
-      <Filter>Ungine\Scene</Filter>
+      <Filter>src\Ungine\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\Upch.h" />
+    <ClInclude Include="src\Ungine\Scene\SceneCamera.h">
+      <Filter>src\Ungine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Scene\SceneSerializer.h">
+      <Filter>src\Ungine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Script\ScriptEngine.h">
+      <Filter>src\Ungine\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Script\ScriptEngineRegistry.h">
+      <Filter>src\Ungine\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Script\ScriptWrappers.h">
+      <Filter>src\Ungine\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Upch.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\anchor.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\binary.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\contrib\anchordict.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp\contrib</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\contrib\graphbuilder.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp\contrib</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\depthguard.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\dll.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\emitfromevents.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\emitter.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\emitterdef.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\emittermanip.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\emitterstyle.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\eventhandler.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\exceptions.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\mark.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\node\convert.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\node\detail\impl.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\node\detail\iterator.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\node\detail\iterator_fwd.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\node\detail\memory.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\node\detail\node.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\node\detail\node_data.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\node\detail\node_iterator.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\node\detail\node_ref.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\node\emit.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\node\impl.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\node\iterator.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\node\node.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\node\parse.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\node\ptr.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\node\type.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\noexcept.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\null.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\ostream_wrapper.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\parser.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\stlemitter.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\traits.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\include\yaml-cpp\yaml.h">
+      <Filter>vendor\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\collectionstack.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\contrib\graphbuilderadapter.h">
+      <Filter>vendor\yaml-cpp\src\contrib</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\directives.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\emitterstate.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\emitterutils.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\exp.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\indentation.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\nodebuilder.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\nodeevents.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\ptr_vector.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\regex_yaml.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\regeximpl.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\scanner.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\scanscalar.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\scantag.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\setting.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\singledocparser.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\stream.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\streamcharsource.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\stringsource.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\tag.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\yaml-cpp\src\token.h">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ungine\Core\Application.cpp">
-      <Filter>Ungine\Core</Filter>
+      <Filter>src\Ungine\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Core\Base.cpp">
-      <Filter>Ungine\Core</Filter>
+      <Filter>src\Ungine\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Core\Layer.cpp">
-      <Filter>Ungine\Core</Filter>
+      <Filter>src\Ungine\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Core\LayerStack.cpp">
-      <Filter>Ungine\Core</Filter>
+      <Filter>src\Ungine\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Core\Log.cpp">
-      <Filter>Ungine\Core</Filter>
+      <Filter>src\Ungine\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Core\Math\Mat4.cpp">
-      <Filter>Ungine\Core\Math</Filter>
+      <Filter>src\Ungine\Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Core\Math\Noise.cpp">
+      <Filter>src\Ungine\Core\Math</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Core\TimeStep.cpp">
-      <Filter>Ungine\Core</Filter>
+      <Filter>src\Ungine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Core\UUID.cpp">
+      <Filter>src\Ungine\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Core\Window.cpp">
-      <Filter>Ungine\Core</Filter>
+      <Filter>src\Ungine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Editor\EditorCamera.cpp">
+      <Filter>src\Ungine\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Editor\SceneHierarchyPanel.cpp">
-      <Filter>Ungine\Editor</Filter>
+      <Filter>src\Ungine\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\ImGui\ImGuiBuild.cpp">
-      <Filter>Ungine\ImGui</Filter>
+      <Filter>src\Ungine\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\ImGui\ImGuiLayer.cpp">
-      <Filter>Ungine\ImGui</Filter>
+      <Filter>src\Ungine\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\ImGui\ImGuizmo.cpp">
-      <Filter>Ungine\ImGui</Filter>
+      <Filter>src\Ungine\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLBuffer.cpp">
-      <Filter>Ungine\Platform\OpenGL</Filter>
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.cpp">
-      <Filter>Ungine\Platform\OpenGL</Filter>
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLRenderPass.cpp">
-      <Filter>Ungine\Platform\OpenGL</Filter>
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLRendererAPI.cpp">
-      <Filter>Ungine\Platform\OpenGL</Filter>
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLShader.cpp">
-      <Filter>Ungine\Platform\OpenGL</Filter>
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLShaderUniform.cpp">
-      <Filter>Ungine\Platform\OpenGL</Filter>
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLTexture.cpp">
-      <Filter>Ungine\Platform\OpenGL</Filter>
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLVertexArray.cpp">
-      <Filter>Ungine\Platform\OpenGL</Filter>
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Platform\Windows\WindowsInput.cpp">
-      <Filter>Ungine\Platform\Windows</Filter>
+      <Filter>src\Ungine\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Platform\Windows\WindowsWindow.cpp">
-      <Filter>Ungine\Platform\Windows</Filter>
+      <Filter>src\Ungine\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\Buffer.cpp">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\Camera.cpp">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\Framebuffer.cpp">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\Material.cpp">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\Mesh.cpp">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\RenderCommandQueue.cpp">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\RenderPass.cpp">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\Renderer.cpp">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\Renderer2D.cpp">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\SceneRenderer.cpp">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\Shader.cpp">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\Texture.cpp">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\VertexArray.cpp">
-      <Filter>Ungine\Renderer</Filter>
+      <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Scene\Entity.cpp">
-      <Filter>Ungine\Scene</Filter>
+      <Filter>src\Ungine\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Scene\Scene.cpp">
-      <Filter>Ungine\Scene</Filter>
+      <Filter>src\Ungine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Scene\SceneCamera.cpp">
+      <Filter>src\Ungine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Scene\SceneSerializer.cpp">
+      <Filter>src\Ungine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Script\ScriptEngine.cpp">
+      <Filter>src\Ungine\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Script\ScriptEngineRegistry.cpp">
+      <Filter>src\Ungine\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Script\ScriptWrappers.cpp">
+      <Filter>src\Ungine\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Vendor\stb_image.cpp">
-      <Filter>Ungine\Vendor</Filter>
+      <Filter>src\Ungine\Vendor</Filter>
     </ClCompile>
-    <ClCompile Include="src\Upch.cpp" />
+    <ClCompile Include="src\Upch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\FastNoise\FastNoise.cpp">
+      <Filter>vendor\FastNoise</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\binary.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\contrib\graphbuilder.cpp">
+      <Filter>vendor\yaml-cpp\src\contrib</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\contrib\graphbuilderadapter.cpp">
+      <Filter>vendor\yaml-cpp\src\contrib</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\convert.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\depthguard.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\directives.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\emit.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\emitfromevents.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\emitter.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\emitterstate.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\emitterutils.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\exceptions.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\exp.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\memory.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\node.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\node_data.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\nodebuilder.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\nodeevents.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\null.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\ostream_wrapper.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\parse.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\parser.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\regex_yaml.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\scanner.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\scanscalar.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\scantag.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\scantoken.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\simplekey.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\singledocparser.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\stream.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\yaml-cpp\src\tag.cpp">
+      <Filter>vendor\yaml-cpp\src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

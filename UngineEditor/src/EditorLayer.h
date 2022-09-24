@@ -2,6 +2,7 @@
 
 #include "Ungine.h"
 
+#include "Ungine/Editor/EditorCamera.h"
 #include "Ungine/ImGui/ImGuiLayer.h"
 #include "imgui/imgui_internal.h"
 
@@ -49,23 +50,35 @@ namespace U {
 		void Property(const std::string& name, glm::vec4& value, float min = -1.0f, float max = 1.0f, PropertyFlag flags = PropertyFlag::None);
 	
 		void ShowBoundingBoxes(bool show, bool onTop = false);
-
+		void SelectEntity(Entity entity);
 	private:
 		std::pair<float, float> GetMouseViewportSpace();
 		std::pair<glm::vec3, glm::vec3> CastRay(float mx, float my);
+
+		struct SelectedSubmesh
+		{
+			U::Entity Entity;
+			Submesh* Mesh = nullptr;
+			float Distance = 0.0f;
+		};
+
+		void OnSelected(const SelectedSubmesh& selectionContext);
+		void OnEntityDeleted(Entity e);
+		Ray CastMouseRay();
+
+		void OnScenePlay();
+		void OnSceneStop();
 
 	private:
 		
 		Scope<SceneHierarchyPanel> m_SceneHierarchyPanel;
 
-		Ref<Scene> m_Scene;
-		Ref<Scene> m_SphereScene;
 		Ref<Scene> m_ActiveScene;
+		Ref<Scene> m_RuntimeScene, m_EditorScene;
 
-		Entity* m_MeshEntity = nullptr;
+		EditorCamera m_EditorCamera;
 
 		Ref<Shader> m_BrushShader;
-		Ref<Mesh> m_PlaneMesh;
 		Ref<Material> m_SphereBaseMaterial;
 
 		Ref<Material> m_MeshMaterial;
@@ -75,11 +88,10 @@ namespace U {
 		std::vector<Ref<MaterialInstance>> m_MetalSphereMaterialInstances;
 		std::vector<Ref<MaterialInstance>> m_DielectricSphereMaterialInstances;
 
-		float m_GridScale = 16.025f, m_GridSize = 0.025f;
 
 		struct AlbedoInput
 		{
-			glm::vec3 Color = { 0.972f, 0.96f, 0.915f }; // Silver, from https://docs.unrealengine.com/en-us/Engine/Rendering/Materials/PhysicallyBased
+			glm::vec3 Color = { 0.972f, 0.96f, 0.915f };
 			Ref<Texture2D> TextureMap;
 			bool SRGB = true;
 			bool UseTexture = false;
@@ -123,6 +135,7 @@ namespace U {
 
 		// Editor resources
 		Ref<Texture2D> m_CheckerboardTex;
+		Ref<Texture2D> m_PlayButtonTex;
 
 		glm::vec2 m_ViewportBounds[2];
 		int m_GizmoType = -1; // -1 = no gizmo
@@ -133,12 +146,25 @@ namespace U {
 		bool m_UIShowBoundingBoxes = false;
 		bool m_UIShowBoundingBoxesOnTop = false;
 
-		struct SelectedSubmesh
+
+		bool m_ViewportPanelMouseOver = false;
+		bool m_ViewportPanelFocused = false;
+
+		enum class SceneState
 		{
-			Submesh* Mesh;
-			float Distance;
+			Edit = 0, Play = 1, Pause = 2
 		};
-		std::vector<SelectedSubmesh> m_SelectedSubmeshes;
+		SceneState m_SceneState = SceneState::Edit;
+
+
+		enum class SelectionMode
+		{
+			None = 0, Entity = 1, SubMesh = 2
+		};
+		
+		SelectionMode m_SelectionMode = SelectionMode::Entity;
+		std::vector<SelectedSubmesh> m_SelectionContext;
+		glm::mat4* m_RelativeTransform = nullptr;
 		glm::mat4* m_CurrentlySelectedTransform = nullptr;
 
 	};

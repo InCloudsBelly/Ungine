@@ -55,7 +55,6 @@ namespace U {
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		U_CORE_ASSERT(status, "Failed to initialize Glad!");
 		glfwSetWindowUserPointer(m_Window, &m_Data);
-		SetVSync(true);
 
 		// Set GLFW callbacks
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
@@ -84,19 +83,19 @@ namespace U {
 			{
 				case GLFW_PRESS:
 				{
-					KeyPressedEvent event(key, 0);
+					KeyPressedEvent event((KeyCode)key, 0);
 					data.EventCallback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					KeyReleasedEvent event(key);
+					KeyReleasedEvent event((KeyCode)key);
 					data.EventCallback(event);
 					break;
 				}
 				case GLFW_REPEAT:
 				{
-					KeyPressedEvent event(key, 1);
+					KeyPressedEvent event((KeyCode)key, 1);
 					data.EventCallback(event);
 					break;
 				}
@@ -107,7 +106,7 @@ namespace U {
 		{
 			auto& data = *((WindowData*)glfwGetWindowUserPointer(window));
 
-			KeyTypedEvent event((int)codepoint);
+			KeyTypedEvent event((KeyCode)codepoint);
 			data.EventCallback(event);
 		});
 
