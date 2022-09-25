@@ -241,7 +241,7 @@ namespace U
 				auto aiMaterial = scene->mMaterials[i];
 				auto aiMaterialName = aiMaterial->GetName();
 
-				auto mi = Ref<MaterialInstance>::Create(m_BaseMaterial);
+				auto mi = Ref<MaterialInstance>::Create(m_BaseMaterial, aiMaterialName.data);
 				m_Materials[i] = mi;
 
 				U_MESH_LOG("  {0} (Index = {1})", aiMaterialName.data, i);
@@ -393,12 +393,12 @@ namespace U
 					auto prop = aiMaterial->mProperties[i];
 
 #if DEBUG_PRINT_ALL_PROPS
-					HZ_MESH_LOG("Material Property:");
-					HZ_MESH_LOG("  Name = {0}", prop->mKey.data);
-					// HZ_MESH_LOG("  Type = {0}", prop->mType);
-					// HZ_MESH_LOG("  Size = {0}", prop->mDataLength);
+					U_MESH_LOG("Material Property:");
+					U_MESH_LOG("  Name = {0}", prop->mKey.data);
+					// U_MESH_LOG("  Type = {0}", prop->mType);
+					// U_MESH_LOG("  Size = {0}", prop->mDataLength);
 					float data = *(float*)prop->mData;
-					HZ_MESH_LOG("  Value = {0}", data);
+					U_MESH_LOG("  Value = {0}", data);
 
 
 					switch (prop->mSemantic)
@@ -625,9 +625,8 @@ namespace U
 		float DeltaTime = (float)(nodeAnim->mPositionKeys[NextPositionIndex].mTime - nodeAnim->mPositionKeys[PositionIndex].mTime);
 		float Factor = (animationTime - (float)nodeAnim->mPositionKeys[PositionIndex].mTime) / DeltaTime;
 
-		if(Factor < 0.0f)
-			Factor = 0.0f;
 		U_CORE_ASSERT(Factor <= 1.0f, "Factor must be below 1.0f");
+		Factor = glm::clamp(Factor, 0.0f, 1.0f);
 
 		const aiVector3D& Start = nodeAnim->mPositionKeys[PositionIndex].mValue;
 		const aiVector3D& End = nodeAnim->mPositionKeys[NextPositionIndex].mValue;
@@ -651,9 +650,10 @@ namespace U
 		U_CORE_ASSERT(NextRotationIndex < nodeAnim->mNumRotationKeys);
 		float DeltaTime = (float)(nodeAnim->mRotationKeys[NextRotationIndex].mTime - nodeAnim->mRotationKeys[RotationIndex].mTime);
 		float Factor = (animationTime - (float)nodeAnim->mRotationKeys[RotationIndex].mTime) / DeltaTime;
-		if (Factor < 0.0f)
-			Factor = 0.0f;
+	
 		U_CORE_ASSERT(Factor <= 1.0f, "Factor must be below 1.0f");
+		Factor = glm::clamp(Factor, 0.0f, 1.0f);
+
 		const aiQuaternion& StartRotationQ = nodeAnim->mRotationKeys[RotationIndex].mValue;
 		const aiQuaternion& EndRotationQ = nodeAnim->mRotationKeys[NextRotationIndex].mValue;
 		auto q = aiQuaternion();
@@ -676,9 +676,10 @@ namespace U
 		U_CORE_ASSERT(nextIndex < nodeAnim->mNumScalingKeys);
 		float deltaTime = (float)(nodeAnim->mScalingKeys[nextIndex].mTime - nodeAnim->mScalingKeys[index].mTime);
 		float factor = (animationTime - (float)nodeAnim->mScalingKeys[index].mTime) / deltaTime;
-		if (factor < 0.0f)
-			factor = 0.0f;
+		
 		U_CORE_ASSERT(factor <= 1.0f, "Factor must be below 1.0f");
+		factor = glm::clamp(factor, 0.0f, 1.0f);
+
 		const auto& start = nodeAnim->mScalingKeys[index].mValue;
 		const auto& end = nodeAnim->mScalingKeys[nextIndex].mValue;
 		auto delta = end - start;

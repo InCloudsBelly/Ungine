@@ -266,7 +266,7 @@ namespace U
 			out << YAML::Key << "CameraComponent";
 			out << YAML::BeginMap; // CameraComponent
 
-			auto cameraComponent = entity.GetComponent<CameraComponent>();
+			auto& cameraComponent = entity.GetComponent<CameraComponent>();
 			out << YAML::Key << "Camera" << YAML::Value << "some camera data...";
 			out << YAML::Key << "Primary" << YAML::Value << cameraComponent.Primary;
 
@@ -286,8 +286,47 @@ namespace U
 
 			out << YAML::EndMap; // SpriteRendererComponent
 		}
+
+		if (entity.HasComponent<RigidBody2DComponent>())
+		{
+			out << YAML::Key << "RigidBody2DComponent";
+			out << YAML::BeginMap; // RigidBody2DComponent
+
+			auto& rigidbody2DComponent = entity.GetComponent<RigidBody2DComponent>();
+			out << YAML::Key << "BodyType" << YAML::Value << (int)rigidbody2DComponent.BodyType;
+			out << YAML::Key << "Mass" << YAML::Value << rigidbody2DComponent.Mass;
+
+			out << YAML::EndMap; // RigidBody2DComponent
+		}
+
+		if (entity.HasComponent<BoxCollider2DComponent>())
+		{
+			out << YAML::Key << "BoxCollider2DComponent";
+			out << YAML::BeginMap; // BoxCollider2DComponent
+
+			auto& boxCollider2DComponent = entity.GetComponent<BoxCollider2DComponent>();
+			out << YAML::Key << "Offset" << YAML::Value << boxCollider2DComponent.Offset;
+			out << YAML::Key << "Size" << YAML::Value << boxCollider2DComponent.Size;
+
+			out << YAML::EndMap; // BoxCollider2DComponent
+		}
+
+		if (entity.HasComponent<CircleCollider2DComponent>())
+		{
+			out << YAML::Key << "CircleCollider2DComponent";
+			out << YAML::BeginMap; // CircleCollider2DComponent
+
+			auto& circleCollider2DComponent = entity.GetComponent<CircleCollider2DComponent>();
+			out << YAML::Key << "Offset" << YAML::Value << circleCollider2DComponent.Offset;
+			out << YAML::Key << "Radius" << YAML::Value << circleCollider2DComponent.Radius;
+
+			out << YAML::EndMap; // CircleCollider2DComponent
+		}
+
 		out << YAML::EndMap; // Entity
 	}
+
+
 
 
 	static void SerializeEnvironment(YAML::Emitter& out, const Ref<Scene>& scene)
@@ -501,15 +540,36 @@ namespace U
 					auto& component = deserializedEntity.AddComponent<SpriteRendererComponent>();
 					component.Color = spriteRendererComponent["Color"].as<glm::vec4>();
 					component.TilingFactor = spriteRendererComponent["TilingFactor"].as<float>();
-
-					U_CORE_INFO("  SpriteRendererComponent present.");
 				}
 
+				auto rigidBody2DComponent = entity["RigidBody2DComponent"];
+				if (rigidBody2DComponent)
+				{
+					auto& component = deserializedEntity.AddComponent<RigidBody2DComponent>();
+					component.BodyType = (RigidBody2DComponent::Type)rigidBody2DComponent["BodyType"].as<int>();
+					component.Mass = rigidBody2DComponent["Mass"].as<float>();
+				}
+
+				auto boxCollider2DComponent = entity["BoxCollider2DComponent"];
+				if (boxCollider2DComponent)
+				{
+					auto& component = deserializedEntity.AddComponent<BoxCollider2DComponent>();
+					component.Offset = boxCollider2DComponent["Offset"].as<glm::vec2>();
+					component.Size = boxCollider2DComponent["Size"].as<glm::vec2>();
+				}
+
+				auto circleCollider2DComponent = entity["CircleCollider2DComponent"];
+				if (circleCollider2DComponent)
+				{
+					auto& component = deserializedEntity.AddComponent<CircleCollider2DComponent>();
+					component.Offset = circleCollider2DComponent["Offset"].as<glm::vec2>();
+					component.Radius = circleCollider2DComponent["Radius"].as<float>();
+				}
 			}
 		}
 		return true;
-
 	}
+
 
 	bool SceneSerializer::DeserializeRuntime(const std::string& filepath)
 	{

@@ -29,6 +29,7 @@ namespace U {
 		void* Ungine_MeshComponent_GetMesh(uint64_t entityID);
 		void Ungine_MeshComponent_SetMesh(uint64_t entityID, Ref<Mesh>* inMesh);
 
+		void Ungine_RigidBody2DComponent_ApplyLinearImpulse(uint64_t entityID, glm::vec2* impulse, glm::vec2* offset, bool wake);
 
 		// Renderer
 		// Texture2D
@@ -44,6 +45,7 @@ namespace U {
 		void Ungine_MaterialInstance_Destructor(Ref<MaterialInstance>* _this);
 		void Ungine_MaterialInstance_SetFloat(Ref<MaterialInstance>* _this, MonoString* uniform, float value);
 		void Ungine_MaterialInstance_SetVector3(Ref<MaterialInstance>* _this, MonoString* uniform, glm::vec3* value);
+		void Ungine_MaterialInstance_SetVector4(Ref<MaterialInstance>* _this, MonoString* uniform, glm::vec4* value);
 		void Ungine_MaterialInstance_SetTexture(Ref<MaterialInstance>* _this, MonoString* uniform, Ref<Texture2D>* texture);
 
 		// Mesh

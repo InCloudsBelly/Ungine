@@ -17,6 +17,7 @@ IncludeDir["GLFW"] = "Ungine/vendor/GLFW/include"
 IncludeDir["Glad"] = "Ungine/vendor/Glad/include"
 IncludeDir["ImGui"] = "Ungine/vendor/ImGui"
 IncludeDir["glm"] = "Ungine/vendor/glm"
+IncludeDir["Box2D"] = "Ungine/vendor/Box2D/include"
 IncludeDir["entt"] = "Ungine/vendor/entt/include"
 IncludeDir["mono"] = "Ungine/vendor/mono/include"
 IncludeDir["FastNoise"] = "Ungine/vendor/FastNoise"
@@ -28,6 +29,7 @@ group "Dependencies"
 include "Ungine/vendor/GLFW"
 include "Ungine/vendor/Glad"
 include "Ungine/vendor/ImGui"
+include "Ungine/vendor/Box2D"
 
 group ""
 
@@ -65,6 +67,7 @@ project "Ungine"
         "%{IncludeDir.Glad}",
         "%{IncludeDir.glm}",
         "%{IncludeDir.ImGui}",
+		"%{IncludeDir.Box2D}",
         "%{IncludeDir.entt}",
 		"%{IncludeDir.mono}",
         "%{IncludeDir.FastNoise}",
@@ -78,6 +81,7 @@ project "Ungine"
         "GLFW",
         "Glad",
         "ImGui",
+		"Box2D",
         "opengl32.lib",
 		"%{LibraryDir.mono}"
     }

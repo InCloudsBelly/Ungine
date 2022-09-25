@@ -90,7 +90,7 @@ namespace U
 		friend class Material;
 
 	public:
-		MaterialInstance(const Ref<Material>& material);
+		MaterialInstance(const Ref<Material>& material, const std::string& name = "");
 		virtual ~MaterialInstance();
 
 		template <typename T>
@@ -139,7 +139,7 @@ namespace U
 		void SetFlag(MaterialFlag flag, bool value = true);
 
 		Ref<Shader >GetShader() { return m_Material->m_Shader; }
-
+		const std::string& GetName() const { return m_Name; }
 
 	private:
 		void AllocateStorage();
@@ -148,6 +148,7 @@ namespace U
 		void OnMaterialValueUpdated(ShaderUniformDeclaration* decl);
 	private:
 		Ref<Material> m_Material;
+		std::string m_Name;
 
 		Buffer m_VSUniformStorageBuffer;
 		Buffer m_PSUniformStorageBuffer;

@@ -11,6 +11,8 @@
 #include "Ungine/Core/Input.h"
 #include <mono/jit/jit.h>
 
+#include <box2d/box2d.h>
+
 
 namespace U
 {
@@ -133,6 +135,23 @@ namespace U
 			meshComponent.Mesh = inMesh ? *inMesh : nullptr;
 		}
 
+
+		void Ungine_RigidBody2DComponent_ApplyLinearImpulse(uint64_t entityID, glm::vec2* impulse, glm::vec2* offset, bool wake)
+		{
+			Ref<Scene> scene= ScriptEngine::GetCurrentSceneContext();
+			U_CORE_ASSERT(scene, "NO active scene!");
+			const auto& entityMap = scene->GetEntityMap();
+			U_CORE_ASSERT(entityMap.find(entityID) != entityMap.end(), "Invalid entity ID or entity doesn't exist in scene!");
+
+			Entity entity = entityMap.at(entityID);
+			U_CORE_ASSERT(entity.HasComponent<RigidBody2DComponent>());
+			auto& component = entity.GetComponent<RigidBody2DComponent>();
+			b2Body* body = (b2Body*)component.RuntimeBody;
+			body->ApplyLinearImpulse(*(const b2Vec2*)impulse, body->GetWorldCenter() + *(const b2Vec2*)offset, wake);
+		}
+	
+
+
 		Ref<Mesh>* Ungine_Mesh_Constructor(MonoString* filepath)
 		{
 			return new Ref<Mesh>(new Mesh(mono_string_to_utf8(filepath)));
@@ -230,6 +249,12 @@ namespace U
 		}
 
 		void Ungine_MaterialInstance_SetVector3(Ref<MaterialInstance>* _this, MonoString* uniform, glm::vec3* value)
+		{
+			Ref<MaterialInstance>& instance = *(Ref<MaterialInstance>*)_this;
+			instance->Set(mono_string_to_utf8(uniform), *value);
+		}
+
+		void Ungine_MaterialInstance_SetVector4(Ref<MaterialInstance>* _this, MonoString* uniform, glm::vec4* value)
 		{
 			Ref<MaterialInstance>& instance = *(Ref<MaterialInstance>*)_this;
 			instance->Set(mono_string_to_utf8(uniform), *value);

@@ -10,3 +10,6 @@
 [submodule "Ungine/vendor/FastNoise"]
 	path = Ungine/vendor/FastNoise
 	url = https://github.com/Auburn/FastNoiseLite.git
+[submodule "Ungine/vendor/Box2D"]
+	path = Ungine/vendor/Box2D
+	url = https://github.com/TheCherno/box2d.git

@@ -40,6 +40,8 @@ namespace U
 		Component_RegisterType(ScriptComponent);
 		Component_RegisterType(CameraComponent);
 		Component_RegisterType(SpriteRendererComponent);
+		Component_RegisterType(RigidBody2DComponent);
+		Component_RegisterType(BoxCollider2DComponent);
 	}
 
 
@@ -57,6 +59,8 @@ namespace U
 		mono_add_internal_call("Ungine.MeshComponent::GetMesh_Native", U::Script::Ungine_MeshComponent_GetMesh);
 		mono_add_internal_call("Ungine.MeshComponent::SetMesh_Native", U::Script::Ungine_MeshComponent_SetMesh);
 
+		mono_add_internal_call("U.RigidBody2DComponent::ApplyLinearImpulse_Native", U::Script::Ungine_RigidBody2DComponent_ApplyLinearImpulse);
+
 		mono_add_internal_call("Ungine.Input::IsKeyPressed_Native", U::Script::Ungine_Input_IsKeyPressed);
 
 		mono_add_internal_call("Ungine.Texture2D::Constructor_Native", U::Script::Ungine_Texture2D_Constructor);
@@ -70,6 +74,7 @@ namespace U
 		mono_add_internal_call("Ungine.MaterialInstance::Destructor_Native", U::Script::Ungine_MaterialInstance_Destructor);
 		mono_add_internal_call("Ungine.MaterialInstance::SetFloat_Native", U::Script::Ungine_MaterialInstance_SetFloat);
 		mono_add_internal_call("Ungine.MaterialInstance::SetVector3_Native", U::Script::Ungine_MaterialInstance_SetVector3);
+		mono_add_internal_call("Hazel.MaterialInstance::SetVector4_Native", U::Script::Ungine_MaterialInstance_SetVector4);
 		mono_add_internal_call("Ungine.MaterialInstance::SetTexture_Native", U::Script::Ungine_MaterialInstance_SetTexture);
 
 		mono_add_internal_call("Ungine.Mesh::Constructor_Native", U::Script::Ungine_Mesh_Constructor);

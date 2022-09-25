@@ -62,6 +62,11 @@ namespace U
             SetVector3_Native(m_UnmanagedInstance, uniform, ref value);
         }
 
+        public void Set(string uniform, Vector4 value)
+        {
+            SetVector4_Native(m_UnmanagedInstance, uniform, ref value);
+        }
+
 
         public void SetTexture(string uniform, Texture2D texture)
         {
@@ -87,6 +92,9 @@ namespace U
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetVector3_Native(IntPtr unmanagedInstance, string uniform, ref Vector3 value);
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetVector4_Native(IntPtr unmanagedInstance, string uniform, ref Vector4 value);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+
         public static extern void SetTexture_Native(IntPtr unmanagedInstance, string uniform, IntPtr texture);
     }
 }

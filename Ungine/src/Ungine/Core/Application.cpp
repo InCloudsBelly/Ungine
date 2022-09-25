@@ -189,4 +189,27 @@ namespace U {
 		return (float)glfwGetTime();
 	}
 
+
+	const char* Application::GetConfigurationName()
+	{
+		#if defined(U_DEBUG)
+				return "Debug";
+		#elif defined(U_RELEASE)
+				return "Release";
+		#elif defined(U_DIST)
+				return "Dist";
+		#else
+		#error Undefined configuration?
+		#endif
+	}
+
+	const char* Application::GetPlatformName()
+	{
+		#if defined(U_PLATFORM_WINDOWS)
+				return "Windows x64";
+		#else
+		#error Undefined platform?
+		#endif
+	}
+
 }
