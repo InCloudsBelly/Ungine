@@ -162,9 +162,6 @@
     <ClInclude Include="src\Ungine\ImGui\ImGuizmo.h">
       <Filter>src\Ungine\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLBuffer.h">
-      <Filter>src\Ungine\Platform\OpenGL</Filter>
-    </ClInclude>
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.h">
       <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClInclude>
@@ -180,13 +177,10 @@
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLTexture.h">
       <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLVertexArray.h">
-      <Filter>src\Ungine\Platform\OpenGL</Filter>
-    </ClInclude>
     <ClInclude Include="src\Ungine\Platform\Windows\WindowsWindow.h">
       <Filter>src\Ungine\Platform\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ungine\Renderer\Buffer.h">
+    <ClInclude Include="src\Ungine\Renderer\VertexBuffer.h">
       <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\Camera.h">
@@ -226,9 +220,6 @@
       <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\Texture.h">
-      <Filter>src\Ungine\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ungine\Renderer\VertexArray.h">
       <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Scene\Components.h">
@@ -435,6 +426,11 @@
     <ClInclude Include="vendor\yaml-cpp\src\token.h">
       <Filter>vendor\yaml-cpp\src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ungine\Renderer\IndexBuffer.h" />
+    <ClInclude Include="src\Ungine\Renderer\Pipeline.h" />
+    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLIndexBuffer.h" />
+    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLPipeline.h" />
+    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLVertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ungine\Core\Application.cpp">
@@ -482,9 +478,6 @@
     <ClCompile Include="src\Ungine\ImGui\ImGuizmo.cpp">
       <Filter>src\Ungine\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLBuffer.cpp">
-      <Filter>src\Ungine\Platform\OpenGL</Filter>
-    </ClCompile>
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.cpp">
       <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClCompile>
@@ -503,16 +496,13 @@
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLTexture.cpp">
       <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLVertexArray.cpp">
-      <Filter>src\Ungine\Platform\OpenGL</Filter>
-    </ClCompile>
     <ClCompile Include="src\Ungine\Platform\Windows\WindowsInput.cpp">
       <Filter>src\Ungine\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Platform\Windows\WindowsWindow.cpp">
       <Filter>src\Ungine\Platform\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="src\Ungine\Renderer\Buffer.cpp">
+    <ClCompile Include="src\Ungine\Renderer\VertexBuffer.cpp">
       <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\Camera.cpp">
@@ -548,7 +538,7 @@
     <ClCompile Include="src\Ungine\Renderer\Texture.cpp">
       <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Ungine\Renderer\VertexArray.cpp">
+    <ClCompile Include="src\Ungine\Renderer\Pipeline.cpp">
       <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Scene\Entity.cpp">
@@ -674,5 +664,9 @@
     <ClCompile Include="vendor\yaml-cpp\src\tag.cpp">
       <Filter>vendor\yaml-cpp\src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Ungine\Renderer\IndexBuffer.cpp" />
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLIndexBuffer.cpp" />
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLPipeline.cpp" />
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLVertexBuffer.cpp" />
   </ItemGroup>
 </Project>

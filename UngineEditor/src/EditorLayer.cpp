@@ -109,7 +109,7 @@ namespace U {
 		m_SceneHierarchyPanel->SetEntityDeletedCallback(std::bind(&EditorLayer::OnEntityDeleted, this, std::placeholders::_1));
 		
 		SceneSerializer serializer(m_EditorScene);
-		serializer.Deserialize("assets/scenes/Physics2DTest.hsc");
+		serializer.Deserialize("assets/scenes/levels/Physics2D-Game.hsc");
 	}
 
 

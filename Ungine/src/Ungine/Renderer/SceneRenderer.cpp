@@ -59,7 +59,7 @@ namespace U
 		geoFramebufferSpec.ClearColor = { 0.1f,0.1f,0.1f,1.0f };
 
 		RenderPassSpecification geoRenderPassSpec;
-		geoRenderPassSpec.TargetFramebuffer = U::Framebuffer::Create(geoFramebufferSpec);
+		geoRenderPassSpec.TargetFramebuffer = Framebuffer::Create(geoFramebufferSpec);
 		s_Data.GeoPass = RenderPass::Create(geoRenderPassSpec);
 
 
@@ -70,7 +70,7 @@ namespace U
 		compFramebufferSpec.ClearColor = { 0.5f, 0.1f, 0.1f, 1.0f };
 
 		RenderPassSpecification compRenderPassSpec;
-		compRenderPassSpec.TargetFramebuffer = U::Framebuffer::Create(compFramebufferSpec);
+		compRenderPassSpec.TargetFramebuffer = Framebuffer::Create(compFramebufferSpec);
 		s_Data.CompositePass = RenderPass::Create(compRenderPassSpec);
 
 		s_Data.CompositeShader = Shader::Create("assets/shaders/SceneComposite.glsl");

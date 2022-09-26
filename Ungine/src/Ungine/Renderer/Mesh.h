@@ -6,8 +6,10 @@
 #include "Ungine/Core/Timestep.h"
 #include "Ungine/Core/Math/AABB.h"
 
-#include "Ungine/Renderer/VertexArray.h"
-#include "Ungine/Renderer/Buffer.h"
+#include "Ungine/Renderer/Pipeline.h"
+#include "Ungine/Renderer/IndexBuffer.h"
+#include "Ungine/Renderer/VertexBuffer.h"
+
 #include "Ungine/Renderer/Shader.h"
 #include "Ungine/Renderer/Material.h"
 
@@ -170,7 +172,10 @@ namespace U
 		uint32_t m_BoneCount = 0;
 		std::vector<BoneInfo> m_BoneInfo;
 
-		Ref<VertexArray> m_VertexArray;
+		Ref<Pipeline> m_Pipeline;
+		Ref<VertexBuffer> m_VertexBuffer;
+		Ref<IndexBuffer> m_IndexBuffer;
+
 
 		std::vector<Vertex> m_StaticVertices;
 		std::vector<AnimatedVertex> m_AnimatedVertices;
