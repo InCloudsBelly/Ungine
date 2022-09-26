@@ -52,6 +52,11 @@ namespace U {
 	
 		void ShowBoundingBoxes(bool show, bool onTop = false);
 		void SelectEntity(Entity entity);
+
+		void OpenScene();
+		void SaveScene();
+		void SaveSceneAs();
+
 	private:
 		std::pair<float, float> GetMouseViewportSpace();
 		std::pair<glm::vec3, glm::vec3> CastRay(float mx, float my);
@@ -72,12 +77,15 @@ namespace U {
 
 		void UpdateWindowTitle(const std::string& sceneName);
 
+		float GetSnapValue();
+
 	private:
 		
 		Scope<SceneHierarchyPanel> m_SceneHierarchyPanel;
 
 		Ref<Scene> m_RuntimeScene, m_EditorScene;
-		bool m_ReloadScriptOnPlay = false;
+		std::string m_SceneFilePath;
+		bool m_ReloadScriptOnPlay = true;
 
 		EditorCamera m_EditorCamera;
 
@@ -85,8 +93,6 @@ namespace U {
 		Ref<Material> m_SphereBaseMaterial;
 
 		Ref<Material> m_MeshMaterial;
-
-
 
 		std::vector<Ref<MaterialInstance>> m_MetalSphereMaterialInstances;
 		std::vector<Ref<MaterialInstance>> m_DielectricSphereMaterialInstances;
@@ -99,14 +105,14 @@ namespace U {
 			bool SRGB = true;
 			bool UseTexture = false;
 		};
-		AlbedoInput m_AlbedoInput;
+		//AlbedoInput m_AlbedoInput;
 
 		struct NormalInput
 		{
 			Ref<Texture2D> TextureMap;
 			bool UseTexture = false;
 		};
-		NormalInput m_NormalInput;
+		//NormalInput m_NormalInput;
 
 		struct MetalnessInput
 		{
@@ -114,7 +120,7 @@ namespace U {
 			Ref<Texture2D> TextureMap;
 			bool UseTexture = false;
 		};
-		MetalnessInput m_MetalnessInput;
+		//MetalnessInput m_MetalnessInput;
 
 		struct RoughnessInput
 		{
@@ -143,6 +149,7 @@ namespace U {
 		glm::vec2 m_ViewportBounds[2];
 		int m_GizmoType = -1; // -1 = no gizmo
 		float m_SnapValue = 0.5f;
+		float m_RotationSnapValue = 45.0f;
 		bool m_AllowViewportCameraEvents = false;
 		bool m_DrawOnTopBoundingBoxes = false;
 

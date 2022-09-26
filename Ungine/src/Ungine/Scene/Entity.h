@@ -20,12 +20,14 @@ namespace U
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args)
 		{
+			U_CORE_ASSERT(!HasComponent<T>(), "Entity already has component!");
 			return m_Scene->m_Registry.emplace<T>(m_EntityHandle, std::forward<Args>(args)...);
 		}
 
 		template<typename T>
 		T& GetComponent()
 		{
+			U_CORE_ASSERT(HasComponent<T>(), "Entity doesn't have component!");
 			return m_Scene->m_Registry.get<T>(m_EntityHandle);
 		}
 
@@ -38,6 +40,7 @@ namespace U
 		template<typename T>
 		void RemoveComponent()
 		{
+			U_CORE_ASSERT(HasComponent<T>(), "Entity doesn't have component!");
 			m_Scene->m_Registry.remove<T>(m_EntityHandle);
 		}
 
@@ -64,7 +67,7 @@ namespace U
 	private:
 		Entity(const std::string& name);
 	private:
-		entt::entity m_EntityHandle;
+		entt::entity m_EntityHandle{ entt::null };
 		Scene* m_Scene = nullptr;
 
 		friend class Scene;

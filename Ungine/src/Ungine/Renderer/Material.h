@@ -34,7 +34,7 @@ namespace U
 		{
 			auto decl = FindUniformDeclaration(name);
 
-			U_CORE_ASSERT(decl, "Could not find uniform with name 'x'");
+			//U_CORE_ASSERT(decl, "Could not find uniform with name 'x'");
 			auto & buffer = GetUniformBufferTarget(decl);
 
 			buffer.Write((byte*)&value, decl->GetSize(), decl->GetOffset());
@@ -61,6 +61,24 @@ namespace U
 		void Set(const std::string& name, const Ref<TextureCube>& texture)
 		{
 			Set(name, (const Ref<Texture>&)texture);
+		}
+
+		template<typename T>
+		T& Get(const std::string& name)
+		{
+			auto decl = FindUniformDeclaration(name);
+			U_CORE_ASSERT(decl, "Could not find uniform with name 'x'");
+			auto& buffer = GetUniformBufferTarget(decl);
+			return buffer.Read<t>(decl->GetOffset());
+		}
+
+		template<typename T>
+		Ref<T> GetResource(const std::string& name)
+		{
+			auto decl = FindResourceDeclaration(name);
+			uint32_t slot = decl->GetRegister();
+			U_CORE_ASSERT(slot < m_Textures.size(), "Texture slot is invalid!");
+			return m_Textures[slot];
 		}
 
 	public:
@@ -111,8 +129,10 @@ namespace U
 		{
 			auto decl = m_Material->FindResourceDeclaration(name);
 			if (!decl)
+			{
 				U_CORE_WARN("Cannot find material property: ", name);
-
+				return;
+			}
 			uint32_t slot = decl->GetRegister();
 			if (m_Textures.size() <= slot)
 				m_Textures.resize((size_t)slot + 1);
@@ -129,6 +149,38 @@ namespace U
 			Set(name, (const Ref<Texture>&)texture);
 		}
 
+		template<typename T>
+		T& Get(const std::string& name)
+		{
+			auto decl = m_Material->FindUniformDeclaration(name);
+			U_CORE_ASSERT(decl, "Could not find uniform with name 'x'");
+			auto& buffer = GetUniformBufferTarget(decl);
+			return buffer.Read<T>(decl->GetOffset());
+		}
+
+		template<typename T>
+		Ref<T> GetResource(const std::string& name)
+		{
+			auto decl = m_Material->FindResourceDeclaration(name);
+			U_CORE_ASSERT(decl, "Could not find uniform with name 'x'");
+			uint32_t slot = decl->GetRegister();
+			U_CORE_ASSERT(slot < m_Textures.size(), "Texture slot is invalid!");
+			return Ref<T>(m_Textures[slot]);
+		}
+
+		template <typename T>
+		Ref<T> TryGetResource(const std::string& name)
+		{
+			auto decl = m_Material->FindResourceDeclaration(name);
+			if (!decl)
+				return nullptr;
+
+			uint32_t slot = decl->GetRegister();
+			if (slot >= m_Textures.size())
+				return nullptr;
+			return Ref<T>(m_Textures[slot]);
+		}
+
 		void Bind();
 
 	public:
@@ -138,7 +190,7 @@ namespace U
 		bool GetFlag(MaterialFlag flag) const { return (uint32_t)flag & m_Material->m_MaterialFlags; }
 		void SetFlag(MaterialFlag flag, bool value = true);
 
-		Ref<Shader >GetShader() { return m_Material->m_Shader; }
+		Ref<Shader> GetShader() { return m_Material->m_Shader; }
 		const std::string& GetName() const { return m_Name; }
 
 	private:

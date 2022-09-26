@@ -93,6 +93,7 @@ namespace U
 		void GetRuntimeValue_Internal(void* outValue) const;
 
 
+
 		friend class ScriptEngine;
 
 	};
@@ -127,6 +128,12 @@ namespace U
 		static void OnCreateEntity(Entity entity);
 		static void OnCreateEntity(UUID sceneID, UUID entityID);
 		static void OnUpdateEntity(UUID sceneID, UUID entityID, Timestep ts);
+
+		static void OnCollision2DBegin(Entity entity);
+		static void OnCollision2DBegin(UUID sceneID, UUID entityID);
+		static void OnCollision2DEnd(Entity entity);
+		static void OnCollision2DEnd(UUID sceneID, UUID entityID);
+
 
 		static void OnScriptComponentDestroyed(UUID sceneID, UUID entityID);
 

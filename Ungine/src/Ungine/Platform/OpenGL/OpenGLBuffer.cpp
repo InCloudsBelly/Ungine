@@ -110,10 +110,10 @@ namespace U {
 
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{
-		Renderer::Submit([this]() {
-			glDeleteBuffers(1, &m_RendererID);
+		GLuint rendererID = m_RendererID;
+		Renderer::Submit([rendererID]() {
+			glDeleteBuffers(1, &rendererID);
 			});
-
 	}
 
 	void OpenGLIndexBuffer::SetData(void* data, uint32_t size, uint32_t offset)
@@ -130,10 +130,10 @@ namespace U {
 
 	void OpenGLIndexBuffer::Bind() const
 	{
-		Renderer::Submit([this]() {
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
+		Ref<const OpenGLIndexBuffer> instance = this;
+		Renderer::Submit([instance]() {
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, instance->m_RendererID);
 			});
-
 	}
 
 

@@ -25,11 +25,15 @@ namespace U {
 		void Ungine_Entity_CreateComponent(uint64_t entityID, void* type);
 		bool Ungine_Entity_HasComponent(uint64_t entityID, void* type);
 
+		uint64_t Ungine_Entity_FindEntityByTag(MonoString* tag);
+
 
 		void* Ungine_MeshComponent_GetMesh(uint64_t entityID);
 		void Ungine_MeshComponent_SetMesh(uint64_t entityID, Ref<Mesh>* inMesh);
 
 		void Ungine_RigidBody2DComponent_ApplyLinearImpulse(uint64_t entityID, glm::vec2* impulse, glm::vec2* offset, bool wake);
+		void Ungine_RigidBody2DComponent_GetLinearVelocity(uint64_t entityID, glm::vec2* outVelocity);
+		void Ungine_RigidBody2DComponent_SetLinearVelocity(uint64_t entityID, glm::vec2* velocity);
 
 		// Renderer
 		// Texture2D
