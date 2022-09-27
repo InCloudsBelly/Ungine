@@ -22,6 +22,9 @@
     <Filter Include="src\Ungine\ImGui">
       <UniqueIdentifier>{CCF1BDB7-B8EA-DC09-E11C-C28ECD74BC15}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Ungine\Physics">
+      <UniqueIdentifier>{9430B7B1-8014-7807-E974-725AD5776289}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Ungine\Platform">
       <UniqueIdentifier>{B60D9BE4-226F-78F2-ABDC-BEA4173DAFB1}</UniqueIdentifier>
     </Filter>
@@ -162,7 +165,16 @@
     <ClInclude Include="src\Ungine\ImGui\ImGuizmo.h">
       <Filter>src\Ungine\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ungine\Physics\Physics3D.h">
+      <Filter>src\Ungine\Physics</Filter>
+    </ClInclude>
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.h">
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLIndexBuffer.h">
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLPipeline.h">
       <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLRenderPass.h">
@@ -177,11 +189,11 @@
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLTexture.h">
       <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLVertexBuffer.h">
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="src\Ungine\Platform\Windows\WindowsWindow.h">
       <Filter>src\Ungine\Platform\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ungine\Renderer\VertexBuffer.h">
-      <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\Camera.h">
       <Filter>src\Ungine\Renderer</Filter>
@@ -189,10 +201,16 @@
     <ClInclude Include="src\Ungine\Renderer\Framebuffer.h">
       <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ungine\Renderer\IndexBuffer.h">
+      <Filter>src\Ungine\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\Material.h">
       <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\Mesh.h">
+      <Filter>src\Ungine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Renderer\Pipeline.h">
       <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\RenderCommandQueue.h">
@@ -220,6 +238,9 @@
       <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\Texture.h">
+      <Filter>src\Ungine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Renderer\VertexBuffer.h">
       <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Scene\Components.h">
@@ -426,11 +447,6 @@
     <ClInclude Include="vendor\yaml-cpp\src\token.h">
       <Filter>vendor\yaml-cpp\src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ungine\Renderer\IndexBuffer.h" />
-    <ClInclude Include="src\Ungine\Renderer\Pipeline.h" />
-    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLIndexBuffer.h" />
-    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLPipeline.h" />
-    <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLVertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ungine\Core\Application.cpp">
@@ -478,7 +494,16 @@
     <ClCompile Include="src\Ungine\ImGui\ImGuizmo.cpp">
       <Filter>src\Ungine\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="src\Ungine\Physics\Physics3D.cpp">
+      <Filter>src\Ungine\Physics</Filter>
+    </ClCompile>
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.cpp">
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLIndexBuffer.cpp">
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLPipeline.cpp">
       <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLRenderPass.cpp">
@@ -496,14 +521,14 @@
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLTexture.cpp">
       <Filter>src\Ungine\Platform\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLVertexBuffer.cpp">
+      <Filter>src\Ungine\Platform\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Ungine\Platform\Windows\WindowsInput.cpp">
       <Filter>src\Ungine\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Platform\Windows\WindowsWindow.cpp">
       <Filter>src\Ungine\Platform\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ungine\Renderer\VertexBuffer.cpp">
-      <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\Camera.cpp">
       <Filter>src\Ungine\Renderer</Filter>
@@ -511,10 +536,16 @@
     <ClCompile Include="src\Ungine\Renderer\Framebuffer.cpp">
       <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Ungine\Renderer\IndexBuffer.cpp">
+      <Filter>src\Ungine\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\Material.cpp">
       <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\Mesh.cpp">
+      <Filter>src\Ungine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Renderer\Pipeline.cpp">
       <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\RenderCommandQueue.cpp">
@@ -538,7 +569,7 @@
     <ClCompile Include="src\Ungine\Renderer\Texture.cpp">
       <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Ungine\Renderer\Pipeline.cpp">
+    <ClCompile Include="src\Ungine\Renderer\VertexBuffer.cpp">
       <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Scene\Entity.cpp">
@@ -664,9 +695,5 @@
     <ClCompile Include="vendor\yaml-cpp\src\tag.cpp">
       <Filter>vendor\yaml-cpp\src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Ungine\Renderer\IndexBuffer.cpp" />
-    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLIndexBuffer.cpp" />
-    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLPipeline.cpp" />
-    <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLVertexBuffer.cpp" />
   </ItemGroup>
 </Project>

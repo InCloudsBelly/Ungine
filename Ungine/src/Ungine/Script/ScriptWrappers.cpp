@@ -6,12 +6,18 @@
 #include "Ungine/Scene/Scene.h"
 #include "Ungine/Scene/Components.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
+
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Ungine/Core/Input.h"
 #include <mono/jit/jit.h>
 
 #include <box2d/box2d.h>
+
+#include <PhysX/PxPhysicsAPI.h>
 
 
 namespace U
@@ -32,16 +38,26 @@ namespace U
 			Script = 3,
 			SpriteRenderer = 4
 		};
+	
+		static std::tuple<glm::vec3, glm::quat, glm::vec3> GetTransformDecomposition(const glm::mat4& transform)
+		{
+			glm::vec3 scale, translation, skew;
+			glm::vec4 perspective;
+			glm::quat orientation;
+			glm::decompose(transform, scale, orientation, translation, skew, perspective);
+
+			return { translation, orientation, scale };
+		}
+
 		////////////////////////////////////////////////////////////////
-	// Math ////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////
+		// Math ////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////
 
 		float Ungine_Noise_PerlinNoise(float x, float y)
 		{
 			return Noise::PerlinNoise(x, y);
 		}
 
-		////////////////////////////////////////////////////////////////
 
 		////////////////////////////////////////////////////////////////
 		// Input ///////////////////////////////////////////////////////
@@ -122,6 +138,21 @@ namespace U
 			return 0;
 		}
 
+		void Ungine_TransformComponent_GetRelativeDirection(uint64_t entityID, glm::vec3* outDirection, glm::vec3* inAbsoluteDirection)
+		{
+			Ref<Scene> scene = ScriptEngine::GetCurrentSceneContext();
+			U_CORE_ASSERT(scene, "No active scene!");
+			const auto& entityMap = scene->GetEntityMap();
+			U_CORE_ASSERT(entityMap.find(entityID) != entityMap.end(), "Invalid entity ID or entity doesn't exist in scene!");
+
+			Entity entity = entityMap.at(entityID);
+			auto& transformComponent = entity.GetComponent<TransformComponent>();
+
+			auto [position, rotation, scale] = GetTransformDecomposition(transformComponent.Transform);
+			*outDirection = glm::rotate(glm::inverse(glm::normalize(rotation)), *inAbsoluteDirection);
+		}
+
+
 
 		void* Ungine_MeshComponent_GetMesh(uint64_t entityID)
 		{
@@ -193,6 +224,103 @@ namespace U
 			U_CORE_ASSERT(velocity);
 			body->SetLinearVelocity({ velocity->x, velocity->y });
 		}
+
+		void Ungine_RigidBodyComponent_AddForce(uint64_t entityID, glm::vec3* force, ForceMode forceMode)
+		{
+			Ref<Scene> scene = ScriptEngine::GetCurrentSceneContext();
+			U_CORE_ASSERT(scene, "No active scene!");
+			const auto& entityMap = scene->GetEntityMap();
+			U_CORE_ASSERT(entityMap.find(entityID) != entityMap.end(), "Invalid entity ID or entity doesn't exist in scene!");
+
+			Entity entity = entityMap.at(entityID);
+			U_CORE_ASSERT(entity.HasComponent<RigidBodyComponent>());
+			
+			auto& component = entity.GetComponent<RigidBodyComponent>();
+			if (component.IsKinematic)
+			{
+				U_CORE_WARN("Cannot add a force to a kinematic actor! EntityID({0})", entityID);
+				return;
+			}
+
+			physx::PxRigidActor* actor = (physx::PxRigidActor*)component.RuntimeActor;
+			physx::PxRigidDynamic* dynamicActor = actor->is<physx::PxRigidDynamic>();
+			U_CORE_ASSERT(dynamicActor);
+
+			U_CORE_ASSERT(force);
+			dynamicActor->addForce({ force->x, force->y, force->z }, (physx::PxForceMode::Enum)forceMode);
+
+		}
+
+		void Ungine_RigidBodyComponent_AddTorque(uint64_t entityID, glm::vec3* torque, ForceMode forceMode)
+		{
+			Ref<Scene> scene = ScriptEngine::GetCurrentSceneContext();
+			U_CORE_ASSERT(scene, "No active scene!");
+			const auto& entityMap = scene->GetEntityMap();
+			U_CORE_ASSERT(entityMap.find(entityID) != entityMap.end(), "Invalid entity ID or entity doesn't exist in scene!");
+
+			Entity entity = entityMap.at(entityID);
+			U_CORE_ASSERT(entity.HasComponent<RigidBodyComponent>());
+			auto& component = entity.GetComponent<RigidBodyComponent>();
+
+			if (component.IsKinematic)
+			{
+				U_CORE_WARN("Cannot add torque to a kinematic actor! EntityID({0})", entityID);
+				return;
+			}
+
+
+			physx::PxRigidActor* actor = (physx::PxRigidActor*)component.RuntimeActor;
+			physx::PxRigidDynamic* dynamicActor = actor->is<physx::PxRigidDynamic>();
+
+			U_CORE_ASSERT(dynamicActor);
+
+			U_CORE_ASSERT(torque);
+			dynamicActor->addTorque({ torque->x, torque->y, torque->z }, (physx::PxForceMode::Enum)forceMode);
+		}
+
+		void Ungine_RigidBodyComponent_GetLinearVelocity(uint64_t entityID, glm::vec3* outVelocity)
+		{
+			Ref<Scene> scene = ScriptEngine::GetCurrentSceneContext();
+			U_CORE_ASSERT(scene, "No active scene!");
+			const auto& entityMap = scene->GetEntityMap();
+			U_CORE_ASSERT(entityMap.find(entityID) != entityMap.end(), "Invalid entity ID or entity doesn't exist in scene!");
+
+			Entity entity = entityMap.at(entityID);
+			U_CORE_ASSERT(entity.HasComponent<RigidBodyComponent>());
+			auto& component = entity.GetComponent<RigidBodyComponent>();
+
+			physx::PxRigidActor* actor = (physx::PxRigidActor*)component.RuntimeActor;
+			physx::PxRigidDynamic* dynamicActor = actor->is<physx::PxRigidDynamic>();
+
+			U_CORE_ASSERT(dynamicActor);
+
+			U_CORE_ASSERT(outVelocity);
+			physx::PxVec3 velocity = dynamicActor->getLinearVelocity();
+			*outVelocity = { velocity.x, velocity.y, velocity.z };
+		}
+
+		void Ungine_RigidBodyComponent_SetLinearVelocity(uint64_t entityID, glm::vec3* velocity)
+		{
+			Ref<Scene> scene = ScriptEngine::GetCurrentSceneContext();
+			U_CORE_ASSERT(scene, "No active scene!");
+			const auto& entityMap = scene->GetEntityMap();
+			U_CORE_ASSERT(entityMap.find(entityID) != entityMap.end(), "Invalid entity ID or entity doesn't exist in scene!");
+
+			Entity entity = entityMap.at(entityID);
+			U_CORE_ASSERT(entity.HasComponent<RigidBodyComponent>());
+			auto& component = entity.GetComponent<RigidBodyComponent>();
+
+			physx::PxRigidActor* actor = (physx::PxRigidActor*)component.RuntimeActor;
+			physx::PxRigidDynamic* dynamicActor = actor->is<physx::PxRigidDynamic>();
+
+			U_CORE_ASSERT(dynamicActor);
+
+			U_CORE_ASSERT(velocity);
+			dynamicActor->setLinearVelocity({ velocity->x, velocity->y, velocity->z });
+		}
+
+
+
 
 		Ref<Mesh>* Ungine_Mesh_Constructor(MonoString* filepath)
 		{

@@ -51,12 +51,41 @@ namespace U
             }
         }
 
-            [MethodImpl(MethodImplOptions.InternalCall)]
-            public static extern void GetTransform_Native(ulong entityID, out Matrix4 result);
+        public Vector3 Forward
+        {
+            get
+            {
+                GetRelativeDirection_Native(Entity.ID, out Vector3 result, ref Vector3.Forward);
+                return result;
+            }
+        }
+
+        public Vector3 Right
+        {
+            get
+            {
+                GetRelativeDirection_Native(Entity.ID, out Vector3 result, ref Vector3.Right);
+                return result;
+            }
+        }
+
+        public Vector3 Up
+        {
+            get
+            {
+                GetRelativeDirection_Native(Entity.ID, out Vector3 result, ref Vector3.Up);
+                return result;
+            }
+        }
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void GetTransform_Native(ulong entityID, out Matrix4 result);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void SetTransform_Native(ulong entityID, ref Matrix4 result);
+
+
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SetTransform_Native(ulong entityID, ref Matrix4 result);
-
+        internal static extern void GetRelativeDirection_Native(ulong entityID, out Vector3 result, ref Vector3 direction);
 
     }
 
@@ -127,6 +156,50 @@ namespace U
     }
     public class BoxCollider2DComponent : Component
     {
+    }
+
+    public class RigidBodyComponent : Component
+    {
+        public enum ForceMode
+        {
+            Force = 0,
+            Impulse,
+            VelocityChange,
+            Acceleration
+        }
+
+        public void AddForce(Vector3 force, ForceMode forceMode = ForceMode.Force)
+        {
+            AddForce_Native(Entity.ID, ref force, forceMode);
+        }
+
+        public void AddTorque(Vector3 torque, ForceMode forceMode = ForceMode.Force)
+        {
+            AddTorque_Native(Entity.ID, ref torque, forceMode);
+        }
+
+        public Vector3 GetLinearVelocity()
+        {
+            GetLinearVelocity_Native(Entity.ID, out Vector3 velocity);
+            return velocity;
+        }
+
+        public void SetLinearVelocity(Vector3 velocity)
+        {
+            SetLinearVelocity_Native(Entity.ID, ref velocity);
+        }
+
+        // TODO: Add SetMaxLinearVelocity() as well
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void AddForce_Native(ulong entityID, ref Vector3 force, ForceMode forceMode);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void AddTorque_Native(ulong entityID, ref Vector3 torque, ForceMode forceMode);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void GetLinearVelocity_Native(ulong entityID, out Vector3 velocity);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void SetLinearVelocity_Native(ulong entityID, ref Vector3 velocity);
     }
 
 }

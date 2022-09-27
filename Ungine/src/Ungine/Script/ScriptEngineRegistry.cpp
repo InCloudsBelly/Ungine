@@ -42,6 +42,10 @@ namespace U
 		Component_RegisterType(SpriteRendererComponent);
 		Component_RegisterType(RigidBody2DComponent);
 		Component_RegisterType(BoxCollider2DComponent);
+		Component_RegisterType(RigidBodyComponent);
+		Component_RegisterType(BoxColliderComponent);
+		Component_RegisterType(SphereColliderComponent);
+
 	}
 
 
@@ -53,9 +57,15 @@ namespace U
 
 		mono_add_internal_call("U.Entity::GetTransform_Native", U::Script::Ungine_Entity_GetTransform);
 		mono_add_internal_call("U.Entity::SetTransform_Native", U::Script::Ungine_Entity_SetTransform);
+
 		mono_add_internal_call("U.Entity::CreateComponent_Native", U::Script::Ungine_Entity_CreateComponent);
 		mono_add_internal_call("U.Entity::HasComponent_Native", U::Script::Ungine_Entity_HasComponent);
 		mono_add_internal_call("U.Entity::FindEntityByTag_Native", U::Script::Ungine_Entity_FindEntityByTag);
+
+		mono_add_internal_call("U.TransformComponent::GetTransform_Native", U::Script::Ungine_Entity_GetTransform);
+		mono_add_internal_call("U.TransformComponent::SetTransform_Native", U::Script::Ungine_Entity_SetTransform);
+		mono_add_internal_call("U.TransformComponent::GetRelativeDirection_Native", U::Script::Ungine_TransformComponent_GetRelativeDirection);
+
 
 		mono_add_internal_call("U.MeshComponent::GetMesh_Native", U::Script::Ungine_MeshComponent_GetMesh);
 		mono_add_internal_call("U.MeshComponent::SetMesh_Native", U::Script::Ungine_MeshComponent_SetMesh);
@@ -63,6 +73,11 @@ namespace U
 		mono_add_internal_call("U.RigidBody2DComponent::ApplyLinearImpulse_Native", U::Script::Ungine_RigidBody2DComponent_ApplyLinearImpulse);
 		mono_add_internal_call("U.RigidBody2DComponent::GetLinearVelocity_Native", U::Script::Ungine_RigidBody2DComponent_GetLinearVelocity);
 		mono_add_internal_call("U.RigidBody2DComponent::SetLinearVelocity_Native", U::Script::Ungine_RigidBody2DComponent_SetLinearVelocity);
+
+		mono_add_internal_call("U.RigidBodyComponent::AddForce_Native", U::Script::Ungine_RigidBodyComponent_AddForce);
+		mono_add_internal_call("U.RigidBodyComponent::AddTorque_Native", U::Script::Ungine_RigidBodyComponent_AddTorque);
+		mono_add_internal_call("U.RigidBodyComponent::GetLinearVelocity_Native", U::Script::Ungine_RigidBodyComponent_GetLinearVelocity);
+		mono_add_internal_call("U.RigidBodyComponent::SetLinearVelocity_Native", U::Script::Ungine_RigidBodyComponent_SetLinearVelocity);
 
 		mono_add_internal_call("U.Input::IsKeyPressed_Native", U::Script::Ungine_Input_IsKeyPressed);
 
@@ -77,7 +92,7 @@ namespace U
 		mono_add_internal_call("U.MaterialInstance::Destructor_Native", U::Script::Ungine_MaterialInstance_Destructor);
 		mono_add_internal_call("U.MaterialInstance::SetFloat_Native", U::Script::Ungine_MaterialInstance_SetFloat);
 		mono_add_internal_call("U.MaterialInstance::SetVector3_Native", U::Script::Ungine_MaterialInstance_SetVector3);
-		mono_add_internal_call("Hazel.MaterialInstance::SetVector4_Native", U::Script::Ungine_MaterialInstance_SetVector4);
+		mono_add_internal_call("U.MaterialInstance::SetVector4_Native", U::Script::Ungine_MaterialInstance_SetVector4);
 		mono_add_internal_call("U.MaterialInstance::SetTexture_Native", U::Script::Ungine_MaterialInstance_SetTexture);
 
 		mono_add_internal_call("U.Mesh::Constructor_Native", U::Script::Ungine_Mesh_Constructor);

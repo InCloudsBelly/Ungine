@@ -26,9 +26,25 @@ IncludeDir["Box2D"] = "Ungine/vendor/Box2D/include"
 IncludeDir["entt"] = "Ungine/vendor/entt/include"
 IncludeDir["mono"] = "Ungine/vendor/mono/include"
 IncludeDir["FastNoise"] = "Ungine/vendor/FastNoise"
+IncludeDir["PhysX"] = "Ungine/vendor/PhysX/include"
 
 LibraryDir = {}
 LibraryDir["mono"] = "vendor/mono/lib/Debug/mono-2.0-sgen.lib"
+LibraryDir["PhysX_LowLevel"] = "vendor/PhysX/lib/%{cfg.buildcfg}/LowLevel.lib"
+LibraryDir["PhysX_LowLevelAABB"] = "vendor/PhysX/lib/%{cfg.buildcfg}/LowLevelAABB.lib"
+LibraryDir["PhysX_LowLevelDynamics"] = "vendor/PhysX/lib/%{cfg.buildcfg}/LowLevelDynamics.lib"
+LibraryDir["PhysX"] = "vendor/PhysX/lib/%{cfg.buildcfg}/PhysX_static_64.lib"
+LibraryDir["PhysXCharacterKinematic"] = "vendor/PhysX/lib/%{cfg.buildcfg}/PhysXCharacterKinematic_static_64.lib"
+LibraryDir["PhysXCommon"] = "vendor/PhysX/lib/%{cfg.buildcfg}/PhysXCommon_static_64.lib"
+LibraryDir["PhysXCooking"] = "vendor/PhysX/lib/%{cfg.buildcfg}/PhysXCooking_static_64.lib"
+LibraryDir["PhysXExtensions"] = "vendor/PhysX/lib/%{cfg.buildcfg}/PhysXExtensions_static_64.lib"
+LibraryDir["PhysXFoundation"] = "vendor/PhysX/lib/%{cfg.buildcfg}/PhysXFoundation_static_64.lib"LibraryDir["PhysXPvd"] = "vendor/PhysX/lib/%{cfg.buildcfg}/PhysXPvdSDK_static_64.lib"
+LibraryDir["PhysXTask"] = "vendor/PhysX/lib/%{cfg.buildcfg}/PhysXTask.lib"
+LibraryDir["PhysXVehicle"] = "vendor/PhysX/lib/%{cfg.buildcfg}/PhysXVehicle_static_64.lib"
+LibraryDir["PhysX_SceneQuery"] = "vendor/PhysX/lib/%{cfg.buildcfg}/SceneQuery.lib"
+LibraryDir["PhysX_SimulationController"] = "vendor/PhysX/lib/%{cfg.buildcfg}/SimulationController.lib"
+
+
 
 group "Dependencies"
 include "Ungine/vendor/GLFW"
@@ -76,6 +92,7 @@ project "Ungine"
         "%{IncludeDir.entt}",
 		"%{IncludeDir.mono}",
         "%{IncludeDir.FastNoise}",
+		"%{IncludeDir.PhysX}",
         "%{prj.name}/vendor/assimp/include",
         "%{prj.name}/vendor/stb/include",
         "%{prj.name}/vendor/yaml-cpp/include"
@@ -88,7 +105,22 @@ project "Ungine"
         "ImGui",
 		"Box2D",
         "opengl32.lib",
-		"%{LibraryDir.mono}"
+		"%{LibraryDir.mono}",
+		--"%{LibraryDir.PhysX_LowLevel}",
+		--"%{LibraryDir.PhysX_LowLevelAABB}",
+		--"%{LibraryDir.PhysX_LowLevelDynamics}",
+		"%{LibraryDir.PhysX}",
+		"%{LibraryDir.PhysXCharacterKinematic}",
+		"%{LibraryDir.PhysXCommon}",
+		"%{LibraryDir.PhysXCooking}",
+		"%{LibraryDir.PhysXExtensions}",
+		"%{LibraryDir.PhysXFoundation}",
+		"%{LibraryDir.PhysXPvd}",
+		--"%{LibraryDir.PhysXTask}",
+		--"%{LibraryDir.PhysXVehicle}",
+		--"%{LibraryDir.PhysX_SceneQuery}",
+		--"%{LibraryDir.PhysX_SimulationController}"
+
     }
 
     filter "files:Ungine/vendor/FastNoise/**.cpp or files:Ungine/vendor/yaml-cpp/src/**.cpp"
@@ -100,7 +132,8 @@ project "Ungine"
 		defines 
 		{ 
             "U_PLATFORM_WINDOWS",
-            "U_BUILD_DLL"
+            "U_BUILD_DLL",
+			"PX_PHYSX_STATIC_LIB"
 		}
 
     filter "configurations:Debug"
@@ -218,7 +251,7 @@ project "UngineEditor"
         postbuildcommands 
 		{
 			'{COPY} "../Ungine/vendor/assimp/bin/Debug/assimp-vc141-mtd.dll" "%{cfg.targetdir}"',
-            '{COPY} "../Ungine/vendor/mono/bin/Debug/mono-2.0-sgen.dll" "%{cfg.targetdir}"'
+            '{COPY} "../Ungine/vendor/mono/bin/Debug/mono-2.0-sgen.dll" "%{cfg.targetdir}"'	
 		}
 group""
 

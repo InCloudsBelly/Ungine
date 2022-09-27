@@ -11,6 +11,10 @@ namespace U
     [StructLayout(LayoutKind.Sequential)]
     public struct Vector3
     {
+        internal static Vector3 Forward = new Vector3(0, 0, -1);
+        internal static Vector3 Right = new Vector3(1, 0, 0);
+        internal static Vector3 Up = new Vector3(0, 1, 0);
+
         public float X;
         public float Y;
         public float Z;
@@ -40,6 +44,23 @@ namespace U
             X = vector.X;
             Y = vector.Y;
             Z = vector.Z;
+        }
+
+        public void Clamp(Vector3 min, Vector3 max)
+        {
+            X = Mathf.Clamp(X, min.X, max.X);
+            Y = Mathf.Clamp(Y, min.Y, max.Y);
+            Z = Mathf.Clamp(Z, min.Z, max.Z);
+        }
+
+        public static Vector3 operator *(Vector3 left, float scalar)
+        {
+            return new Vector3(left.X * scalar, left.Y * scalar, left.Z * scalar);
+        }
+
+        public static Vector3 operator *(float scalar, Vector3 right)
+        {
+            return new Vector3(scalar * right.X, scalar * right.Y, scalar * right.Z);
         }
 
         public Vector2 XY

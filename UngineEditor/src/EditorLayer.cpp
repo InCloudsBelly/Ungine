@@ -11,6 +11,7 @@
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Ungine/Physics/Physics3D.h"
 
 namespace U {
 
@@ -109,12 +110,13 @@ namespace U {
 		m_SceneHierarchyPanel->SetEntityDeletedCallback(std::bind(&EditorLayer::OnEntityDeleted, this, std::placeholders::_1));
 		
 		SceneSerializer serializer(m_EditorScene);
-		serializer.Deserialize("assets/scenes/levels/Physics2D-Game.hsc");
+		serializer.Deserialize("assets/scenes/Physics3DTest.hsc");
 	}
 
 
 	void EditorLayer::OnDetach()
 	{
+		m_EditorScene->OnShutdown();
 	}
 
 	void EditorLayer::OnScenePlay()
@@ -362,7 +364,13 @@ namespace U {
 		SelectedSubmesh selection;
 		if (entity.HasComponent<MeshComponent>())
 		{
-			selection.Mesh = &entity.GetComponent<MeshComponent>().Mesh->GetSubmeshes()[0];
+			auto& meshComp = entity.GetComponent<MeshComponent>();
+
+			if (meshComp.Mesh)
+			{
+				selection.Mesh = &meshComp.Mesh->GetSubmeshes()[0];
+			}
+
 		}
 		selection.Entity = entity;
 		m_SelectionContext.clear();
@@ -706,6 +714,17 @@ namespace U {
 				ImGui::EndMenu();
 			}
 
+			if (ImGui::BeginMenu("Debug"))
+			{
+				if (ImGui::MenuItem("Connect To PVD"))
+				{
+					Physics3D::ConnectToPhysXDebugger();
+				}
+
+				ImGui::EndMenu();
+			}
+
+
 			ImGui::EndMenuBar();
 		}
 
@@ -760,7 +779,8 @@ namespace U {
 									if (albedoMap)
 									{
 										ImGui::BeginTooltip();
-										ImGui::PushTextWrapPos(ImGui::GetFontSize() * 32.0f);
+										ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+										ImGui::TextUnformatted(albedoMap->GetPath().c_str());
 										ImGui::PopTextWrapPos();
 										ImGui::Image((void*)albedoMap->GetRendererID(), ImVec2(384, 384));
 										ImGui::EndTooltip();

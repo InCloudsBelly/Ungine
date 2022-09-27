@@ -25,7 +25,7 @@ namespace U
 			: Tag(tag) {}
 
 		operator std::string& () { return Tag; }
-		operator const std::string& () { return Tag; }
+		operator const std::string& () const{ return Tag; }
 	};
 
 	struct TransformComponent
@@ -132,5 +132,81 @@ namespace U
 		CircleCollider2DComponent() = default;
 		CircleCollider2DComponent(const CircleCollider2DComponent& other) = default;
 	};
+
+
+	struct RigidBodyComponent
+	{
+		enum class Type { Static, Dynamic };
+		Type BodyType;
+		float Mass = 1.0F;
+		bool IsKinematic = false;
+
+		bool LockPositionX = false;
+		bool LockPositionY = false;
+		bool LockPositionZ = false;
+		bool LockRotationX = false;
+		bool LockRotationY = false;
+		bool LockRotationZ = false;
+
+		void* RuntimeActor = nullptr;
+
+		RigidBodyComponent() = default;
+		RigidBodyComponent(const RigidBodyComponent& other) = default;
+	};
+
+	struct PhysicsMaterialComponent
+	{
+		float StaticFriction = 1.0f;
+		float DynamicFriction = 1.0f;
+		float Bounciness = 1.0f;
+
+		PhysicsMaterialComponent() = default;
+		PhysicsMaterialComponent(const PhysicsMaterialComponent& other) = default;
+	};
+
+	struct BoxColliderComponent
+	{
+		glm::vec3 Size = { 1.0F, 1.0F, 1.0F };
+		glm::vec3 Offset = { 0.0F, 0.0F, 0.0F };
+
+		BoxColliderComponent() = default;
+		BoxColliderComponent(const BoxColliderComponent& other) = default;
+	};
+
+	struct SphereColliderComponent
+	{
+		float Radius = 1.0F;
+
+		// TODO: Physics Material
+
+		SphereColliderComponent() = default;
+		SphereColliderComponent(const SphereColliderComponent& other) = default;
+	};
+
+
+	struct CapsuleColliderComponent
+	{
+		float Radius = 0.5F;
+		float Height = 1.0F;
+
+		CapsuleColliderComponent() = default;
+		CapsuleColliderComponent(const CapsuleColliderComponent& other) = default;
+
+	};
+
+	struct MeshColliderComponent
+	{
+		Ref<U::Mesh> CollisionMesh;
+
+		MeshColliderComponent() = default;
+		MeshColliderComponent(const MeshColliderComponent& other) = default;
+		MeshColliderComponent(const Ref<U::Mesh>& mesh)
+			: CollisionMesh(mesh)
+		{
+		}
+
+		operator Ref<U::Mesh>() { return CollisionMesh; }
+	};
+
 
 }

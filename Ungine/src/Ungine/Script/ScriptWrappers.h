@@ -2,6 +2,7 @@
 
 #include "Ungine/Script/ScriptEngine.h"
 #include "Ungine/Core/KeyCodes.h"
+#include "Ungine/Physics/Physics3D.h"
 
 #include <glm/glm.hpp>
 
@@ -22,11 +23,13 @@ namespace U {
 		// Entity
 		void Ungine_Entity_GetTransform(uint64_t entityID, glm::mat4* outTransform);
 		void Ungine_Entity_SetTransform(uint64_t entityID, glm::mat4* inTransform);
+		
 		void Ungine_Entity_CreateComponent(uint64_t entityID, void* type);
 		bool Ungine_Entity_HasComponent(uint64_t entityID, void* type);
 
 		uint64_t Ungine_Entity_FindEntityByTag(MonoString* tag);
 
+		void Ungine_TransformComponent_GetRelativeDirection(uint64_t entityID, glm::vec3* outDirection, glm::vec3* inAbsoluteDirection);
 
 		void* Ungine_MeshComponent_GetMesh(uint64_t entityID);
 		void Ungine_MeshComponent_SetMesh(uint64_t entityID, Ref<Mesh>* inMesh);
@@ -34,6 +37,12 @@ namespace U {
 		void Ungine_RigidBody2DComponent_ApplyLinearImpulse(uint64_t entityID, glm::vec2* impulse, glm::vec2* offset, bool wake);
 		void Ungine_RigidBody2DComponent_GetLinearVelocity(uint64_t entityID, glm::vec2* outVelocity);
 		void Ungine_RigidBody2DComponent_SetLinearVelocity(uint64_t entityID, glm::vec2* velocity);
+
+		void Ungine_RigidBodyComponent_AddForce(uint64_t entityID, glm::vec3* force, ForceMode foceMode);
+		void Ungine_RigidBodyComponent_AddTorque(uint64_t entityID, glm::vec3* torque, ForceMode forceMode);
+		void Ungine_RigidBodyComponent_GetLinearVelocity(uint64_t entityID, glm::vec3* outVelocity);
+		void Ungine_RigidBodyComponent_SetLinearVelocity(uint64_t entityID, glm::vec3* velocity);
+
 
 		// Renderer
 		// Texture2D

@@ -44,6 +44,9 @@ namespace U
 		MonoMethod* OnUpdateMethod = nullptr;
 
 		//Physics
+		MonoMethod* OnCollisionBeginMethod = nullptr;
+		MonoMethod* OnCollisionEndMethod = nullptr;
+
 		MonoMethod* OnCollision2DBeginMethod = nullptr;
 		MonoMethod* OnCollision2DEndMethod = nullptr;
 
@@ -53,6 +56,9 @@ namespace U
 			OnUpdateMethod = GetMethod(image, FullName + ":OnUpdate(single)");
 		
 			//Physics(Entity class)
+			OnCollisionBeginMethod = GetMethod(s_CoreAssemblyImage, "U.Entity:OnCollisionBegin(single)");
+			OnCollisionEndMethod = GetMethod(s_CoreAssemblyImage, "U.Entity:OnCollisionEnd(single)");
+
 			OnCollision2DBeginMethod = GetMethod(s_CoreAssemblyImage, "U.Entity:OnCollision2DBegin(single)");
 			OnCollision2DEndMethod = GetMethod(s_CoreAssemblyImage, "U.Entity:OnCollision2DEnd(single)");
 		}
@@ -393,9 +399,41 @@ namespace U
 			void* args[] = { &value };
 			CallMethod(entityInstance.GetInstance(), entityInstance.ScriptClass->OnCollision2DEndMethod, args);
 		}
-		
 	}
 
+
+	void ScriptEngine::OnCollisionBegin(Entity entity)
+	{
+		OnCollisionBegin(entity.m_Scene->GetUUID(), entity.GetComponent<IDComponent>().ID);
+	}
+
+	void ScriptEngine::OnCollisionBegin(UUID sceneID, UUID entityID)
+	{
+		EntityInstance& entityInstance = GetEntityInstanceData(sceneID, entityID).Instance;
+		if (entityInstance.ScriptClass->OnCollisionBeginMethod)
+		{
+			float value = 5.0f;
+			void* args[] = { &value };
+			CallMethod(entityInstance.GetInstance(), entityInstance.ScriptClass->OnCollisionBeginMethod, args);
+		}
+	}
+
+
+	void ScriptEngine::OnCollisionEnd(Entity entity)
+	{
+		OnCollisionEnd(entity.m_Scene->GetUUID(), entity.GetComponent<IDComponent>().ID);
+	}
+
+	void ScriptEngine::OnCollisionEnd(UUID sceneID, UUID entityID)
+	{
+		EntityInstance& entityInstance = GetEntityInstanceData(sceneID, entityID).Instance;
+		if (entityInstance.ScriptClass->OnCollisionEndMethod)
+		{
+			float value = 5.0f;
+			void* args[] = { &value };
+			CallMethod(entityInstance.GetInstance(), entityInstance.ScriptClass->OnCollisionEndMethod, args);
+		}
+	}
 
 
 	void ScriptEngine::OnScriptComponentDestroyed(UUID sceneID, UUID entityID)

@@ -76,8 +76,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Upch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>U_PLATFORM_WINDOWS;U_BUILD_DLL;U_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor;vendor\GLFW\include;vendor\Glad\include;vendor\glm;vendor\ImGui;vendor\Box2D\include;vendor\entt\include;vendor\mono\include;vendor\FastNoise;vendor\assimp\include;vendor\stb\include;vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>U_PLATFORM_WINDOWS;U_BUILD_DLL;PX_PHYSX_STATIC_LIB;U_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor;vendor\GLFW\include;vendor\Glad\include;vendor\glm;vendor\ImGui;vendor\Box2D\include;vendor\entt\include;vendor\mono\include;vendor\FastNoise;vendor\PhysX\include;vendor\assimp\include;vendor\stb\include;vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -90,7 +90,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>opengl32.lib;vendor\mono\lib\Debug\mono-2.0-sgen.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;vendor\mono\lib\Debug\mono-2.0-sgen.lib;vendor\PhysX\lib\Debug\PhysX_static_64.lib;vendor\PhysX\lib\Debug\PhysXCharacterKinematic_static_64.lib;vendor\PhysX\lib\Debug\PhysXCommon_static_64.lib;vendor\PhysX\lib\Debug\PhysXCooking_static_64.lib;vendor\PhysX\lib\Debug\PhysXExtensions_static_64.lib;vendor\PhysX\lib\Debug\PhysXFoundation_static_64.lib;vendor\PhysX\lib\Debug\PhysXPvdSDK_static_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -98,8 +98,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Upch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>U_PLATFORM_WINDOWS;U_BUILD_DLL;U_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor;vendor\GLFW\include;vendor\Glad\include;vendor\glm;vendor\ImGui;vendor\Box2D\include;vendor\entt\include;vendor\mono\include;vendor\FastNoise;vendor\assimp\include;vendor\stb\include;vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>U_PLATFORM_WINDOWS;U_BUILD_DLL;PX_PHYSX_STATIC_LIB;U_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor;vendor\GLFW\include;vendor\Glad\include;vendor\glm;vendor\ImGui;vendor\Box2D\include;vendor\entt\include;vendor\mono\include;vendor\FastNoise;vendor\PhysX\include;vendor\assimp\include;vendor\stb\include;vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -115,7 +115,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>opengl32.lib;vendor\mono\lib\Debug\mono-2.0-sgen.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;vendor\mono\lib\Debug\mono-2.0-sgen.lib;vendor\PhysX\lib\Release\PhysX_static_64.lib;vendor\PhysX\lib\Release\PhysXCharacterKinematic_static_64.lib;vendor\PhysX\lib\Release\PhysXCommon_static_64.lib;vendor\PhysX\lib\Release\PhysXCooking_static_64.lib;vendor\PhysX\lib\Release\PhysXExtensions_static_64.lib;vendor\PhysX\lib\Release\PhysXFoundation_static_64.lib;vendor\PhysX\lib\Release\PhysXPvdSDK_static_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -123,8 +123,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Upch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>U_PLATFORM_WINDOWS;U_BUILD_DLL;U_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor;vendor\GLFW\include;vendor\Glad\include;vendor\glm;vendor\ImGui;vendor\Box2D\include;vendor\entt\include;vendor\mono\include;vendor\FastNoise;vendor\assimp\include;vendor\stb\include;vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>U_PLATFORM_WINDOWS;U_BUILD_DLL;PX_PHYSX_STATIC_LIB;U_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor;vendor\GLFW\include;vendor\Glad\include;vendor\glm;vendor\ImGui;vendor\Box2D\include;vendor\entt\include;vendor\mono\include;vendor\FastNoise;vendor\PhysX\include;vendor\assimp\include;vendor\stb\include;vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -140,7 +140,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>opengl32.lib;vendor\mono\lib\Debug\mono-2.0-sgen.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;vendor\mono\lib\Debug\mono-2.0-sgen.lib;vendor\PhysX\lib\Dist\PhysX_static_64.lib;vendor\PhysX\lib\Dist\PhysXCharacterKinematic_static_64.lib;vendor\PhysX\lib\Dist\PhysXCommon_static_64.lib;vendor\PhysX\lib\Dist\PhysXCooking_static_64.lib;vendor\PhysX\lib\Dist\PhysXExtensions_static_64.lib;vendor\PhysX\lib\Dist\PhysXFoundation_static_64.lib;vendor\PhysX\lib\Dist\PhysXPvdSDK_static_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -173,6 +173,7 @@
     <ClInclude Include="src\Ungine\EntryPoint.h" />
     <ClInclude Include="src\Ungine\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Ungine\ImGui\ImGuizmo.h" />
+    <ClInclude Include="src\Ungine\Physics\Physics3D.h" />
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.h" />
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLIndexBuffer.h" />
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLPipeline.h" />
@@ -182,7 +183,6 @@
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLTexture.h" />
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLVertexBuffer.h" />
     <ClInclude Include="src\Ungine\Platform\Windows\WindowsWindow.h" />
-    <ClInclude Include="src\Ungine\Renderer\VertexBuffer.h" />
     <ClInclude Include="src\Ungine\Renderer\Camera.h" />
     <ClInclude Include="src\Ungine\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Ungine\Renderer\IndexBuffer.h" />
@@ -198,6 +198,7 @@
     <ClInclude Include="src\Ungine\Renderer\Shader.h" />
     <ClInclude Include="src\Ungine\Renderer\ShaderUniform.h" />
     <ClInclude Include="src\Ungine\Renderer\Texture.h" />
+    <ClInclude Include="src\Ungine\Renderer\VertexBuffer.h" />
     <ClInclude Include="src\Ungine\Scene\Components.h" />
     <ClInclude Include="src\Ungine\Scene\Entity.h" />
     <ClInclude Include="src\Ungine\Scene\Scene.h" />
@@ -283,6 +284,7 @@
     <ClCompile Include="src\Ungine\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Ungine\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Ungine\ImGui\ImGuizmo.cpp" />
+    <ClCompile Include="src\Ungine\Physics\Physics3D.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLIndexBuffer.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLPipeline.cpp" />
@@ -294,12 +296,12 @@
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLVertexBuffer.cpp" />
     <ClCompile Include="src\Ungine\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Ungine\Platform\Windows\WindowsWindow.cpp" />
-    <ClCompile Include="src\Ungine\Renderer\VertexBuffer.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Camera.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\Ungine\Renderer\IndexBuffer.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Material.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Mesh.cpp" />
+    <ClCompile Include="src\Ungine\Renderer\Pipeline.cpp" />
     <ClCompile Include="src\Ungine\Renderer\RenderCommandQueue.cpp" />
     <ClCompile Include="src\Ungine\Renderer\RenderPass.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Renderer.cpp" />
@@ -307,7 +309,7 @@
     <ClCompile Include="src\Ungine\Renderer\SceneRenderer.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Shader.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Texture.cpp" />
-    <ClCompile Include="src\Ungine\Renderer\Pipeline.cpp" />
+    <ClCompile Include="src\Ungine\Renderer\VertexBuffer.cpp" />
     <ClCompile Include="src\Ungine\Scene\Entity.cpp" />
     <ClCompile Include="src\Ungine\Scene\Scene.cpp" />
     <ClCompile Include="src\Ungine\Scene\SceneCamera.cpp" />

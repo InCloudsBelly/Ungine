@@ -8,6 +8,7 @@
 #include <imgui/imgui.h>
 
 #include "Ungine/Script/ScriptEngine.h"
+#include "Ungine/Physics/Physics3D.h"
 
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
@@ -32,6 +33,8 @@ namespace U {
 		PushOverlay(m_ImGuiLayer);
 
 		ScriptEngine::Init("assets/scripts/ExampleApp.dll");
+		Physics3D::Init();
+
 
 		Renderer::Init();
 		Renderer::WaitAndRender();
@@ -39,6 +42,11 @@ namespace U {
 
 	Application::~Application()
 	{
+		for (Layer* layer : m_LayerStack)
+			layer->OnDetach();
+
+		Physics3D::Shutdown();
+
 		ScriptEngine::Shutdown();
 	}
 
