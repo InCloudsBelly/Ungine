@@ -1,8 +1,9 @@
 #include "Upch.h"
 #include "SceneRenderer.h"
+#include "Renderer2D.h"
 
 #include "Renderer.h"
-#include "Renderer2D.h"
+#include "Ungine/Renderer/MeshFactory.h"
 
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -12,17 +13,15 @@ namespace U
 	struct SceneRendererData
 	{
 		const Scene* ActiveScene = nullptr;
-
 		struct SceneInfo
 		{
 			SceneRendererCamera SceneCamera;
 
-			//Resources
+			// Resources
 			Ref<MaterialInstance> SkyboxMaterial;
 			Environment SceneEnvironment;
 			Light ActiveLight;
-
-		}SceneData;
+		} SceneData;
 
 		Ref<Texture2D> BRDFLUT;
 		Ref<Shader> CompositeShader;
@@ -36,13 +35,15 @@ namespace U
 			Ref<MaterialInstance> Material;
 			glm::mat4 Transform;
 		};
-
 		std::vector<DrawCommand> DrawList;
 		std::vector<DrawCommand> SelectedMeshDrawList;
+		std::vector<DrawCommand> ColliderDrawList;
 
-		//Grid
+		// Grid
 		Ref<MaterialInstance> GridMaterial;
 		Ref<MaterialInstance> OutlineMaterial;
+
+		Ref<MaterialInstance> ColliderMaterial;
 
 		SceneRendererOptions Options;
 	};
@@ -56,12 +57,11 @@ namespace U
 		geoFramebufferSpec.Height = 720;
 		geoFramebufferSpec.Format = FramebufferFormat::RGBA16F;
 		geoFramebufferSpec.Samples = 8;
-		geoFramebufferSpec.ClearColor = { 0.1f,0.1f,0.1f,1.0f };
+		geoFramebufferSpec.ClearColor = { 0.1f, 0.1f, 0.1f, 1.0f };
 
 		RenderPassSpecification geoRenderPassSpec;
 		geoRenderPassSpec.TargetFramebuffer = Framebuffer::Create(geoFramebufferSpec);
 		s_Data.GeoPass = RenderPass::Create(geoRenderPassSpec);
-
 
 		FramebufferSpecification compFramebufferSpec;
 		compFramebufferSpec.Width = 1280;
@@ -76,8 +76,7 @@ namespace U
 		s_Data.CompositeShader = Shader::Create("assets/shaders/SceneComposite.glsl");
 		s_Data.BRDFLUT = Texture2D::Create("assets/textures/BRDF_LUT.tga");
 
-
-		//Grid
+		// Grid
 		auto gridShader = Shader::Create("assets/shaders/Grid.glsl");
 		s_Data.GridMaterial = MaterialInstance::Create(Material::Create(gridShader));
 		float gridScale = 16.025f, gridSize = 0.025f;
@@ -89,6 +88,9 @@ namespace U
 		s_Data.OutlineMaterial = MaterialInstance::Create(Material::Create(outlineShader));
 		s_Data.OutlineMaterial->SetFlag(MaterialFlag::DepthTest, false);
 
+		auto colliderShader = Shader::Create("assets/shaders/Collider.glsl");
+		s_Data.ColliderMaterial = MaterialInstance::Create(Material::Create(colliderShader));
+		s_Data.ColliderMaterial->SetFlag(MaterialFlag::DepthTest, false);
 	}
 
 	void SceneRenderer::SetViewportSize(uint32_t width, uint32_t height)
@@ -100,6 +102,7 @@ namespace U
 	void SceneRenderer::BeginScene(const Scene* scene, const SceneRendererCamera& camera)
 	{
 		U_CORE_ASSERT(!s_Data.ActiveScene, "");
+
 		s_Data.ActiveScene = scene;
 
 		s_Data.SceneData.SceneCamera = camera;
@@ -115,7 +118,6 @@ namespace U
 		s_Data.ActiveScene = nullptr;
 
 		FlushDrawList();
-
 	}
 
 	void SceneRenderer::SubmitMesh(Ref<Mesh> mesh, const glm::mat4& transform, Ref<MaterialInstance> overrideMaterial)
@@ -129,18 +131,33 @@ namespace U
 		s_Data.SelectedMeshDrawList.push_back({ mesh, nullptr, transform });
 	}
 
+	void SceneRenderer::SubmitColliderMesh(const BoxColliderComponent& component, const glm::mat4& parentTransform)
+	{
+		s_Data.ColliderDrawList.push_back({ component.DebugMesh, nullptr, glm::translate(parentTransform, component.Offset) });
+	}
+
+	void SceneRenderer::SubmitColliderMesh(const SphereColliderComponent& component, const glm::mat4& parentTransform)
+	{
+		s_Data.ColliderDrawList.push_back({ component.DebugMesh, nullptr, parentTransform });
+	}
+
+	void SceneRenderer::SubmitColliderMesh(const CapsuleColliderComponent& component, const glm::mat4& parentTransform)
+	{
+		s_Data.ColliderDrawList.push_back({ component.DebugMesh, nullptr, parentTransform });
+	}
+
+	void SceneRenderer::SubmitColliderMesh(const MeshColliderComponent& component, const glm::mat4& parentTransform)
+	{
+		s_Data.ColliderDrawList.push_back({ component.ProcessedMesh, nullptr, parentTransform });
+	}
 
 	static Ref<Shader> equirectangularConversionShader, envFilteringShader, envIrradianceShader;
-
-
 	std::pair<Ref<TextureCube>, Ref<TextureCube>> SceneRenderer::CreateEnvironmentMap(const std::string& filepath)
 	{
 		const uint32_t cubemapSize = 2048;
 		const uint32_t irradianceMapSize = 32;
 
 		Ref<TextureCube> envUnfiltered = TextureCube::Create(TextureFormat::Float16, cubemapSize, cubemapSize);
-		
-		
 		if (!equirectangularConversionShader)
 			equirectangularConversionShader = Shader::Create("assets/shaders/EquirectangularToCubeMap.glsl");
 		Ref<Texture2D> envEquirect = Texture2D::Create(filepath);
@@ -149,20 +166,21 @@ namespace U
 		equirectangularConversionShader->Bind();
 		envEquirect->Bind();
 		Renderer::Submit([envUnfiltered, cubemapSize, envEquirect]()
-		{
-			glBindImageTexture(0, envUnfiltered->GetRendererID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
-			glDispatchCompute(cubemapSize / 32, cubemapSize / 32, 6);
-			glGenerateTextureMipmap(envUnfiltered->GetRendererID());
+			{
+				glBindImageTexture(0, envUnfiltered->GetRendererID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
+				glDispatchCompute(cubemapSize / 32, cubemapSize / 32, 6);
+				glGenerateTextureMipmap(envUnfiltered->GetRendererID());
+			});
 
-		});
 
-		
-		if(!envFilteringShader)
+		if (!envFilteringShader)
 			envFilteringShader = Shader::Create("assets/shaders/EnvironmentMipFilter.glsl");
+
 		Ref<TextureCube> envFiltered = TextureCube::Create(TextureFormat::Float16, cubemapSize, cubemapSize);
+
 		Renderer::Submit([envUnfiltered, envFiltered]()
 			{
-				glCopyImageSubData(envUnfiltered->GetRendererID(), GL_TEXTURE_CUBE_MAP, 0, 0, 0,0,
+				glCopyImageSubData(envUnfiltered->GetRendererID(), GL_TEXTURE_CUBE_MAP, 0, 0, 0, 0,
 					envFiltered->GetRendererID(), GL_TEXTURE_CUBE_MAP, 0, 0, 0, 0,
 					envFiltered->GetWidth(), envFiltered->GetHeight(), 6);
 			});
@@ -181,9 +199,9 @@ namespace U
 			}
 			});
 
-		
-		if(!envIrradianceShader)
+		if (!envIrradianceShader)
 			envIrradianceShader = Shader::Create("assets/shaders/EnvironmentIrradiance.glsl");
+
 		Ref<TextureCube> irradianceMap = TextureCube::Create(TextureFormat::Float16, irradianceMapSize, irradianceMapSize);
 		envIrradianceShader->Bind();
 		envFiltered->Bind();
@@ -195,46 +213,14 @@ namespace U
 			});
 
 		return { envFiltered, irradianceMap };
-
-	}
-
-	Ref<RenderPass> SceneRenderer::GetFinalRenderPass()
-	{
-		return s_Data.CompositePass;
-	}
-
-
-	Ref<Texture2D> SceneRenderer::GetFinalColorBuffer()
-	{
-		// return s_Data.CompositePass->GetSpecification().TargetFramebuffer;
-		U_CORE_ASSERT(false, "Not implemented");
-		return nullptr;
-
-	}
-
-	uint32_t SceneRenderer::GetFinalColorBufferRendererID()
-	{
-		return s_Data.CompositePass->GetSpecification().TargetFramebuffer->GetColorAttachmentRendererID();
-	}
-
-	void SceneRenderer::FlushDrawList()
-	{
-		U_CORE_ASSERT(!s_Data.ActiveScene, "");
-
-		GeometryPass();
-		CompositePass();
-
-		s_Data.DrawList.clear();
-		s_Data.SelectedMeshDrawList.clear();
-		s_Data.SceneData = {};
-
 	}
 
 	void SceneRenderer::GeometryPass()
 	{
 		bool outline = s_Data.SelectedMeshDrawList.size() > 0;
+		bool collider = s_Data.ColliderDrawList.size() > 0;
 
-		if (outline)
+		if (outline || collider)
 		{
 			Renderer::Submit([]()
 				{
@@ -243,7 +229,8 @@ namespace U
 		}
 
 		Renderer::BeginRenderPass(s_Data.GeoPass);
-		if (outline)
+
+		if (outline || collider)
 		{
 			Renderer::Submit([]()
 				{
@@ -254,16 +241,15 @@ namespace U
 		auto viewProjection = s_Data.SceneData.SceneCamera.Camera.GetProjectionMatrix() * s_Data.SceneData.SceneCamera.ViewMatrix;
 		glm::vec3 cameraPosition = glm::inverse(s_Data.SceneData.SceneCamera.ViewMatrix)[3];
 
-
 		// Skybox
 		auto skyboxShader = s_Data.SceneData.SkyboxMaterial->GetShader();
 		s_Data.SceneData.SkyboxMaterial->Set("u_InverseVP", glm::inverse(viewProjection));
 		Renderer::SubmitFullscreenQuad(s_Data.SceneData.SkyboxMaterial);
 
+		// Render entities
 		for (auto& dc : s_Data.DrawList)
 		{
 			auto baseMaterial = dc.Mesh->GetMaterial();
-
 			baseMaterial->Set("u_ViewProjectionMatrix", viewProjection);
 			baseMaterial->Set("u_CameraPosition", cameraPosition);
 
@@ -272,32 +258,6 @@ namespace U
 			baseMaterial->Set("u_EnvIrradianceTex", s_Data.SceneData.SceneEnvironment.IrradianceMap);
 			baseMaterial->Set("u_BRDFLUTTexture", s_Data.BRDFLUT);
 
-			// Set lights (TODO: move to light environment and don't do per mesh)
-			baseMaterial->Set("lights", s_Data.SceneData.ActiveLight);
-
-
-			auto overrideMaterial = nullptr; // dc.Material;
-			Renderer::SubmitMesh(dc.Mesh, dc.Transform, overrideMaterial);
-		}
-
-		if (outline)
-		{
-			Renderer::Submit([]()
-				{
-					glStencilFunc(GL_ALWAYS, 1, 0xff);
-					glStencilMask(0xff);
-				});
-		}
-
-		for (auto& dc : s_Data.SelectedMeshDrawList)
-		{
-			auto baseMaterial = dc.Mesh->GetMaterial();
-			baseMaterial->Set("u_ViewProjectionMatrix", viewProjection);
-			baseMaterial->Set("u_CameraPosition", cameraPosition);
-			// Environment (TODO: don't do this per mesh)
-			baseMaterial->Set("u_EnvRadianceTex", s_Data.SceneData.SceneEnvironment.RadianceMap);
-			baseMaterial->Set("u_EnvIrradianceTex", s_Data.SceneData.SceneEnvironment.IrradianceMap);
-			baseMaterial->Set("u_BRDFLUTTexture", s_Data.BRDFLUT);
 			// Set lights (TODO: move to light environment and don't do per mesh)
 			baseMaterial->Set("lights", s_Data.SceneData.ActiveLight);
 
@@ -343,7 +303,47 @@ namespace U
 					glStencilFunc(GL_ALWAYS, 1, 0xff);
 					glEnable(GL_DEPTH_TEST);
 				});
+		}
 
+		if (collider)
+		{
+			Renderer::Submit([]()
+				{
+					glStencilFunc(GL_NOTEQUAL, 1, 0xff);
+					glStencilMask(0);
+
+					glLineWidth(1);
+					glEnable(GL_LINE_SMOOTH);
+					glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+					glDisable(GL_DEPTH_TEST);
+				});
+
+			s_Data.ColliderMaterial->Set("u_ViewProjection", viewProjection);
+			for (auto& dc : s_Data.ColliderDrawList)
+			{
+				if (dc.Mesh)
+					Renderer::SubmitMesh(dc.Mesh, dc.Transform, s_Data.ColliderMaterial);
+			}
+
+			Renderer::Submit([]()
+				{
+					glPointSize(1);
+					glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+				});
+
+			for (auto& dc : s_Data.ColliderDrawList)
+			{
+				if (dc.Mesh)
+					Renderer::SubmitMesh(dc.Mesh, dc.Transform, s_Data.ColliderMaterial);
+			}
+
+			Renderer::Submit([]()
+				{
+					glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+					glStencilMask(0xff);
+					glStencilFunc(GL_ALWAYS, 1, 0xff);
+					glEnable(GL_DEPTH_TEST);
+				});
 		}
 
 		// Grid
@@ -361,7 +361,6 @@ namespace U
 			Renderer2D::EndScene();
 		}
 
-
 		Renderer::EndRenderPass();
 	}
 
@@ -376,6 +375,35 @@ namespace U
 		Renderer::EndRenderPass();
 	}
 
+	void SceneRenderer::FlushDrawList()
+	{
+		U_CORE_ASSERT(!s_Data.ActiveScene, "");
+
+		GeometryPass();
+		CompositePass();
+
+		s_Data.DrawList.clear();
+		s_Data.SelectedMeshDrawList.clear();
+		s_Data.ColliderDrawList.clear();
+		s_Data.SceneData = {};
+	}
+
+	Ref<Texture2D> SceneRenderer::GetFinalColorBuffer()
+	{
+		// return s_Data.CompositePass->GetSpecification().TargetFramebuffer;
+		U_CORE_ASSERT(false, "Not implemented");
+		return nullptr;
+	}
+
+	Ref<RenderPass> SceneRenderer::GetFinalRenderPass()
+	{
+		return s_Data.CompositePass;
+	}
+
+	uint32_t SceneRenderer::GetFinalColorBufferRendererID()
+	{
+		return s_Data.CompositePass->GetSpecification().TargetFramebuffer->GetColorAttachmentRendererID();
+	}
 
 	SceneRendererOptions& SceneRenderer::GetOptions()
 	{

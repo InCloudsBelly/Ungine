@@ -4,6 +4,9 @@
 #include"Ungine/Core/Application.h"
 #include "Ungine/Renderer/Mesh.h"
 #include "Ungine/Script/ScriptEngine.h"
+#include "Ungine/Physics/PXPhysicsWrappers.h"
+#include "Ungine/Renderer/MeshFactory.h"
+
 
 #include <imgui.h>
 #include <assimp/scene.h>
@@ -168,7 +171,14 @@ namespace U
 							ImGui::CloseCurrentPopup();
 						}
 					}
-
+					if (!m_SelectionContext.HasComponent<SphereColliderComponent>())
+					{
+						if (ImGui::Button("Capsule Collider"))
+						{
+							m_SelectionContext.AddComponent<CapsuleColliderComponent>();
+							ImGui::CloseCurrentPopup();
+						}
+					}
 					if (!m_SelectionContext.HasComponent<MeshColliderComponent>())
 					{
 						if (ImGui::Button("Mesh Collider"))
@@ -260,6 +270,7 @@ namespace U
 
 
 		//Mesh Hierarchy
+		if (ImGui::TreeNode(imguiName))
 		{
 			auto rootNode = mesh->m_Scene->mRootNode;
 			MeshNodeHierarchy(mesh, rootNode);
@@ -377,7 +388,7 @@ namespace U
 		ImGui::InputText(s_IDBuffer, (char*)value, 256, ImGuiInputTextFlags_ReadOnly);
 
 		ImGui::PopItemWidth();
-		ImGui::NextColumn;
+		ImGui::NextColumn();
 	}
 
 	static bool Property(const char* label, bool& value)
@@ -898,6 +909,7 @@ namespace U
 
 		DrawComponent<RigidBodyComponent>("Rigidbody", entity, [](RigidBodyComponent& rbc)
 			{
+				// Rigidbody Type
 				const char* rbTypeStrings[] = { "Static", "Dynamic" };
 				const char* currentType = rbTypeStrings[(int)rbc.BodyType];
 				if (ImGui::BeginCombo("Type", currentType))
@@ -937,8 +949,7 @@ namespace U
 						ImGui::TreePop();
 					}
 				}
-		});
-
+			});
 
 		DrawComponent<PhysicsMaterialComponent>("Physics Material", entity, [](PhysicsMaterialComponent& pmc)
 			{
@@ -954,8 +965,15 @@ namespace U
 		DrawComponent<BoxColliderComponent>("Box Collider", entity, [](BoxColliderComponent& bcc)
 			{
 				BeginPropertyGrid();
-				Property("Size", bcc.Size);
+
+				if (Property("Size", bcc.Size))
+				{
+					bcc.DebugMesh = MeshFactory::CreateBox(bcc.Size);
+				}
+
 				//Property("Offset", bcc.Offset);
+				Property("Is Trigger", bcc.IsTrigger);
+
 				EndPropertyGrid();
 			});
 
@@ -963,13 +981,40 @@ namespace U
 			{
 				BeginPropertyGrid();
 
-				Property("Radius", scc.Radius);
+				if (Property("Radius", scc.Radius))
+				{
+					scc.DebugMesh = MeshFactory::CreateSphere(scc.Radius);
+				}
+
+				Property("Is Trigger", scc.IsTrigger);
 
 				EndPropertyGrid();
 			});
 
-		DrawComponent<MeshColliderComponent>("Mesh Collider", entity, [](MeshColliderComponent& mc)
+		DrawComponent<CapsuleColliderComponent>("Capsule Collider", entity, [](CapsuleColliderComponent& ccc)
 			{
+				BeginPropertyGrid();
+
+				bool changed = false;
+
+				if (Property("Radius", ccc.Radius))
+					changed = true;
+
+				if (Property("Height", ccc.Height))
+					changed = true;
+				Property("Is Trigger", ccc.IsTrigger);
+
+				if (changed)
+				{
+					ccc.DebugMesh = MeshFactory::CreateCapsule(ccc.Radius, ccc.Height);
+				}
+
+				EndPropertyGrid();
+			});
+
+		DrawComponent<MeshColliderComponent>("Mesh Collider", entity, [](MeshColliderComponent& mcc)
+			{
+				BeginPropertyGrid();
 				ImGui::Columns(3);
 				ImGui::SetColumnWidth(0, 100);
 				ImGui::SetColumnWidth(1, 300);
@@ -977,8 +1022,8 @@ namespace U
 				ImGui::Text("File Path");
 				ImGui::NextColumn();
 				ImGui::PushItemWidth(-1);
-				if (mc.CollisionMesh)
-					ImGui::InputText("##meshfilepath", (char*)mc.CollisionMesh->GetFilePath().c_str(), 256, ImGuiInputTextFlags_ReadOnly);
+				if (mcc.CollisionMesh)
+					ImGui::InputText("##meshfilepath", (char*)mcc.CollisionMesh->GetFilePath().c_str(), 256, ImGuiInputTextFlags_ReadOnly);
 				else
 					ImGui::InputText("##meshfilepath", (char*)"Null", 256, ImGuiInputTextFlags_ReadOnly);
 				ImGui::PopItemWidth();
@@ -987,10 +1032,16 @@ namespace U
 				{
 					std::string file = Application::Get().OpenFile();
 					if (!file.empty())
-						mc.CollisionMesh = Ref<Mesh>::Create(file);
+					{
+						mcc.CollisionMesh = Ref<Mesh>::Create(file);
+						PXPhysicsWrappers::CreateConvexMesh(mcc);
+					}
 				}
+
+				Property("Is Trigger", mcc.IsTrigger);
+				EndPropertyGrid();
 			});
 
-			
 	}
+	
 }

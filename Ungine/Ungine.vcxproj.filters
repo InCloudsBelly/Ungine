@@ -165,7 +165,13 @@
     <ClInclude Include="src\Ungine\ImGui\ImGuizmo.h">
       <Filter>src\Ungine\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ungine\Physics\Physics3D.h">
+    <ClInclude Include="src\Ungine\Physics\PXPhysicsWrappers.h">
+      <Filter>src\Ungine\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Physics\Physics.h">
+      <Filter>src\Ungine\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Physics\PhysicsUtil.h">
       <Filter>src\Ungine\Physics</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.h">
@@ -208,6 +214,9 @@
       <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\Mesh.h">
+      <Filter>src\Ungine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ungine\Renderer\MeshFactory.h">
       <Filter>src\Ungine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ungine\Renderer\Pipeline.h">
@@ -494,7 +503,13 @@
     <ClCompile Include="src\Ungine\ImGui\ImGuizmo.cpp">
       <Filter>src\Ungine\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="src\Ungine\Physics\Physics3D.cpp">
+    <ClCompile Include="src\Ungine\Physics\PXPhysicsWrappers.cpp">
+      <Filter>src\Ungine\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Physics\Physics.cpp">
+      <Filter>src\Ungine\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Physics\PhysicsUtil.cpp">
       <Filter>src\Ungine\Physics</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.cpp">
@@ -543,6 +558,9 @@
       <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\Mesh.cpp">
+      <Filter>src\Ungine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ungine\Renderer\MeshFactory.cpp">
       <Filter>src\Ungine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ungine\Renderer\Pipeline.cpp">

@@ -2,7 +2,7 @@
 
 #include "Ungine/Script/ScriptEngine.h"
 #include "Ungine/Core/KeyCodes.h"
-#include "Ungine/Physics/Physics3D.h"
+#include "Ungine/Physics/Physics.h"
 
 #include <glm/glm.hpp>
 

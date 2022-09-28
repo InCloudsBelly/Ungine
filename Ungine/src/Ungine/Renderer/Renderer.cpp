@@ -30,8 +30,8 @@ namespace U {
 		s_Data.m_ShaderLibrary = Ref<ShaderLibrary>::Create();
 		Renderer::Submit([]() { RendererAPI::Init(); });
 
-		Renderer::GetShaderLibrary()->Load("assets/shaders/HazelPBR_Static.glsl");
-		Renderer::GetShaderLibrary()->Load("assets/shaders/HazelPBR_Anim.glsl");
+		Renderer::GetShaderLibrary()->Load("assets/shaders/UnginePBR_Static.glsl");
+		Renderer::GetShaderLibrary()->Load("assets/shaders/UnginePBR_Anim.glsl");
 	
 
 		SceneRenderer::Init();

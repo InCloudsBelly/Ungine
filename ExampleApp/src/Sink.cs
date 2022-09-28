@@ -8,7 +8,7 @@ using U;
 
 namespace Example
 {
-    internal class Sink : Entity
+     class Sink : Entity
     {
 
         public float SinkSpeed;

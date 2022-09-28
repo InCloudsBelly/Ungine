@@ -19,5 +19,5 @@ public:
 
 U::Application* U::CreateApplication()
 {
-	return new EditiorApplication({"Hazelnut", 1600, 900});
+	return new EditiorApplication({"Unginenut", 1600, 900});
 }

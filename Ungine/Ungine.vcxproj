@@ -173,7 +173,9 @@
     <ClInclude Include="src\Ungine\EntryPoint.h" />
     <ClInclude Include="src\Ungine\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Ungine\ImGui\ImGuizmo.h" />
-    <ClInclude Include="src\Ungine\Physics\Physics3D.h" />
+    <ClInclude Include="src\Ungine\Physics\PXPhysicsWrappers.h" />
+    <ClInclude Include="src\Ungine\Physics\Physics.h" />
+    <ClInclude Include="src\Ungine\Physics\PhysicsUtil.h" />
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.h" />
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLIndexBuffer.h" />
     <ClInclude Include="src\Ungine\Platform\OpenGL\OpenGLPipeline.h" />
@@ -188,6 +190,7 @@
     <ClInclude Include="src\Ungine\Renderer\IndexBuffer.h" />
     <ClInclude Include="src\Ungine\Renderer\Material.h" />
     <ClInclude Include="src\Ungine\Renderer\Mesh.h" />
+    <ClInclude Include="src\Ungine\Renderer\MeshFactory.h" />
     <ClInclude Include="src\Ungine\Renderer\Pipeline.h" />
     <ClInclude Include="src\Ungine\Renderer\RenderCommandQueue.h" />
     <ClInclude Include="src\Ungine\Renderer\RenderPass.h" />
@@ -284,7 +287,9 @@
     <ClCompile Include="src\Ungine\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Ungine\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Ungine\ImGui\ImGuizmo.cpp" />
-    <ClCompile Include="src\Ungine\Physics\Physics3D.cpp" />
+    <ClCompile Include="src\Ungine\Physics\PXPhysicsWrappers.cpp" />
+    <ClCompile Include="src\Ungine\Physics\Physics.cpp" />
+    <ClCompile Include="src\Ungine\Physics\PhysicsUtil.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLFramebuffer.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLIndexBuffer.cpp" />
     <ClCompile Include="src\Ungine\Platform\OpenGL\OpenGLPipeline.cpp" />
@@ -301,6 +306,7 @@
     <ClCompile Include="src\Ungine\Renderer\IndexBuffer.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Material.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Mesh.cpp" />
+    <ClCompile Include="src\Ungine\Renderer\MeshFactory.cpp" />
     <ClCompile Include="src\Ungine\Renderer\Pipeline.cpp" />
     <ClCompile Include="src\Ungine\Renderer\RenderCommandQueue.cpp" />
     <ClCompile Include="src\Ungine\Renderer\RenderPass.cpp" />

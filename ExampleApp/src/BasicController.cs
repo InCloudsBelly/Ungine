@@ -4,7 +4,7 @@ using U;
 
 namespace Example
 {
-    internal class BasicController: Entity
+    public class BasicController: Entity
     {
         public float Speed;
         public float DistanceFromPlayer = 20.0F;

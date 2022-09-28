@@ -31,7 +31,6 @@ namespace U
 		}\
 	}
 
-
 	static void InitComponentTypes()
 	{
 		Component_RegisterType(TagComponent);
@@ -45,9 +44,7 @@ namespace U
 		Component_RegisterType(RigidBodyComponent);
 		Component_RegisterType(BoxColliderComponent);
 		Component_RegisterType(SphereColliderComponent);
-
 	}
-
 
 	void ScriptEngineRegistry::RegisterAll()
 	{
@@ -57,7 +54,6 @@ namespace U
 
 		mono_add_internal_call("U.Entity::GetTransform_Native", U::Script::Ungine_Entity_GetTransform);
 		mono_add_internal_call("U.Entity::SetTransform_Native", U::Script::Ungine_Entity_SetTransform);
-
 		mono_add_internal_call("U.Entity::CreateComponent_Native", U::Script::Ungine_Entity_CreateComponent);
 		mono_add_internal_call("U.Entity::HasComponent_Native", U::Script::Ungine_Entity_HasComponent);
 		mono_add_internal_call("U.Entity::FindEntityByTag_Native", U::Script::Ungine_Entity_FindEntityByTag);
@@ -65,7 +61,6 @@ namespace U
 		mono_add_internal_call("U.TransformComponent::GetTransform_Native", U::Script::Ungine_Entity_GetTransform);
 		mono_add_internal_call("U.TransformComponent::SetTransform_Native", U::Script::Ungine_Entity_SetTransform);
 		mono_add_internal_call("U.TransformComponent::GetRelativeDirection_Native", U::Script::Ungine_TransformComponent_GetRelativeDirection);
-
 
 		mono_add_internal_call("U.MeshComponent::GetMesh_Native", U::Script::Ungine_MeshComponent_GetMesh);
 		mono_add_internal_call("U.MeshComponent::SetMesh_Native", U::Script::Ungine_MeshComponent_SetMesh);
@@ -110,6 +105,7 @@ namespace U
 		// static float GetMouseX() { return s_Instance->GetMouseXImpl(); }
 		// static float GetMouseY() { return s_Instance->GetMouseYImpl(); }
 	}
+
 
 
 

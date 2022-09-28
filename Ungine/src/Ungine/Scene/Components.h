@@ -169,15 +169,20 @@ namespace U
 		glm::vec3 Size = { 1.0F, 1.0F, 1.0F };
 		glm::vec3 Offset = { 0.0F, 0.0F, 0.0F };
 
+		bool IsTrigger = false;
+		// The mesh that will be drawn in the editor to show the collision bounds
+		Ref<Mesh> DebugMesh;
+
 		BoxColliderComponent() = default;
 		BoxColliderComponent(const BoxColliderComponent& other) = default;
 	};
 
 	struct SphereColliderComponent
 	{
-		float Radius = 1.0F;
-
-		// TODO: Physics Material
+		float Radius = 0.5F;
+		bool IsTrigger = false;
+		// The mesh that will be drawn in the editor to show the collision bounds
+		Ref<Mesh> DebugMesh;
 
 		SphereColliderComponent() = default;
 		SphereColliderComponent(const SphereColliderComponent& other) = default;
@@ -188,6 +193,9 @@ namespace U
 	{
 		float Radius = 0.5F;
 		float Height = 1.0F;
+		bool IsTrigger = false;
+		
+		Ref<Mesh> DebugMesh;
 
 		CapsuleColliderComponent() = default;
 		CapsuleColliderComponent(const CapsuleColliderComponent& other) = default;
@@ -197,6 +205,8 @@ namespace U
 	struct MeshColliderComponent
 	{
 		Ref<U::Mesh> CollisionMesh;
+		Ref<U::Mesh> ProcessedMesh;
+		bool IsTrigger = false;
 
 		MeshColliderComponent() = default;
 		MeshColliderComponent(const MeshColliderComponent& other) = default;

@@ -11,7 +11,7 @@
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Ungine/Physics/Physics3D.h"
+#include "Ungine/Physics/Physics.h"
 
 namespace U {
 
@@ -102,7 +102,7 @@ namespace U {
 		m_CheckerboardTex = Texture2D::Create("assets/editor/Checkerboard.tga");
 		m_PlayButtonTex = Texture2D::Create("assets/editor/PlayButton.png");
 
-		m_EditorScene = Ref<Scene>::Create();
+		m_EditorScene = Ref<Scene>::Create("EditorScene", true);
 		UpdateWindowTitle("Untitled Scene");
 		ScriptEngine::SetSceneContext(m_EditorScene);
 		m_SceneHierarchyPanel = CreateScope<SceneHierarchyPanel>(m_EditorScene);
@@ -116,7 +116,7 @@ namespace U {
 
 	void EditorLayer::OnDetach()
 	{
-		m_EditorScene->OnShutdown();
+
 	}
 
 	void EditorLayer::OnScenePlay()
@@ -718,7 +718,7 @@ namespace U {
 			{
 				if (ImGui::MenuItem("Connect To PVD"))
 				{
-					Physics3D::ConnectToPhysXDebugger();
+					Physics::ConnectVisualDebugger();
 				}
 
 				ImGui::EndMenu();

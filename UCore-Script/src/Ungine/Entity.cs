@@ -14,6 +14,9 @@ namespace U
         private Action<float> m_Collision2DBeginCallbacks;
         private Action<float> m_Collision2DEndCallbacks;
 
+        private Action<float> m_TriggerBeginCallbacks;
+        private Action<float> m_TriggerEndCallbacks;
+
 
         protected Entity() { ID = 0; }
         internal Entity(ulong id)
@@ -83,13 +86,24 @@ namespace U
 
         public void AddCollisionBeginCallback(Action<float> callback)
         {
-            m_CollisionEndCallbacks += callback; 
+            m_CollisionBeginCallbacks += callback; 
         }
 
         public void AddCollisionEndCallback(Action<float> callback)
         {
             m_CollisionEndCallbacks += callback;
         }
+
+        public void AddTriggerBeginCallback(Action<float> callback)
+        {
+            m_TriggerBeginCallbacks += callback;
+        }
+
+        public void AddTriggerEndCallback(Action<float> callback)
+        {
+            m_TriggerEndCallbacks += callback;
+        }
+
 
         private void OnCollisionBegin(float data)
         {
@@ -103,6 +117,17 @@ namespace U
                 m_CollisionEndCallbacks.Invoke(data);
         }
 
+        private void OnTriggerBegin(float data)
+        {
+            if (m_TriggerBeginCallbacks != null)
+                m_TriggerBeginCallbacks.Invoke(data);
+        }
+
+        private void OnTriggerEnd(float data)
+        {
+            if (m_TriggerEndCallbacks != null)
+                m_TriggerEndCallbacks.Invoke(data);
+        }
 
         private void OnCollision2DBegin(float data)
         {

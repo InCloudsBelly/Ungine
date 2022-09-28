@@ -20,6 +20,9 @@
 #include "imgui/imgui.h"
 
 #include "Ungine/Renderer/Renderer.h"	
+#include "Ungine/Renderer/VertexBuffer.h"
+
+#include "Ungine/Physics/PhysicsUtil.h"
 
 #include <filesystem>
 
@@ -90,7 +93,7 @@ namespace U
 		m_Scene = scene;
 
 		m_IsAnimated = scene->mAnimations != nullptr;
-		m_MeshShader = m_IsAnimated ? Renderer::GetShaderLibrary()->Get("HazelPBR_Anim") : Renderer::GetShaderLibrary()->Get("HazelPBR_Static");
+		m_MeshShader = m_IsAnimated ? Renderer::GetShaderLibrary()->Get("UnginePBR_Anim") : Renderer::GetShaderLibrary()->Get("UnginePBR_Static");
 		
 		m_BaseMaterial = Ref<Material>::Create(m_MeshShader);
 		// m_MaterialInstance = Ref<MaterialInstance>::Create(m_BaseMaterial);
@@ -268,7 +271,7 @@ namespace U
 				bool hasAlbedoMap = aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTexPath) == AI_SUCCESS;
 				if (hasAlbedoMap)
 				{
-					// TODO: Temp - this should be handled by Hazel's filesystem
+					// TODO: Temp - this should be handled by Ungine's filesystem
 					std::filesystem::path path = filename;
 					auto parentPath = path.parent_path();
 					parentPath /= std::string(aiTexPath.data);
@@ -300,7 +303,7 @@ namespace U
 				mi->Set("u_NormalTexToggle", 0.0f);
 				if (aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiTexPath) == AI_SUCCESS)
 				{
-					// TODO: Temp - this should be handled by Hazel's filesystem
+					// TODO: Temp - this should be handled by Ungine's filesystem
 					std::filesystem::path path = filename;
 					auto parentPath = path.parent_path();
 					parentPath /= std::string(aiTexPath.data);
@@ -328,7 +331,7 @@ namespace U
 				// mi->Set("u_RoughnessTexToggle", 0.0f);
 				if (aiMaterial->GetTexture(aiTextureType_SHININESS, 0, &aiTexPath) == AI_SUCCESS)
 				{
-					// TODO: Temp - this should be handled by Hazel's filesystem
+					// TODO: Temp - this should be handled by Ungine's filesystem
 					std::filesystem::path path = filename;
 					auto parentPath = path.parent_path();
 					parentPath /= std::string(aiTexPath.data);
@@ -357,7 +360,7 @@ namespace U
 				// Metalness map (or is it??)
 				if (aiMaterial->Get("$raw.ReflectionFactor|file", aiPTI_String, 0, aiTexPath) == AI_SUCCESS)
 				{
-					// TODO: Temp - this should be handled by Hazel's filesystem
+					// TODO: Temp - this should be handled by Ungine's filesystem
 					std::filesystem::path path = filename;
 					auto parentPath = path.parent_path();
 					parentPath /= std::string(aiTexPath.data);
@@ -366,7 +369,6 @@ namespace U
 					auto texture = Texture2D::Create(texturePath);
 					if (texture->Loaded())
 					{
-						U_CORE_TRACE("  Metalness map path = {0}", texturePath);
 						U_MESH_LOG("    Metalness map path = {0}", texturePath);
 						mi->Set("u_MetalnessTexture", texture);
 						mi->Set("u_MetalnessTexToggle", 1.0f);
@@ -378,7 +380,6 @@ namespace U
 				}
 				else
 				{
-					U_CORE_TRACE("Mesh has no metalness texture");
 					U_MESH_LOG("    No metalness texture");
 					mi->Set("u_Metalness", metalness);
 				}
@@ -454,7 +455,7 @@ namespace U
 						{
 							metalnessTextureFound = true;
 
-							// TODO: Temp - this should be handled by Hazel's filesystem
+							// TODO: Temp - this should be handled by Ungine's filesystem
 							std::filesystem::path path = filename;
 							auto parentPath = path.parent_path();
 							parentPath /= str;
@@ -521,6 +522,31 @@ namespace U
 		m_Pipeline = Pipeline::Create(pipelineSpecification);
 
 	}
+
+	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<Index>& indices)
+		: m_StaticVertices(vertices), m_Indices(indices), m_IsAnimated(false)
+	{
+		Submesh submesh;
+		submesh.BaseVertex = 0;
+		submesh.BaseIndex = 0;
+		submesh.IndexCount = indices.size() * 3;
+		submesh.Transform = glm::mat4(1.0F);
+		m_Submeshes.push_back(submesh);
+
+		m_VertexBuffer = VertexBuffer::Create(m_StaticVertices.data(), m_StaticVertices.size() * sizeof(Vertex));
+		m_IndexBuffer = IndexBuffer::Create(m_Indices.data(), m_Indices.size() * sizeof(Index));
+
+		PipelineSpecification pipelineSpecification;
+		pipelineSpecification.Layout = {
+			{ ShaderDataType::Float3, "a_Position" },
+			{ ShaderDataType::Float3, "a_Normal" },
+			{ ShaderDataType::Float3, "a_Tangent" },
+			{ ShaderDataType::Float3, "a_Binormal" },
+			{ ShaderDataType::Float2, "a_TexCoord" },
+		};
+		m_Pipeline = Pipeline::Create(pipelineSpecification);
+	}
+
 
 	Mesh::~Mesh()
 	{

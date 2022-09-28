@@ -126,20 +126,18 @@ namespace U
 		static void CopyEntityScriptData(UUID dst, UUID src);
 
 		static void OnCreateEntity(Entity entity);
-		static void OnCreateEntity(UUID sceneID, UUID entityID);
-		static void OnUpdateEntity(UUID sceneID, UUID entityID, Timestep ts);
+		static void OnUpdateEntity(Entity entity, Timestep ts);
 
 		static void OnCollision2DBegin(Entity entity);
-		static void OnCollision2DBegin(UUID sceneID, UUID entityID);
 		static void OnCollision2DEnd(Entity entity);
-		static void OnCollision2DEnd(UUID sceneID, UUID entityID);
 
 
 		static void OnCollisionBegin(Entity entity);
-		static void OnCollisionBegin(UUID sceneID, UUID entityID);
 		static void OnCollisionEnd(Entity entity);
-		static void OnCollisionEnd(UUID sceneID, UUID entityID);
+		static void OnTriggerBegin(Entity entity);
+		static void OnTriggerEnd(Entity entity);
 
+		static bool IsEntityModuleValid(Entity entity);
 
 		static void OnScriptComponentDestroyed(UUID sceneID, UUID entityID);
 

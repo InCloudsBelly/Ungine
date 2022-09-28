@@ -37,7 +37,7 @@ namespace Example
             {
                 for (int x = 0; x < width; x++)
                 {
-                   // colorMap[x + y * width] = Vector4.Lerp(, Color.White, noiseMap[x, y]);
+                    colorMap[x + y * width] = Vector4.Lerp(Color.Black, Color.White, noiseMap[x, y]);
                 }
             }
 

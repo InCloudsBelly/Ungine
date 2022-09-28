@@ -53,12 +53,8 @@ namespace Example
             else if (Input.IsKeyPressed(KeyCode.A))
                 m_PhysicsBody.ApplyLinearImpulse(new Vector2(-movementForce, 0), new Vector2(), true);
 
-            if (Input.IsKeyPressed(KeyCode.Space))
+            if (Colliding && Input.IsKeyPressed(KeyCode.Space))
                 m_PhysicsBody.ApplyLinearImpulse(new Vector2(0, JumpForce), new Vector2(0, 0), true);
-
-            Vector3 color = new Vector3(0.8f, 0.8f, 0.8f);
-            if (Input.IsKeyPressed(KeyCode.Q))
-                color = new Vector3(0.0f, 1.0f, 0.0f);
 
             if (m_CollisionCounter > 0)
                 m_MeshMaterial.Set("u_AlbedoColor", new Vector3(1.0f, 0.0f, 0.0f));
