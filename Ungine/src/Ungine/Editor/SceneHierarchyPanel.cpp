@@ -4,6 +4,7 @@
 #include"Ungine/Core/Application.h"
 #include "Ungine/Renderer/Mesh.h"
 #include "Ungine/Script/ScriptEngine.h"
+#include "Ungine/Physics/PhysicsLayer.h"
 #include "Ungine/Physics/PXPhysicsWrappers.h"
 #include "Ungine/Renderer/MeshFactory.h"
 
@@ -912,7 +913,10 @@ namespace U
 				// Rigidbody Type
 				const char* rbTypeStrings[] = { "Static", "Dynamic" };
 				const char* currentType = rbTypeStrings[(int)rbc.BodyType];
-				if (ImGui::BeginCombo("Type", currentType))
+				ImGui::TextUnformatted("Type");
+				ImGui::SameLine();
+				if (ImGui::BeginCombo("##TypeSelection", currentType))
+
 				{
 					for (int type = 0; type < 2; type++)
 					{
@@ -921,6 +925,32 @@ namespace U
 						{
 							currentType = rbTypeStrings[type];
 							rbc.BodyType = (RigidBodyComponent::Type)type;
+						}
+						if (is_selected)
+							ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndCombo();
+				}
+
+				// Layer has been removed, set to Default layer
+				if (!PhysicsLayerManager::IsLayerValid(rbc.Layer))
+					rbc.Layer = 0;
+
+				uint32_t currentLayer = rbc.Layer;
+				const PhysicsLayer& layerInfo = PhysicsLayerManager::GetLayer(currentLayer);
+
+				ImGui::TextUnformatted("Layer");
+				ImGui::SameLine();
+				if (ImGui::BeginCombo("##LayerSelection", layerInfo.Name.c_str())) 
+				{
+					for (const auto& layer : PhysicsLayerManager::GetLayers())
+					{
+						bool is_selected = (currentLayer == layer.LayerID);
+						if (ImGui::Selectable(layer.Name.c_str(), is_selected))
+						{
+							currentLayer = layer.LayerID;
+							rbc.Layer = layer.LayerID;
+
 						}
 						if (is_selected)
 							ImGui::SetItemDefaultFocus();
@@ -991,7 +1021,7 @@ namespace U
 				EndPropertyGrid();
 			});
 
-		DrawComponent<CapsuleColliderComponent>("Capsule Collider", entity, [](CapsuleColliderComponent& ccc)
+		DrawComponent<CapsuleColliderComponent>("Capsule Collider", entity, [=](CapsuleColliderComponent& ccc)
 			{
 				BeginPropertyGrid();
 

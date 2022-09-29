@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "Components.h"
 #include "Ungine/Script/ScriptEngine.h"
+#include "Ungine/Physics/PhysicsLayer.h"
 #include "Ungine/Physics/PXPhysicsWrappers.h"
 #include "Ungine/Renderer/MeshFactory.h"
 
@@ -335,6 +336,7 @@ namespace U
 			out << YAML::Key << "BodyType" << YAML::Value << (int)rigidbodyComponent.BodyType;
 			out << YAML::Key << "Mass" << YAML::Value << rigidbodyComponent.Mass;
 			out << YAML::Key << "IsKinematic" << YAML::Value << rigidbodyComponent.IsKinematic;
+			out << YAML::Key << "Layer" << YAML::Value << rigidbodyComponent.Layer;
 
 			out << YAML::Key << "Constraints";
 			out << YAML::BeginMap; // Constraints
@@ -453,6 +455,28 @@ namespace U
 				SerializeEntity(out, entity);
 
 			});
+		out << YAML::EndSeq;
+
+		out << YAML::Key << "PhysicsLayers";
+		out << YAML::Value << YAML::BeginSeq;
+		for (uint32_t i = 0; i < PhysicsLayerManager::GetLayerCount(); i++)
+		{
+			const PhysicsLayer& layer = PhysicsLayerManager::GetLayer(i);
+
+			out << YAML::BeginMap;
+			out << YAML::Key << "Name" << YAML::Value << layer.Name;
+
+			out << YAML::Key << "CollidesWith" << YAML::Value;
+			out << YAML::BeginSeq;
+			for (const auto& collidingLayer : PhysicsLayerManager::GetLayerCollisions(layer.LayerID))
+			{
+				out << YAML::BeginMap;
+				out << YAML::Key << "Name" << YAML::Value << collidingLayer.Name;
+				out << YAML::EndMap;
+			}
+			out << YAML::EndSeq;
+			out << YAML::EndMap;
+		}
 		out << YAML::EndSeq;
 		out << YAML::EndMap;
 
@@ -669,6 +693,7 @@ namespace U
 					component.BodyType = (RigidBodyComponent::Type)rigidBodyComponent["BodyType"].as<int>();
 					component.Mass = rigidBodyComponent["Mass"].as<float>();
 					component.IsKinematic = rigidBodyComponent["IsKinematic"] ? rigidBodyComponent["IsKinematic"].as<bool>() : false;
+					component.Layer = rigidBodyComponent["Layer"] ? rigidBodyComponent["Layer"].as<uint32_t>() : 0;
 
 					component.LockPositionX = rigidBodyComponent["Constraints"]["LockPositionX"].as<bool>();
 					component.LockPositionY = rigidBodyComponent["Constraints"]["LockPositionY"].as<bool>();
@@ -729,10 +754,35 @@ namespace U
 
 					U_CORE_INFO("  Mesh Collider Asset Path: {0}", meshPath);
 				}
-
-
 			}
 		}
+
+		auto physicsLayers = data["PhysicsLayers"];
+		if (physicsLayers)
+		{
+			PhysicsLayerManager::ClearLayers();
+
+			for (auto layer : physicsLayers)
+			{
+				PhysicsLayerManager::AddLayer(layer["Name"].as<std::string>(), false);
+			}
+
+			for (auto layer : physicsLayers)
+			{
+				const PhysicsLayer& layerInfo = PhysicsLayerManager::GetLayer(layer["Name"].as<std::string>());
+
+				auto collidesWith = layer["CollidesWith"];
+				if (collidesWith)
+				{
+					for (auto collisionLayer : collidesWith)
+					{
+						const auto& otherLayer = PhysicsLayerManager::GetLayer(collisionLayer["Name"].as<std::string>());
+						PhysicsLayerManager::SetLayerCollision(layerInfo.LayerID, otherLayer.LayerID, true);
+					}
+				}
+			}
+		}
+
 		return true;
 	}
 

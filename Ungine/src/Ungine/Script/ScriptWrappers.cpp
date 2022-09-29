@@ -5,6 +5,8 @@
 
 #include "Ungine/Scene/Scene.h"
 #include "Ungine/Scene/Components.h"
+#include "Ungine/Physics/PhysicsUtil.h"
+#include "Ungine/Physics/PXPhysicsWrappers.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
@@ -12,13 +14,13 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Ungine/Core/Input.h"
 #include <mono/jit/jit.h>
 
 #include <box2d/box2d.h>
 
 #include <PhysX/PxPhysicsAPI.h>
 
+#include <imgui.h>
 
 namespace U
 {
@@ -67,6 +69,34 @@ namespace U
 		{
 			return Input::IsKeyPressed(key);
 		}
+
+		bool Ungine_Input_IsMouseButtonPressed(MouseButton button)
+		{
+			return Input::IsMouseButtonPressed(button);
+		}
+
+
+		void Ungine_Input_GetMousePosition(glm::vec2* outPosition)
+		{
+			auto [x, y] = Input::GetMousePosition();
+			*outPosition = { x, y };
+		}
+
+		void Ungine_Input_SetCursorMode(CursorMode mode)
+		{
+			Input::SetCursorMode(mode);
+		}
+
+		CursorMode Ungine_Input_GetCursorMode()
+		{
+			return Input::GetCursorMode();
+		}
+
+		bool Ungine_Physics_Raycast(glm::vec3* origin, glm::vec3* direction, float maxDistance, RaycastHit* hit)
+		{
+			return PXPhysicsWrappers::Raycast(*origin, *direction, maxDistance, hit);
+		}
+
 
 		////////////////////////////////////////////////////////////////
 
@@ -149,9 +179,37 @@ namespace U
 			auto& transformComponent = entity.GetComponent<TransformComponent>();
 
 			auto [position, rotation, scale] = GetTransformDecomposition(transformComponent.Transform);
-			*outDirection = glm::rotate(glm::inverse(glm::normalize(rotation)), *inAbsoluteDirection);
+			*outDirection = glm::rotate(rotation, *inAbsoluteDirection);
 		}
 
+		void Ungine_TransformComponent_GetRotation(uint64_t entityID, glm::vec3* outRotation)
+		{
+			Ref<Scene> scene = ScriptEngine::GetCurrentSceneContext();
+			U_CORE_ASSERT(scene, "No active scene!");
+			const auto& entityMap = scene->GetEntityMap();
+			U_CORE_ASSERT(entityMap.find(entityID) != entityMap.end(), "Invalid entity ID or entity doesn't exist in scene!");
+
+			Entity entity = entityMap.at(entityID);
+			auto& transformComponent = entity.GetComponent<TransformComponent>();
+			auto [position, rotationQuat, scale] = GetTransformDecomposition(transformComponent.Transform);
+			*outRotation = glm::degrees(glm::eulerAngles(rotationQuat));
+		}
+
+		void Ungine_TransformComponent_SetRotation(uint64_t entityID, glm::vec3* inRotation)
+		{
+			Ref<Scene> scene = ScriptEngine::GetCurrentSceneContext();
+			U_CORE_ASSERT(scene, "No active scene!");
+			const auto& entityMap = scene->GetEntityMap();
+			U_CORE_ASSERT(entityMap.find(entityID) != entityMap.end(), "Invalid entity ID or entity doesn't exist in scene!");
+
+			Entity entity = entityMap.at(entityID);
+			glm::mat4& transform = entity.Transform();
+
+			auto [translation, rotationQuat, scale] = GetTransformDecomposition(transform);
+			transform = glm::translate(glm::mat4(1.0F), translation) *
+				glm::toMat4(glm::quat(glm::radians(*inRotation))) *
+				glm::scale(glm::mat4(1.0F), scale);
+		}
 
 
 		void* Ungine_MeshComponent_GetMesh(uint64_t entityID)
@@ -319,6 +377,27 @@ namespace U
 			dynamicActor->setLinearVelocity({ velocity->x, velocity->y, velocity->z });
 		}
 
+		void Ungine_RigidBodyComponent_Rotate(uint64_t entityID, glm::vec3* rotation)
+		{
+			Ref<Scene> scene = ScriptEngine::GetCurrentSceneContext();
+			U_CORE_ASSERT(scene, "No active scene!");
+			const auto& entityMap = scene->GetEntityMap();
+			U_CORE_ASSERT(entityMap.find(entityID) != entityMap.end(), "Invalid entity ID or entity doesn't exist in scene!");
+
+			Entity entity = entityMap.at(entityID);
+			U_CORE_ASSERT(entity.HasComponent<RigidBodyComponent>());
+			auto& component = entity.GetComponent<RigidBodyComponent>();
+
+			physx::PxRigidActor* actor = (physx::PxRigidActor*)component.RuntimeActor;
+			physx::PxRigidDynamic* dynamicActor = actor->is<physx::PxRigidDynamic>();
+			U_CORE_ASSERT(dynamicActor);
+
+			physx::PxTransform transform = dynamicActor->getGlobalPose();
+			transform.q *= (physx::PxQuat(glm::radians(rotation->x), { 1.0F, 0.0F, 0.0F })
+				* physx::PxQuat(glm::radians(rotation->y), { 0.0F, 1.0F, 0.0F })
+				* physx::PxQuat(glm::radians(rotation->z), { 0.0F, 0.0F, 1.0F }));
+			dynamicActor->setGlobalPose(transform);
+		}
 
 
 

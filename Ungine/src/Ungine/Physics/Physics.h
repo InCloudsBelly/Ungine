@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Ungine/Core/TimeStep.h"
 #include "Ungine/Core/Base.h"
 #include "Ungine/Scene/Entity.h"
 
@@ -27,6 +27,15 @@ namespace U
 		glm::vec3 Gravity = { 0.0F, -9.81F, 0.0F };
 	};
 
+	struct RaycastHit
+	{
+		uint64_t EntityID;
+		glm::vec3 Position;
+		glm::vec3 Normal;
+		float Distance;
+	};
+
+
 	class Physics
 	{
 	public:
@@ -36,9 +45,11 @@ namespace U
 		static void CreateScene(const SceneParams& params);
 		static void CreateActor(Entity e, int entityCount);
 
-		static void Simulate();
+		static void Simulate(Timestep ts);
 
 		static void DestroyScene();
+		
+		static void* GetPhysicsScene();
 
 		static void ConnectVisualDebugger();
 		static void DisconnectVisualDebugger();

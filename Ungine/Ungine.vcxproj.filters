@@ -456,6 +456,8 @@
     <ClInclude Include="vendor\yaml-cpp\src\token.h">
       <Filter>vendor\yaml-cpp\src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ungine\Editor\PhysicsSettingsWindow.h" />
+    <ClInclude Include="src\Ungine\Physics\PhysicsLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ungine\Core\Application.cpp">
@@ -713,5 +715,7 @@
     <ClCompile Include="vendor\yaml-cpp\src\tag.cpp">
       <Filter>vendor\yaml-cpp\src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Ungine\Editor\PhysicsSettingsWindow.cpp" />
+    <ClCompile Include="src\Ungine\Physics\PhysicsLayer.cpp" />
   </ItemGroup>
 </Project>

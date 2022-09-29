@@ -6,13 +6,14 @@
 namespace U
 {
 	struct SceneParams;
+	struct RaycastHit;
 
 	class PXPhysicsWrappers
 	{
 	public:
 		static physx::PxScene* CreateScene(const SceneParams& sceneParams);
 		static physx::PxRigidActor* CreateActor(const RigidBodyComponent& rigidbody, const glm::mat4& transform);
-		static void SetCollisionFilters(const physx::PxRigidActor& actor, uint32_t actorGroup, uint32_t filters);
+		static void SetCollisionFilters(const physx::PxRigidActor& actor, uint32_t physicsLayer);
 
 		static void AddBoxCollider(physx::PxRigidActor& actor, const physx::PxMaterial& material, const BoxColliderComponent& collider, const glm::vec3& size = glm::vec3(0.0F));
 		static void AddSphereCollider(physx::PxRigidActor& actor, const physx::PxMaterial& material, const SphereColliderComponent& collider, const glm::vec3& size = glm::vec3(0.0F));
@@ -23,6 +24,7 @@ namespace U
 
 		static physx::PxMaterial* CreateMaterial(const PhysicsMaterialComponent& material);
 
+		static bool Raycast(const glm::vec3& origin, const glm::vec3& direction, float maxDistance, RaycastHit* hit);
 	private:
 		static void Initialize();
 		static void Shutdown();

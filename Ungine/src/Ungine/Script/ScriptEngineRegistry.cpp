@@ -52,6 +52,8 @@ namespace U
 
 		mono_add_internal_call("U.Noise::PerlinNoise_Native", U::Script::Ungine_Noise_PerlinNoise);
 
+		mono_add_internal_call("U.Physics::Raycast_Native", U::Script::Ungine_Physics_Raycast);
+
 		mono_add_internal_call("U.Entity::GetTransform_Native", U::Script::Ungine_Entity_GetTransform);
 		mono_add_internal_call("U.Entity::SetTransform_Native", U::Script::Ungine_Entity_SetTransform);
 		mono_add_internal_call("U.Entity::CreateComponent_Native", U::Script::Ungine_Entity_CreateComponent);
@@ -61,6 +63,8 @@ namespace U
 		mono_add_internal_call("U.TransformComponent::GetTransform_Native", U::Script::Ungine_Entity_GetTransform);
 		mono_add_internal_call("U.TransformComponent::SetTransform_Native", U::Script::Ungine_Entity_SetTransform);
 		mono_add_internal_call("U.TransformComponent::GetRelativeDirection_Native", U::Script::Ungine_TransformComponent_GetRelativeDirection);
+		mono_add_internal_call("U.TransformComponent::GetRotation_Native", U::Script::Ungine_TransformComponent_GetRotation);
+		mono_add_internal_call("U.TransformComponent::SetRotation_Native", U::Script::Ungine_TransformComponent_SetRotation);
 
 		mono_add_internal_call("U.MeshComponent::GetMesh_Native", U::Script::Ungine_MeshComponent_GetMesh);
 		mono_add_internal_call("U.MeshComponent::SetMesh_Native", U::Script::Ungine_MeshComponent_SetMesh);
@@ -73,8 +77,13 @@ namespace U
 		mono_add_internal_call("U.RigidBodyComponent::AddTorque_Native", U::Script::Ungine_RigidBodyComponent_AddTorque);
 		mono_add_internal_call("U.RigidBodyComponent::GetLinearVelocity_Native", U::Script::Ungine_RigidBodyComponent_GetLinearVelocity);
 		mono_add_internal_call("U.RigidBodyComponent::SetLinearVelocity_Native", U::Script::Ungine_RigidBodyComponent_SetLinearVelocity);
+		mono_add_internal_call("U.RigidBodyComponent::Rotate_Native", U::Script::Ungine_RigidBodyComponent_Rotate);
 
 		mono_add_internal_call("U.Input::IsKeyPressed_Native", U::Script::Ungine_Input_IsKeyPressed);
+		mono_add_internal_call("U.Input::IsMouseButtonPressed_Native", U::Script::Ungine_Input_IsMouseButtonPressed);
+		mono_add_internal_call("U.Input::GetMousePosition_Native", U::Script::Ungine_Input_GetMousePosition);
+		mono_add_internal_call("U.Input::SetCursorMode_Native", U::Script::Ungine_Input_SetCursorMode);
+		mono_add_internal_call("U.Input::GetCursorMode_Native", U::Script::Ungine_Input_GetCursorMode);
 
 		mono_add_internal_call("U.Texture2D::Constructor_Native", U::Script::Ungine_Texture2D_Constructor);
 		mono_add_internal_call("U.Texture2D::Destructor_Native", U::Script::Ungine_Texture2D_Destructor);
@@ -98,12 +107,6 @@ namespace U
 
 		mono_add_internal_call("U.MeshFactory::CreatePlane_Native", U::Script::Ungine_MeshFactory_CreatePlane);
 
-		// static bool IsKeyPressed(KeyCode key) { return s_Instance->IsKeyPressedImpl(key); }
-		// 
-		// static bool IsMouseButtonPressed(MouseCode button) { return s_Instance->IsMouseButtonPressedImpl(button); }
-		// static std::pair<float, float> GetMousePosition() { return s_Instance->GetMousePositionImpl(); }
-		// static float GetMouseX() { return s_Instance->GetMouseXImpl(); }
-		// static float GetMouseY() { return s_Instance->GetMouseYImpl(); }
 	}
 
 

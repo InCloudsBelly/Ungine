@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Ungine/Script/ScriptEngine.h"
-#include "Ungine/Core/KeyCodes.h"
+#include "Ungine/Core/Input.h"
 #include "Ungine/Physics/Physics.h"
 
 #include <glm/glm.hpp>
@@ -19,6 +19,14 @@ namespace U {
 
 		// Input
 		bool Ungine_Input_IsKeyPressed(KeyCode key);
+		bool Ungine_Input_IsMouseButtonPressed(MouseButton button);
+		void Ungine_Input_GetMousePosition(glm::vec2* outPosition);
+		void Ungine_Input_SetCursorMode(CursorMode mode);
+		CursorMode Ungine_Input_GetCursorMode();
+
+		// Physics
+		bool Ungine_Physics_Raycast(glm::vec3* origin, glm::vec3* direction, float maxDistance, RaycastHit* hit);
+
 
 		// Entity
 		void Ungine_Entity_GetTransform(uint64_t entityID, glm::mat4* outTransform);
@@ -30,6 +38,8 @@ namespace U {
 		uint64_t Ungine_Entity_FindEntityByTag(MonoString* tag);
 
 		void Ungine_TransformComponent_GetRelativeDirection(uint64_t entityID, glm::vec3* outDirection, glm::vec3* inAbsoluteDirection);
+		void Ungine_TransformComponent_GetRotation(uint64_t entityID, glm::vec3* outRotation);
+		void Ungine_TransformComponent_SetRotation(uint64_t entityID, glm::vec3* inRotation);
 
 		void* Ungine_MeshComponent_GetMesh(uint64_t entityID);
 		void Ungine_MeshComponent_SetMesh(uint64_t entityID, Ref<Mesh>* inMesh);
@@ -42,7 +52,7 @@ namespace U {
 		void Ungine_RigidBodyComponent_AddTorque(uint64_t entityID, glm::vec3* torque, ForceMode forceMode);
 		void Ungine_RigidBodyComponent_GetLinearVelocity(uint64_t entityID, glm::vec3* outVelocity);
 		void Ungine_RigidBodyComponent_SetLinearVelocity(uint64_t entityID, glm::vec3* velocity);
-
+		void Ungine_RigidBodyComponent_Rotate(uint64_t entityID, glm::vec3* rotation);
 
 		// Renderer
 		// Texture2D

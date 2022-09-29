@@ -1,6 +1,9 @@
 #include "Upch.h"
 #include "PXPhysicsWrappers.h"
 #include "Physics.h"
+#include "PhysicsLayer.h"
+
+#include <glm/gtx/rotate_vector.hpp>
 
 #ifdef  U_DEBUG
 #define PHYSX_DEBUGGER 0
@@ -60,11 +63,15 @@ namespace U
 		return actor;
 	}
 
-	void PXPhysicsWrappers::SetCollisionFilters(const physx::PxRigidActor& actor, uint32_t actorGroup, uint32_t filters)
+	void PXPhysicsWrappers::SetCollisionFilters(const physx::PxRigidActor& actor, uint32_t physicsLayer)
 	{
+		const PhysicsLayer& layerInfo = PhysicsLayerManager::GetLayer(physicsLayer);
+		if (layerInfo.CollidesWith == 0)
+			return;
+
 		physx::PxFilterData filterData;
-		filterData.word0 = actorGroup;
-		filterData.word1 = filters;
+		filterData.word0 = layerInfo.BitValue;
+		filterData.word1 = layerInfo.CollidesWith;
 
 		const physx::PxU32 numShapes = actor.getNbShapes();
 
@@ -112,7 +119,7 @@ namespace U
 		float colliderHeight = collider.Height;
 
 		if (size.x != 0.0F)
-			colliderRadius *= size.x;
+			colliderRadius *= (size.x / 2.0F);
 
 		if (size.y != 0.0F)
 			colliderHeight *= size.y;
@@ -127,18 +134,16 @@ namespace U
 
 	void PXPhysicsWrappers::AddMeshCollider(physx::PxRigidActor& actor, const physx::PxMaterial& material, MeshColliderComponent& collider, const glm::vec3& size)
 	{
-		// TODO: Possibly take a look at https://github.com/kmammou/v-hacd for computing convex meshes from triangle meshes...
-		physx::PxConvexMeshGeometry triangleGeometry = physx::PxConvexMeshGeometry(CreateConvexMesh(collider));
-		triangleGeometry.meshFlags = physx::PxConvexMeshGeometryFlag::eTIGHT_BOUNDS;
-		physx::PxShape* shape = physx::PxRigidActorExt::createExclusiveShape(actor, triangleGeometry, material);
+		physx::PxConvexMeshGeometry convexGeometry = physx::PxConvexMeshGeometry(CreateConvexMesh(collider));
+		convexGeometry.meshFlags = physx::PxConvexMeshGeometryFlag::eTIGHT_BOUNDS;
+		physx::PxShape* shape = physx::PxRigidActorExt::createExclusiveShape(actor, convexGeometry, material);
 		shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !collider.IsTrigger);
 		shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, collider.IsTrigger);
 	}
 
 	physx::PxConvexMesh* PXPhysicsWrappers::CreateConvexMesh(MeshColliderComponent& collider)
 	{
-		const auto& vertices = collider.CollisionMesh->GetStaticVertices();
-		const auto& indices = collider.CollisionMesh->GetIndices();
+		std::vector<Vertex> vertices = collider.CollisionMesh->GetStaticVertices();
 
 		physx::PxConvexMeshDesc convexDesc;
 		convexDesc.points.count = vertices.size();
@@ -188,7 +193,7 @@ namespace U
 				uint32_t vI0 = vertCounter;
 				for (uint32_t vI = 0; vI < polygon.mNbVerts; vI++)
 				{
-					collisionVertices[vertCounter].Position = FromPhysXVector(convexVertices[convexIndices[polygon.mIndexBase + vI]]);
+					collisionVertices[vertCounter].Position = glm::rotate(FromPhysXVector(convexVertices[convexIndices[polygon.mIndexBase + vI]]), glm::radians(90.0F), { 1, 0, 0 });
 					vertCounter++;
 				}
 
@@ -211,6 +216,30 @@ namespace U
 	{
 		return s_Physics->createMaterial(material.StaticFriction, material.DynamicFriction, material.Bounciness);
 	}
+
+	bool PXPhysicsWrappers::Raycast(const glm::vec3& origin, const glm::vec3& direction, float maxDistance, RaycastHit* hit)
+	{
+		physx::PxScene* scene = static_cast<physx::PxScene*>(Physics::GetPhysicsScene());
+		physx::PxRaycastBuffer hitInfo;
+		bool result = scene->raycast(ToPhysXVector(origin), ToPhysXVector(glm::normalize(direction)), maxDistance, hitInfo);
+
+		if (result)
+		{
+			Entity& entity = *(Entity*)hitInfo.block.actor->userData;
+
+			// NOTE: This should never be the case...
+			if (!entity)
+				U_CORE_ASSERT("Physics body with not Entity?");
+
+			hit->EntityID = entity.GetUUID();
+			hit->Position = FromPhysXVector(hitInfo.block.position);
+			hit->Normal = FromPhysXVector(hitInfo.block.normal);
+			hit->Distance = hitInfo.block.distance;
+		}
+
+		return result;
+	}
+
 
 	void PXPhysicsWrappers::Initialize()
 	{

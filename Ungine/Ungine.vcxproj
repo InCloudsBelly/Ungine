@@ -169,10 +169,12 @@
     <ClInclude Include="src\Ungine\Core\UUID.h" />
     <ClInclude Include="src\Ungine\Core\Window.h" />
     <ClInclude Include="src\Ungine\Editor\EditorCamera.h" />
+    <ClInclude Include="src\Ungine\Editor\PhysicsSettingsWindow.h" />
     <ClInclude Include="src\Ungine\Editor\SceneHierarchyPanel.h" />
     <ClInclude Include="src\Ungine\EntryPoint.h" />
     <ClInclude Include="src\Ungine\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Ungine\ImGui\ImGuizmo.h" />
+    <ClInclude Include="src\Ungine\Physics\PhysicsLayer.h" />
     <ClInclude Include="src\Ungine\Physics\PXPhysicsWrappers.h" />
     <ClInclude Include="src\Ungine\Physics\Physics.h" />
     <ClInclude Include="src\Ungine\Physics\PhysicsUtil.h" />
@@ -283,10 +285,12 @@
     <ClCompile Include="src\Ungine\Core\UUID.cpp" />
     <ClCompile Include="src\Ungine\Core\Window.cpp" />
     <ClCompile Include="src\Ungine\Editor\EditorCamera.cpp" />
+    <ClCompile Include="src\Ungine\Editor\PhysicsSettingsWindow.cpp" />
     <ClCompile Include="src\Ungine\Editor\SceneHierarchyPanel.cpp" />
     <ClCompile Include="src\Ungine\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Ungine\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Ungine\ImGui\ImGuizmo.cpp" />
+    <ClCompile Include="src\Ungine\Physics\PhysicsLayer.cpp" />
     <ClCompile Include="src\Ungine\Physics\PXPhysicsWrappers.cpp" />
     <ClCompile Include="src\Ungine\Physics\Physics.cpp" />
     <ClCompile Include="src\Ungine\Physics\PhysicsUtil.cpp" />

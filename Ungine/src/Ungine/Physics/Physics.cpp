@@ -2,15 +2,10 @@
 #include "Physics.h"
 #include "PXPhysicsWrappers.h"
 
-#include "Ungine/Scene/Scene.h"
+#include "PhysicsLayer.h"
 
 namespace U
 {
-	static physx::PxScene* s_Scene;
-	static std::vector<Entity> s_SimulatedEntities;
-	static Entity* s_EntityStorageBuffer;
-	static int s_EntityStorageBufferPosition;
-
 	static std::tuple<glm::vec3, glm::quat, glm::vec3> GetTransformDecomposition(const glm::mat4& transform)
 	{
 		glm::vec3 scale, translation, skew;
@@ -21,9 +16,17 @@ namespace U
 		return { translation, orientation, scale };
 	}
 
+
+	static physx::PxScene* s_Scene;
+	static std::vector<Entity> s_SimulatedEntities;
+	static Entity* s_EntityStorageBuffer;
+	static int s_EntityStorageBufferPosition;
+	static float s_SimulationTime = 0.0f;
+
 	void Physics::Init()
 	{
 		PXPhysicsWrappers::Initialize();
+		PhysicsLayerManager::AddLayer("Default");
 	}
 
 	void Physics::Shutdown()
@@ -56,7 +59,6 @@ namespace U
 		if (s_EntityStorageBuffer == nullptr)
 			s_EntityStorageBuffer = new Entity[entityCount];
 
-		// Create Actor Body
 		physx::PxRigidActor* actor = PXPhysicsWrappers::CreateActor(rigidbody, e.Transform());
 		s_SimulatedEntities.push_back(e);
 		Entity* entityStorage = &s_EntityStorageBuffer[s_EntityStorageBufferPosition++];
@@ -64,12 +66,11 @@ namespace U
 		actor->userData = (void*)entityStorage;
 		rigidbody.RuntimeActor = actor;
 
-		// Physics Material
 		physx::PxMaterial* material = PXPhysicsWrappers::CreateMaterial(e.GetComponent<PhysicsMaterialComponent>());
 
-		auto [translation, rotationQuat, scale] = GetTransformDecomposition(e.Transform());
+		const auto& transform = e.Transform();
+		auto [translation, rotation, scale] = GetTransformDecomposition(transform);
 
-		// Add all colliders
 		if (e.HasComponent<BoxColliderComponent>())
 		{
 			BoxColliderComponent& collider = e.GetComponent<BoxColliderComponent>();
@@ -80,7 +81,6 @@ namespace U
 		{
 			SphereColliderComponent& collider = e.GetComponent<SphereColliderComponent>();
 			PXPhysicsWrappers::AddSphereCollider(*actor, *material, collider, scale);
-			
 		}
 
 		if (e.HasComponent<CapsuleColliderComponent>())
@@ -95,30 +95,31 @@ namespace U
 			PXPhysicsWrappers::AddMeshCollider(*actor, *material, collider, scale);
 		}
 
-		// Set collision filters
-		if (rigidbody.BodyType == RigidBodyComponent::Type::Static)
-		{
-			PXPhysicsWrappers::SetCollisionFilters(*actor, (uint32_t)FilterGroup::Static, (uint32_t)FilterGroup::All);
-		}
-		else if (rigidbody.BodyType == RigidBodyComponent::Type::Dynamic)
-		{
-			PXPhysicsWrappers::SetCollisionFilters(*actor, (uint32_t)FilterGroup::Dynamic, (uint32_t)FilterGroup::All);
-		}
+		if (!PhysicsLayerManager::IsLayerValid(rigidbody.Layer))
+			rigidbody.Layer = 0;
+
+		PXPhysicsWrappers::SetCollisionFilters(*actor, rigidbody.Layer);
 
 		s_Scene->addActor(*actor);
 	}
 
-	void Physics::Simulate()
+	void Physics::Simulate(Timestep ts)
 	{
-		constexpr float stepSize = 0.016666660f;
+		constexpr float stepSize = 1.0F / 50.0F;
+		s_SimulationTime += ts.GetMilliseconds();
+
+		if (s_SimulationTime < stepSize)
+			return;
+
+		s_SimulationTime -= stepSize;
+
 		s_Scene->simulate(stepSize);
 		s_Scene->fetchResults(true);
 
 		for (Entity& e : s_SimulatedEntities)
 		{
 			auto& transform = e.Transform();
-			// TODO: Come up with a better solution for scale
-			auto [p, r, scale] = GetTransformDecomposition(transform);
+			auto [translation, rotation, scale] = GetTransformDecomposition(transform);
 			RigidBodyComponent& rb = e.GetComponent<RigidBodyComponent>();
 			physx::PxRigidActor* actor = static_cast<physx::PxRigidActor*>(rb.RuntimeActor);
 
@@ -142,6 +143,12 @@ namespace U
 		s_Scene->release();
 		s_Scene = nullptr;
 	}
+
+	void* Physics::GetPhysicsScene()
+	{
+		return s_Scene;
+	}
+
 
 	void Physics::ConnectVisualDebugger()
 	{

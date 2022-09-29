@@ -3,6 +3,7 @@
 #include "Ungine/ImGui/ImGuizmo.h"
 #include "Ungine/Renderer/Renderer2D.h"
 #include "Ungine/Script/ScriptEngine.h"
+#include "Ungine/Editor/PhysicsSettingsWindow.h"
 
 #include <filesystem>
 
@@ -110,7 +111,7 @@ namespace U {
 		m_SceneHierarchyPanel->SetEntityDeletedCallback(std::bind(&EditorLayer::OnEntityDeleted, this, std::placeholders::_1));
 		
 		SceneSerializer serializer(m_EditorScene);
-		serializer.Deserialize("assets/scenes/Physics3DTest.hsc");
+		serializer.Deserialize("assets/scenes/FPSDemo.hsc");
 	}
 
 
@@ -705,6 +706,14 @@ namespace U {
 				ImGui::EndMenu();
 			}
 
+			if (ImGui::BeginMenu("Edit"))
+			{
+				ImGui::MenuItem("Physics Settings", nullptr, &m_ShowPhysicsSettings);
+
+				ImGui::EndMenu();
+			}
+
+
 			if (ImGui::BeginMenu("Script"))
 			{
 				if (ImGui::MenuItem("Reload C# Assembly"))
@@ -934,6 +943,7 @@ namespace U {
 		ImGui::End();
 
 		ScriptEngine::OnImGuiRender();
+		PhysicsSettingsWindow::OnImGuiRender(&m_ShowPhysicsSettings);
 
 		ImGui::End();
 	}
